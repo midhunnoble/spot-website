@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-handwriting: "Caveat", cursive;
+
+  --color-spot-cream: #F9F8F6;
+  --color-spot-red: #D92D20;
+  --color-spot-charcoal: #1C1C1C;
+  --color-spot-pastel-blue: #D1E8E2;
+  --color-spot-pastel-yellow: #FDF2D5;
+  --color-spot-pastel-pink: #FADCD9;
+  --color-spot-pastel-green: #D4E09B;
+}
+
+body {
+  background-color: var(--color-spot-cream);
+  color: var(--color-spot-charcoal);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Paper texture overlay */
+.paper-texture {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.3;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
+/* Polaroid style */
+.polaroid {
+  background: white;
+  padding: 12px 12px 40px 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 4px 10px rgba(0,0,0,0.05);
+  transform: rotate(calc(var(--rotate, 0) * 1deg));
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.polaroid:hover {
+  transform: rotate(0deg) scale(1.05);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15), 0 10px 20px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.polaroid-caption {
+  font-family: var(--font-handwriting);
+  font-size: 1.5rem;
+  text-align: center;
+  margin-top: 12px;
+  color: var(--color-spot-charcoal);
+  line-height: 1;
+}
+
+/* Hide scrollbar for horizontal scroll areas */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
