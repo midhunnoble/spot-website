@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import { ArrowRight, Users, Lightbulb, Heart, Compass, Zap, Briefcase, Clock, CheckCircle2, X, Star, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const ApplicationModal = ({ isOpen, onClose, defaultRole = "" }: { isOpen: boolean, onClose: () => void, defaultRole?: string }) => {
   // Prevent scrolling when modal is open
@@ -355,57 +356,7 @@ const EducatorMindset = () => {
   );
 };
 
-const DayInTheLife = () => {
-  const timeline = [
-    { time: "08:30 AM", title: "Morning Reflection & Planning", desc: "Reviewing the day's goals and setting up the studio space." },
-    { time: "09:30 AM", title: "Studio Facilitation", desc: "Guiding students through hands-on exploration and inquiry." },
-    { time: "11:30 AM", title: "Project Mentoring", desc: "One-on-one check-ins to help students overcome creative blocks." },
-    { time: "01:30 PM", title: "Student Presentations", desc: "Facilitating peer feedback and showcasing works in progress." },
-    { time: "03:00 PM", title: "Team Reflection", desc: "Collaborating with fellow educators to discuss student progress." },
-    { time: "04:00 PM", title: "Community Discussions", desc: "Engaging with parents and the broader SPOT community." }
-  ];
 
-  return (
-    <section className="py-16 md:py-32 px-6 max-w-5xl mx-auto">
-      <div className="text-center mb-10 md:mb-20">
-        <h2 className="font-display text-3xl md:text-4xl lg:text-5xl lg:text-6xl font-black uppercase tracking-tighter mb-6">A Day in the Life</h2>
-        <p className="text-xl text-spot-charcoal/70">The rhythm of a SPOT Educator</p>
-      </div>
-
-      <div className="relative">
-        {/* Vertical Line */}
-        <div className="absolute left-[27px] md:left-1/2 top-0 bottom-0 w-1 bg-spot-charcoal/10 md:-translate-x-1/2 rounded-full" />
-
-        <div className="space-y-12">
-          {timeline.map((item, i) => (
-            <motion.div 
-              key={i}
-              className={`relative flex flex-col md:flex-row items-start ${i % 2 === 0 ? 'md:flex-row-reverse' : ''}`}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-            >
-              {/* Timeline Dot */}
-              <div className="absolute left-0 md:left-1/2 w-14 h-14 bg-spot-cream border-4 border-spot-red rounded-full flex items-center justify-center md:-translate-x-1/2 z-10 shadow-lg">
-                <Clock size={20} className="text-spot-red" />
-              </div>
-
-              {/* Content Box */}
-              <div className={`ml-20 md:ml-0 md:w-1/2 ${i % 2 === 0 ? 'md:pl-16' : 'md:pr-16 text-left md:text-right'}`}>
-                <div className="bg-white p-6 rounded-3xl shadow-sm border border-black/5 hover:shadow-md transition-shadow">
-                  <div className="text-spot-red font-bold text-sm uppercase tracking-wider mb-2">{item.time}</div>
-                  <h3 className="font-display text-2xl font-bold mb-2">{item.title}</h3>
-                  <p className="text-spot-charcoal/70">{item.desc}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
 
 const OpenRoles = ({ onApply }: { onApply: (role: string) => void }) => {
   const roles = [
@@ -513,7 +464,7 @@ const MeetTheTeam = () => {
               "At SPOT I feel like I am building something meaningful every day. It's the creative freedom I always wanted as an educator."
             </p>
             <div>
-              <div className="font-bold text-xl text-spot-pastel-yellow">Sarah Jenkins</div>
+              <div className="font-bold text-xl text-spot-pastel-yellow">Pooja Latisha</div>
               <div className="text-spot-cream/60 uppercase tracking-wider text-sm font-bold mt-1">Lead Learning Designer</div>
             </div>
           </div>
@@ -527,7 +478,7 @@ const MeetTheTeam = () => {
           transition={{ duration: 0.6 }}
         >
           <div className="aspect-[4/5] rounded-[3rem] overflow-hidden border-8 border-spot-charcoal shadow-2xl relative z-10">
-            <img src="https://images.unsplash.com/photo-1580894732444-8ecded790047?q=80&w=800&auto=format&fit=crop" alt="Educator at SPOT" className="w-full h-full object-cover" />
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop" alt="Pooja Latisha at SPOT" className="w-full h-full object-cover" />
           </div>
           <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-spot-red rounded-full mix-blend-screen filter blur-3xl opacity-50 z-0" />
         </motion.div>
@@ -536,35 +487,7 @@ const MeetTheTeam = () => {
   );
 };
 
-const EducatorCommunity = () => {
-  return (
-    <section className="py-16 md:py-32 px-6 max-w-7xl mx-auto">
-      <div className="bg-spot-pastel-yellow rounded-[3rem] p-10 md:p-20 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-10 mix-blend-multiply" />
-        
-        <div className="relative z-10 max-w-3xl">
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl lg:text-6xl font-black uppercase tracking-tighter mb-6 text-spot-charcoal">Educator Community</h2>
-          <p className="text-xl text-spot-charcoal/80 mb-10 font-medium">
-            Not looking for a full-time role? We invite professionals to collaborate with SPOT through various community programs.
-          </p>
-          
-          <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 sm:grid sm:grid-cols-2 gap-6 mb-10">
-            {['Guest Mentors', 'Artists in Residence', 'Industry Experts', 'Internships'].map((item, i) => (
-              <div key={i} className="flex items-center gap-3 bg-white/50 backdrop-blur-sm p-4 rounded-2xl border border-black/5">
-                <Star className="text-spot-red" size={20} />
-                <span className="font-bold text-spot-charcoal">{item}</span>
-              </div>
-            ))}
-          </div>
-          
-          <button className="px-8 py-4 bg-spot-charcoal text-white font-bold rounded-full text-lg hover:bg-black transition-colors shadow-xl">
-            Partner With Us
-          </button>
-        </div>
-      </div>
-    </section>
-  );
-};
+
 
 const FinalCTA = ({ onApply }: { onApply: () => void }) => {
   return (
@@ -628,23 +551,10 @@ export default function Careers() {
       <WhyWorkAtSpot />
       <SpotCulture />
       <EducatorMindset />
-      <DayInTheLife />
       <OpenRoles onApply={handleApply} />
       <Benefits />
       <MeetTheTeam />
       
-      {/* Join SPOT Section */}
-      <section className="py-20 px-6 text-center">
-        <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-black uppercase tracking-tighter mb-8">Join the SPOT Team</h2>
-        <button 
-          onClick={() => handleApply()}
-          className="px-10 py-5 bg-spot-charcoal text-white font-bold rounded-full text-xl hover:bg-spot-red transition-colors shadow-xl"
-        >
-          Apply Now
-        </button>
-      </section>
-
-      <EducatorCommunity />
       <FinalCTA onApply={() => handleApply()} />
 
       <ApplicationModal 

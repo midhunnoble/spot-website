@@ -12,20 +12,20 @@ export const Navbar = () => {
     { 
       name: 'Inside SPOT', 
       dropdown: [
+        { name: 'About', path: '/about' },
         { name: 'Philosophy', path: '/philosophy' },
-        { name: 'Projects', path: '/projects' }
+        { name: 'Careers', path: '/careers' }
       ]
     },
     { name: 'Microschool', path: '/microschool' },
-    { name: 'Studios', path: '/studios' },
-    { name: 'Events', path: '/events' },
     { 
-      name: 'About SPOT', 
+      name: 'Studios', 
       dropdown: [
-        { name: 'About', path: '/about' },
-        { name: 'Careers', path: '/careers' }
+        { name: 'All Studios', path: '/studios' },
+        { name: 'Projects', path: '/projects' }
       ]
-    }
+    },
+    { name: 'Events', path: '/events' }
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -80,9 +80,9 @@ export const Navbar = () => {
               )}
             </div>
           ))}
-          <button className="px-6 py-2 bg-spot-charcoal text-spot-cream font-bold rounded-full text-sm hover:bg-spot-red transition-colors">
+          <Link to="/contact" className="px-6 py-2 bg-spot-charcoal text-spot-cream font-bold rounded-full text-sm hover:bg-spot-red transition-colors">
             Book a Visit
-          </button>
+          </Link>
         </div>
         <button className="md:hidden text-spot-charcoal" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={28} /> : <Menu size={28} />}
@@ -129,9 +129,9 @@ export const Navbar = () => {
                 )}
               </div>
             ))}
-            <button className="px-6 py-4 bg-spot-charcoal text-spot-cream font-bold rounded-full text-lg mt-6">
+            <Link to="/contact" onClick={() => setIsOpen(false)} className="px-6 py-4 bg-spot-charcoal text-spot-cream font-bold rounded-full text-lg mt-6 text-center">
               Book a Visit
-            </button>
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>

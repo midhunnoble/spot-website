@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import { ArrowDown, ArrowRight, Brain, Heart, Users, Sparkles, Rocket, Microscope, Palette, MessageCircle, Briefcase, ChevronRight, PlayCircle, Star, Globe, Compass, Zap, Target, CheckCircle2, ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
   const { scrollY } = useScroll();
@@ -25,14 +26,14 @@ const HeroSection = () => {
       <motion.div style={{ y: y1 }} className="absolute top-32 left-10 md:left-20 hidden lg:block z-10">
         <div className="relative p-3 bg-white shadow-xl transform -rotate-6 hover:rotate-0 transition-transform duration-300">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-4 bg-white/80 border border-black/10 shadow-sm transform -rotate-2" />
-          <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=400&auto=format&fit=crop" alt="Collaborating" className="w-56 h-64 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+          <img src="https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=400&auto=format&fit=crop" alt="Collaborating" className="w-56 h-64 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
         </div>
       </motion.div>
 
       <motion.div style={{ y: y2 }} className="absolute bottom-40 right-10 md:right-20 hidden lg:block z-10">
         <div className="relative p-3 bg-white shadow-xl transform rotate-6 hover:rotate-0 transition-transform duration-300">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-4 bg-white/80 border border-black/10 shadow-sm transform rotate-3" />
-          <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=400&auto=format&fit=crop" alt="Building" className="w-64 h-56 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+          <img src="https://images.unsplash.com/photo-1585468273280-7c6536979201?q=80&w=400&auto=format&fit=crop" alt="Building" className="w-64 h-56 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
         </div>
       </motion.div>
 
@@ -76,12 +77,12 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
         >
-          <button className="px-8 py-4 bg-spot-red text-white font-bold rounded-full text-lg hover:bg-red-700 transition-colors w-full sm:w-auto flex items-center justify-center gap-2 shadow-xl shadow-spot-red/20 hover:scale-105 active:scale-95">
+          <Link to="/contact" className="px-8 py-4 bg-spot-red text-white font-bold rounded-full text-lg hover:bg-red-700 transition-colors w-full sm:w-auto flex items-center justify-center gap-2 shadow-xl shadow-spot-red/20 hover:scale-105 active:scale-95">
             Book an Open House <ArrowRight size={20} />
-          </button>
-          <button className="px-8 py-4 bg-white border-2 border-spot-charcoal text-spot-charcoal font-bold rounded-full text-lg hover:bg-spot-charcoal hover:text-white transition-colors w-full sm:w-auto shadow-xl shadow-black/5 hover:scale-105 active:scale-95">
+          </Link>
+          <Link to="/studios" className="px-8 py-4 bg-white border-2 border-spot-charcoal text-spot-charcoal font-bold rounded-full text-lg hover:bg-spot-charcoal hover:text-white transition-colors w-full sm:w-auto shadow-xl shadow-black/5 hover:scale-105 active:scale-95 flex items-center justify-center">
             Explore Studios
-          </button>
+          </Link>
         </motion.div>
       </div>
     </section>
@@ -281,13 +282,71 @@ const KolbCycle = () => {
   );
 };
 
+const AcademicPathways = () => {
+  return (
+    <section className="py-12 md:py-24 bg-spot-charcoal text-spot-cream px-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="font-display text-4xl md:text-6xl font-bold mb-6 text-spot-pastel-yellow">Academic Pathways</h2>
+          <p className="text-xl text-spot-cream/80 max-w-3xl mx-auto leading-relaxed">
+            While our approach is deeply project-based, we ensure students are fully prepared for formal qualifications when they need them. SPOT supports flexible pathways to board exams.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <motion.div 
+            className="bg-white/5 border border-white/10 rounded-[3rem] p-10 hover:bg-white/10 transition-colors"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <div className="w-16 h-16 bg-spot-pastel-blue rounded-full flex items-center justify-center text-spot-charcoal mb-6">
+              <Globe size={32} />
+            </div>
+            <h3 className="font-display font-bold text-3xl mb-4">IGCSE Pathway</h3>
+            <p className="text-spot-cream/70 mb-6 leading-relaxed">
+              The International General Certificate of Secondary Education (IGCSE) is a globally recognized qualification. It offers a flexible curriculum with a wide choice of subjects, perfectly complementing our project-based approach by allowing students to dive deep into areas of interest.
+            </p>
+            <ul className="space-y-3 text-spot-cream/90 font-medium">
+              <li className="flex items-center gap-3"><CheckCircle2 size={18} className="text-spot-pastel-blue" /> Globally recognized standard</li>
+              <li className="flex items-center gap-3"><CheckCircle2 size={18} className="text-spot-pastel-blue" /> Flexible subject selection</li>
+              <li className="flex items-center gap-3"><CheckCircle2 size={18} className="text-spot-pastel-blue" /> Rigorous academic foundation</li>
+            </ul>
+          </motion.div>
+
+          <motion.div 
+            className="bg-white/5 border border-white/10 rounded-[3rem] p-10 hover:bg-white/10 transition-colors"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className="w-16 h-16 bg-spot-pastel-pink rounded-full flex items-center justify-center text-spot-charcoal mb-6">
+              <Target size={32} />
+            </div>
+            <h3 className="font-display font-bold text-3xl mb-4">NIOS Pathway</h3>
+            <p className="text-spot-cream/70 mb-6 leading-relaxed">
+              The National Institute of Open Schooling (NIOS) provides a highly flexible, recognized board certification in India. It allows students to focus heavily on their passions, studio work, or entrepreneurial projects while completing their formal board exams at their own pace.
+            </p>
+            <ul className="space-y-3 text-spot-cream/90 font-medium">
+              <li className="flex items-center gap-3"><CheckCircle2 size={18} className="text-spot-pastel-pink" /> Recognized across India</li>
+              <li className="flex items-center gap-3"><CheckCircle2 size={18} className="text-spot-pastel-pink" /> Learn at your own pace</li>
+              <li className="flex items-center gap-3"><CheckCircle2 size={18} className="text-spot-pastel-pink" /> Maximum flexibility for projects</li>
+            </ul>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const Thrive = () => {
   const learners = [
     "Curious explorers",
     "Creative thinkers",
     "Neurodivergent learners",
-    "Children who learn by building and experimenting",
-    "Independent thinkers"
+    "Home Schoolers",
+    "2E and Gifted"
   ];
   return (
     <section className="py-12 md:py-24 px-6 max-w-7xl mx-auto">
@@ -345,11 +404,14 @@ const Studios = () => {
 
 const Projects = () => {
   const projects = [
-    { title: "Science Experiments", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&auto=format&fit=crop", rotate: -2 },
-    { title: "Robot Builds", img: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop", rotate: 3 },
-    { title: "Art Installations", img: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=800&auto=format&fit=crop", rotate: -1 },
-    { title: "Storytelling Podcasts", img: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=800&auto=format&fit=crop", rotate: 2 },
-    { title: "Entrepreneurship", img: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800&auto=format&fit=crop", rotate: -3 },
+    { title: "Mechanical robot arm - Building circuits", img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800&auto=format&fit=crop", rotate: -2 },
+    { title: "Design a comic book - Creating Art with Artlore", img: "https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=800&auto=format&fit=crop", rotate: 3 },
+    { title: "Making Pickles - Fermentation Lab", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&auto=format&fit=crop", rotate: -1 },
+    { title: "Designing Branding for a Shop", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=800&auto=format&fit=crop", rotate: 2 },
+    { title: "Building a Terrarium", img: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=800&auto=format&fit=crop", rotate: -3 },
+    { title: "3D printing and designing", img: "https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=800&auto=format&fit=crop", rotate: 1 },
+    { title: "Baking Studio - Design cakes and cookies", img: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=800&auto=format&fit=crop", rotate: -2 },
+    { title: "AI Studio - Designing programs with AI", img: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=800&auto=format&fit=crop", rotate: 2 },
   ];
   return (
     <section className="py-12 md:py-24 px-6 max-w-7xl mx-auto">
@@ -394,7 +456,7 @@ const Community = () => {
           </ul>
         </div>
         <div className="relative">
-          <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800&auto=format&fit=crop" alt="Community" className="rounded-3xl shadow-xl transform rotate-3" />
+          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800&auto=format&fit=crop" alt="Community" className="rounded-3xl shadow-xl transform rotate-3" />
         </div>
       </div>
     </section>
@@ -403,10 +465,10 @@ const Community = () => {
 
 const Gallery = () => {
   const images = [
-    "https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=600&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=600&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=600&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=600&auto=format&fit=crop"
+    "https://images.unsplash.com/photo-1585468273280-7c6536979201?q=80&w=600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=600&auto=format&fit=crop"
   ];
   return (
     <section className="py-12 md:py-24 px-6 max-w-7xl mx-auto">
@@ -427,6 +489,13 @@ const Gallery = () => {
 };
 
 const OpenHouse = () => {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitted(true);
+  };
+
   return (
     <section className="py-12 md:py-24 bg-spot-pastel-pink px-6">
       <div className="max-w-4xl mx-auto bg-white p-10 md:p-16 rounded-[3rem] shadow-xl relative">
@@ -435,17 +504,50 @@ const OpenHouse = () => {
         <p className="text-lg text-spot-charcoal/80 mb-10">
           Parents can attend an open house to observe studios, meet educators and understand the learning model.
         </p>
-        <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-          <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 md:grid md:grid-cols-2 gap-6">
-            <input type="text" placeholder="Your Name" className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red" />
-            <input type="text" placeholder="Child's Age" className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red" />
-          </div>
-          <input type="email" placeholder="Email Address" className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red" />
-          <input type="date" className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red text-spot-charcoal/60" />
-          <button className="w-full py-4 bg-spot-red text-white font-bold rounded-xl text-lg hover:bg-red-700 transition-colors">
-            Register for Open House
-          </button>
-        </form>
+        
+        <AnimatePresence mode="wait">
+          {!isSubmitted ? (
+            <motion.form 
+              key="form"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="space-y-6" 
+              onSubmit={handleSubmit}
+            >
+              <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 md:grid md:grid-cols-2 gap-6">
+                <input type="text" required placeholder="Your Name" className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red" />
+                <input type="text" required placeholder="Child's Age" className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red" />
+              </div>
+              <input type="email" required placeholder="Email Address" className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red" />
+              <input type="date" required className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red text-spot-charcoal/60" />
+              <button type="submit" className="w-full py-4 bg-spot-red text-white font-bold rounded-xl text-lg hover:bg-red-700 transition-colors">
+                Register for Open House
+              </button>
+            </motion.form>
+          ) : (
+            <motion.div
+              key="success"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-12"
+            >
+              <div className="w-20 h-20 bg-spot-pastel-green/20 text-spot-pastel-green rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircle2 size={40} />
+              </div>
+              <h3 className="font-display text-3xl font-bold mb-4">Registration Successful!</h3>
+              <p className="text-xl text-spot-charcoal/70 mb-8">
+                Thank you for registering. We've sent the open house details to your email. See you soon!
+              </p>
+              <button 
+                onClick={() => setIsSubmitted(false)}
+                className="px-8 py-3 bg-spot-charcoal text-white font-bold rounded-full hover:bg-black transition-colors"
+              >
+                Register Another Child
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
@@ -501,13 +603,15 @@ const CTA = () => {
         <h2 className="font-display text-3xl md:text-4xl lg:text-5xl lg:text-7xl font-black uppercase tracking-tighter mb-10">
           COME VISIT <span className="text-spot-red">SPOT</span>.
         </h2>
-        <motion.button 
-          className="px-10 py-5 bg-spot-charcoal text-spot-cream font-bold rounded-full text-xl hover:bg-spot-red transition-colors shadow-xl"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Book an Open House
-        </motion.button>
+        <Link to="/contact">
+          <motion.button 
+            className="px-10 py-5 bg-spot-charcoal text-spot-cream font-bold rounded-full text-xl hover:bg-spot-red transition-colors shadow-xl"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Book an Open House
+          </motion.button>
+        </Link>
       </div>
     </section>
   );
@@ -521,6 +625,7 @@ export default function Microschool() {
       <ExecutiveFunction />
       <DayAtSpot />
       <KolbCycle />
+      <AcademicPathways />
       <Thrive />
       <Studios />
       <Projects />

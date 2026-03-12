@@ -14,7 +14,7 @@ const EVENTS_DATA = [
     audience: 'Ages 8-12',
     location: 'In Person - SPOT Studio',
     price: '$45',
-    image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1585468273280-7c6536979201?auto=format&fit=crop&q=80',
     description: 'Build and program your first robot using recycled materials and basic electronics.',
     featured: true
   },
@@ -27,7 +27,7 @@ const EVENTS_DATA = [
     audience: 'Parents & Educators',
     location: 'Online',
     price: 'Free',
-    image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?auto=format&fit=crop&q=80',
     description: 'Join leading educators to discuss how self-directed learning is reshaping education.',
     featured: true
   },
@@ -40,7 +40,7 @@ const EVENTS_DATA = [
     audience: 'Ages 10-14',
     location: 'In Person - SPOT Studio',
     price: '$250',
-    image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80',
     description: 'A 5-day intensive camp where kids build their own interactive stories and games.',
     featured: false
   },
@@ -53,7 +53,7 @@ const EVENTS_DATA = [
     audience: 'Educators',
     location: 'In Person - SPOT Studio',
     price: '$120',
-    image: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80',
     description: 'Learn how to integrate design thinking methodologies into your classroom.',
     featured: false
   },
@@ -66,7 +66,7 @@ const EVENTS_DATA = [
     audience: 'Ages 5-8',
     location: 'In Person - SPOT Studio',
     price: '$30',
-    image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1627556592933-ffe99c1c9dd8?auto=format&fit=crop&q=80',
     description: 'Explore different art mediums to tell compelling visual stories.',
     featured: false
   },
@@ -79,7 +79,7 @@ const EVENTS_DATA = [
     audience: 'School Leaders',
     location: 'In Person - SPOT Studio',
     price: 'Free',
-    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80',
     description: 'A guided tour of our studios and a discussion on progressive education models.',
     featured: false
   }
@@ -134,7 +134,7 @@ export default function Events() {
       <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden px-6 py-20">
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80" 
+            src="https://images.unsplash.com/photo-1585468273280-7c6536979201?auto=format&fit=crop&q=80" 
             alt="Children in a workshop" 
             className="w-full h-full object-cover opacity-20"
           />
@@ -379,22 +379,22 @@ export default function Events() {
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="col-span-2 row-span-2 relative rounded-3xl overflow-hidden group">
-            <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80" alt="Highlight" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <img src="https://images.unsplash.com/photo-1585468273280-7c6536979201?auto=format&fit=crop&q=80" alt="Highlight" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
               <PlayCircle size={64} className="text-white opacity-80 group-hover:opacity-100 transition-opacity" />
             </div>
           </div>
           <div className="rounded-3xl overflow-hidden h-48 md:h-auto">
+            <img src="https://images.unsplash.com/photo-1627556592933-ffe99c1c9dd8?auto=format&fit=crop&q=80" alt="Highlight" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+          </div>
+          <div className="rounded-3xl overflow-hidden h-48 md:h-auto">
             <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80" alt="Highlight" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
           </div>
           <div className="rounded-3xl overflow-hidden h-48 md:h-auto">
-            <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80" alt="Highlight" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+            <img src="https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?auto=format&fit=crop&q=80" alt="Highlight" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
           </div>
           <div className="rounded-3xl overflow-hidden h-48 md:h-auto">
-            <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80" alt="Highlight" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-          </div>
-          <div className="rounded-3xl overflow-hidden h-48 md:h-auto">
-            <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80" alt="Highlight" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+            <img src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80" alt="Highlight" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
           </div>
         </div>
       </section>
@@ -424,13 +424,13 @@ export default function Events() {
             <p className="text-xl text-spot-charcoal/80 mb-8 font-medium">
               We partner with schools, community centers, and organizations to deliver custom hands-on learning experiences.
             </p>
-            <button className="px-8 py-4 bg-spot-charcoal text-white font-bold rounded-full hover:bg-spot-red transition-colors text-lg shadow-lg">
+            <Link to="/contact" className="inline-block px-8 py-4 bg-spot-charcoal text-white font-bold rounded-full hover:bg-spot-red transition-colors text-lg shadow-lg">
               Enquire Now
-            </button>
+            </Link>
           </div>
           <div className="md:w-1/2 relative z-10">
             <div className="polaroid rotate-3">
-              <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80" alt="School Partnership" className="w-full h-64 object-cover" />
+              <img src="https://images.unsplash.com/photo-1585468273280-7c6536979201?auto=format&fit=crop&q=80" alt="School Partnership" className="w-full h-64 object-cover" />
               <div className="polaroid-caption">School Partnerships</div>
             </div>
           </div>
@@ -484,9 +484,9 @@ export default function Events() {
           <button className="px-8 py-4 bg-white text-spot-charcoal font-bold rounded-full hover:bg-spot-pastel-yellow transition-colors text-lg border-2 border-spot-charcoal/10">
             Explore Trainings
           </button>
-          <button className="px-8 py-4 bg-spot-charcoal text-white font-bold rounded-full hover:bg-black transition-colors text-lg">
+          <Link to="/contact" className="px-8 py-4 bg-spot-charcoal text-white font-bold rounded-full hover:bg-black transition-colors text-lg">
             Contact SPOT
-          </button>
+          </Link>
         </div>
       </section>
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import { ArrowDown, ArrowRight, Brain, Heart, Users, Sparkles, Rocket, Microscope, Palette, MessageCircle, Briefcase, ChevronRight, PlayCircle, Star, Globe, Compass, Zap, Target } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // --- Components ---
 
@@ -33,21 +34,21 @@ const HeroSection = () => {
       <motion.div style={{ y: y1 }} className="absolute top-24 left-10 md:left-20 hidden lg:block z-10">
         <div className="relative p-3 bg-white shadow-xl transform -rotate-6 hover:rotate-0 transition-transform duration-300">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-4 bg-white/80 border border-black/10 shadow-sm transform -rotate-2" /> {/* Tape */}
-          <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=400&auto=format&fit=crop" alt="Science" className="w-48 h-56 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+          <img src="https://images.unsplash.com/photo-1585468273280-7c6536979201?q=80&w=400&auto=format&fit=crop" alt="Science" className="w-48 h-56 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
         </div>
       </motion.div>
 
       <motion.div style={{ y: y2 }} className="absolute bottom-32 right-10 md:right-20 hidden lg:block z-10">
         <div className="relative p-3 bg-white shadow-xl transform rotate-6 hover:rotate-0 transition-transform duration-300">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-4 bg-white/80 border border-black/10 shadow-sm transform rotate-3" /> {/* Tape */}
-          <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=400&auto=format&fit=crop" alt="Art" className="w-56 h-48 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+          <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=400&auto=format&fit=crop" alt="Art" className="w-56 h-48 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
         </div>
       </motion.div>
 
       <motion.div style={{ y: y3 }} className="absolute top-32 right-32 hidden xl:block z-10">
         <div className="relative p-3 bg-white shadow-xl transform rotate-12 hover:rotate-0 transition-transform duration-300">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-4 bg-white/80 border border-black/10 shadow-sm transform -rotate-1" /> {/* Tape */}
-          <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=300&auto=format&fit=crop" alt="Robotics" className="w-40 h-40 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+          <img src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=300&auto=format&fit=crop" alt="Robotics" className="w-40 h-40 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
         </div>
       </motion.div>
 
@@ -100,12 +101,12 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
         >
-          <button className="px-8 py-4 bg-spot-red text-white font-bold rounded-full text-lg hover:bg-red-700 transition-colors w-full sm:w-auto flex items-center justify-center gap-2 shadow-xl shadow-spot-red/20 hover:scale-105 active:scale-95">
+          <Link to="/microschool" className="px-8 py-4 bg-spot-red text-white font-bold rounded-full text-lg hover:bg-red-700 transition-colors w-full sm:w-auto flex items-center justify-center gap-2 shadow-xl shadow-spot-red/20 hover:scale-105 active:scale-95">
             Explore Microschool <ArrowRight size={20} />
-          </button>
-          <button className="px-8 py-4 bg-white border-2 border-spot-charcoal text-spot-charcoal font-bold rounded-full text-lg hover:bg-spot-charcoal hover:text-white transition-colors w-full sm:w-auto shadow-xl shadow-black/5 hover:scale-105 active:scale-95">
+          </Link>
+          <Link to="/studios" className="px-8 py-4 bg-white border-2 border-spot-charcoal text-spot-charcoal font-bold rounded-full text-lg hover:bg-spot-charcoal hover:text-white transition-colors w-full sm:w-auto shadow-xl shadow-black/5 hover:scale-105 active:scale-95 flex items-center justify-center">
             Explore Studios
-          </button>
+          </Link>
         </motion.div>
       </div>
 
@@ -150,10 +151,10 @@ const WhatIsSpot = () => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="font-display text-4xl md:text-6xl font-bold mb-8 leading-tight">
-            Designed for curious learners & future makers.
+            Designed for curious learners, home schoolers, 2E & gifted.
           </h2>
           <p className="text-xl text-spot-charcoal/80 mb-6 leading-relaxed">
-            SPOT is a microschool and studio ecosystem designed for curious learners, neurodivergent thinkers and future makers.
+            SPOT is a microschool and studio ecosystem designed for curious learners, neurodivergent thinkers, home schoolers, 2E and gifted children.
           </p>
           <p className="text-xl text-spot-charcoal/80 leading-relaxed">
             Children learn through <span className="font-bold text-spot-red bg-spot-pastel-yellow/50 px-2 py-1 rounded-md transform -rotate-1 inline-block">project based learning</span>, studio exploration and real world challenges.
@@ -323,9 +324,9 @@ const StudioEcosystem = () => {
           transition={{ duration: 0.4, delay: 0.5 }}
         >
           <h3 className="font-display text-2xl font-bold mb-4">And many more...</h3>
-          <button className="px-6 py-3 bg-spot-red text-white font-bold rounded-full hover:bg-red-700 transition-colors">
+          <Link to="/studios" className="px-6 py-3 bg-spot-red text-white font-bold rounded-full hover:bg-red-700 transition-colors">
             View All Studios
-          </button>
+          </Link>
         </motion.div>
       </div>
     </section>
@@ -379,12 +380,14 @@ const LearningJourney = () => {
 
 const StudentProjects = () => {
   const projects = [
-    { title: "Robot Builds", img: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop", rotate: -2 },
-    { title: "3D Printed Machines", img: "https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=800&auto=format&fit=crop", rotate: 3 },
-    { title: "Art Installations", img: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=800&auto=format&fit=crop", rotate: -1 },
-    { title: "Podcasts", img: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=800&auto=format&fit=crop", rotate: 2 },
-    { title: "Science Experiments", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&auto=format&fit=crop", rotate: -3 },
-    { title: "Startup Pitches", img: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800&auto=format&fit=crop", rotate: 1 },
+    { title: "Mechanical robot arm - Building circuits", img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800&auto=format&fit=crop", rotate: -2 },
+    { title: "Design a comic book - Creating Art with Artlore", img: "https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=800&auto=format&fit=crop", rotate: 3 },
+    { title: "Making Pickles - Fermentation Lab", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&auto=format&fit=crop", rotate: -1 },
+    { title: "Designing Branding for a Shop", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=800&auto=format&fit=crop", rotate: 2 },
+    { title: "Building a Terrarium", img: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=800&auto=format&fit=crop", rotate: -3 },
+    { title: "3D printing and designing", img: "https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=800&auto=format&fit=crop", rotate: 1 },
+    { title: "Baking Studio - Design cakes and cookies", img: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=800&auto=format&fit=crop", rotate: -2 },
+    { title: "AI Studio - Designing programs with AI", img: "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800&auto=format&fit=crop", rotate: 2 },
   ];
 
   return (
@@ -423,8 +426,8 @@ const WhoIsSpotFor = () => {
     "Curious learners",
     "Creative thinkers",
     "Neurodivergent children",
-    "Future makers",
-    "Young entrepreneurs"
+    "Home Schoolers",
+    "2E and Gifted"
   ];
 
   return (
@@ -450,7 +453,7 @@ const WhoIsSpotFor = () => {
         </div>
         <div className="relative">
           <div className="aspect-square rounded-full overflow-hidden border-8 border-white shadow-xl">
-             <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=800&auto=format&fit=crop" alt="Child learning" className="w-full h-full object-cover" />
+             <img src="https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=800&auto=format&fit=crop" alt="Child learning" className="w-full h-full object-cover" />
           </div>
           <div className="absolute -bottom-10 -left-10 bg-spot-pastel-blue p-6 rounded-3xl shadow-lg transform -rotate-6 border border-black/5">
             <p className="font-handwriting text-3xl">"I love it here!"</p>
@@ -468,9 +471,9 @@ const Programs = () => {
       
       <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 md:grid md:grid-cols-3 gap-8 hide-scrollbar">
         {[
-          { title: "Microschool", desc: "Full-time alternative to traditional schooling.", color: "bg-spot-cream", img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600&auto=format&fit=crop" },
-          { title: "After School Studios", desc: "Deep dives into specific passions and skills.", color: "bg-spot-pastel-pink", img: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=600&auto=format&fit=crop" },
-          { title: "SPOT in School", desc: "Bringing our studio model to traditional schools.", color: "bg-spot-pastel-blue", img: "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=600&auto=format&fit=crop" }
+          { title: "Microschool", desc: "Full-time alternative to traditional schooling.", color: "bg-spot-cream", img: "https://images.unsplash.com/photo-1585468273280-7c6536979201?q=80&w=600&auto=format&fit=crop" },
+          { title: "After School Studios", desc: "Deep dives into specific passions and skills.", color: "bg-spot-pastel-pink", img: "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=600&auto=format&fit=crop" },
+          { title: "SPOT in School", desc: "Bringing our studio model to traditional schools.", color: "bg-spot-pastel-blue", img: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=600&auto=format&fit=crop" }
         ].map((prog, i) => (
           <motion.div
             key={i}
@@ -503,12 +506,11 @@ const Programs = () => {
 const Impact = () => {
   return (
     <section className="py-12 md:py-24 bg-spot-charcoal text-spot-cream px-6">
-      <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-10 text-center">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-10 text-center">
         {[
-          { num: "150+", label: "Microschool students" },
-          { num: "500+", label: "After school learners" },
-          { num: "12", label: "School partnerships" },
-          { num: "1000+", label: "Camp participants" }
+          { num: "1000+", label: "Children impacted" },
+          { num: "50+", label: "After school learners" },
+          { num: "10+", label: "Studios" }
         ].map((stat, i) => (
           <motion.div
             key={i}
@@ -522,45 +524,6 @@ const Impact = () => {
           </motion.div>
         ))}
       </div>
-    </section>
-  );
-};
-
-const FarmSchool = () => {
-  return (
-    <section className="py-6 px-6 max-w-7xl mx-auto">
-      <motion.div 
-        className="relative rounded-[3rem] overflow-hidden bg-spot-charcoal text-spot-cream min-h-[600px] flex items-center"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-      >
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2000&auto=format&fit=crop" 
-            alt="Farm School" 
-            className="w-full h-full object-cover opacity-50"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-spot-charcoal via-spot-charcoal/80 to-transparent" />
-        </div>
-        
-        <div className="relative z-10 p-10 md:p-20 max-w-2xl">
-          <div className="inline-block px-4 py-1 bg-spot-pastel-green text-spot-charcoal font-bold rounded-full mb-6">Coming Soon</div>
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl lg:text-7xl font-bold mb-8">SPOT Farm School</h2>
-          
-          <ul className="space-y-4 mb-10 text-xl font-light">
-            {['Nature learning', 'Astronomy nights', 'Ecology labs', 'Maker barns', 'Outdoor exploration'].map((item, i) => (
-              <li key={i} className="flex items-center gap-3">
-                <Sparkles className="text-spot-pastel-yellow" size={20} /> {item}
-              </li>
-            ))}
-          </ul>
-          
-          <button className="px-8 py-4 bg-spot-cream text-spot-charcoal font-bold rounded-full text-lg hover:bg-spot-pastel-yellow transition-colors flex items-center gap-2">
-            Explore Stargaze <ArrowRight size={20} />
-          </button>
-        </div>
-      </motion.div>
     </section>
   );
 };
@@ -631,13 +594,15 @@ const CTA = () => {
           <div className="font-handwriting text-3xl text-spot-charcoal/70">Explore programs</div>
         </div>
         
-        <motion.button 
-          className="px-10 py-5 bg-spot-charcoal text-spot-cream font-bold rounded-full text-xl hover:bg-spot-red transition-colors shadow-xl"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Book a Visit
-        </motion.button>
+        <Link to="/contact">
+          <motion.button 
+            className="px-10 py-5 bg-spot-charcoal text-spot-cream font-bold rounded-full text-xl hover:bg-spot-red transition-colors shadow-xl"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Book a Visit
+          </motion.button>
+        </Link>
       </div>
     </section>
   );
@@ -655,7 +620,6 @@ export default function Home() {
       <WhoIsSpotFor />
       <Programs />
       <Impact />
-      <FarmSchool />
       <ParentStories />
       <CTA />
     </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import { ArrowRight, Lightbulb, Compass, Hammer, Rocket, Users, Target, Briefcase, ChevronLeft, ChevronRight, Star, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
   const { scrollY } = useScroll();
@@ -11,7 +12,7 @@ const HeroSection = () => {
     <section className="relative min-h-screen w-full overflow-hidden bg-spot-charcoal flex items-center justify-center pt-20 pb-32 text-spot-cream">
       {/* Dynamic Background */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 left-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay" />
+        <div className="absolute top-0 left-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1585468273280-7c6536979201?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay" />
       </div>
       
       <motion.div 
@@ -44,21 +45,21 @@ const HeroSection = () => {
             After-school studios where children explore art, science, engineering, storytelling and entrepreneurship through projects and real-world challenges.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <button className="px-8 py-4 bg-spot-red text-white font-bold rounded-full text-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2 shadow-xl shadow-spot-red/20 hover:scale-105 active:scale-95">
+            <a href="#explore" className="px-8 py-4 bg-spot-red text-white font-bold rounded-full text-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2 shadow-xl shadow-spot-red/20 hover:scale-105 active:scale-95">
               Explore Studios <ArrowRight size={20} />
-            </button>
-            <button className="px-8 py-4 bg-transparent border-2 border-spot-cream text-spot-cream font-bold rounded-full text-lg hover:bg-spot-cream hover:text-spot-charcoal transition-colors flex items-center justify-center shadow-xl hover:scale-105 active:scale-95">
+            </a>
+            <a href="#enroll" className="px-8 py-4 bg-transparent border-2 border-spot-cream text-spot-cream font-bold rounded-full text-lg hover:bg-spot-cream hover:text-spot-charcoal transition-colors flex items-center justify-center shadow-xl hover:scale-105 active:scale-95">
               Join a Studio
-            </button>
+            </a>
           </div>
         </motion.div>
 
         <div className="relative h-[600px] hidden lg:block">
           <motion.div style={{ y: y1 }} className="absolute top-0 right-0 w-64 h-80 rounded-3xl overflow-hidden shadow-2xl border-4 border-spot-charcoal z-20">
-            <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=600&auto=format&fit=crop" alt="Building robots" className="w-full h-full object-cover" />
+            <img src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=600&auto=format&fit=crop" alt="Building robots" className="w-full h-full object-cover" />
           </motion.div>
           <motion.div style={{ y: y2 }} className="absolute bottom-20 left-0 w-72 h-64 rounded-3xl overflow-hidden shadow-2xl border-4 border-spot-charcoal z-30">
-            <img src="https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=600&auto=format&fit=crop" alt="Painting" className="w-full h-full object-cover" />
+            <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=600&auto=format&fit=crop" alt="Painting" className="w-full h-full object-cover" />
           </motion.div>
           <motion.div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-spot-pastel-yellow rounded-full mix-blend-multiply filter blur-xl opacity-50 z-10 animate-pulse" />
         </div>
@@ -131,13 +132,6 @@ const WhyStudioLearning = () => {
     "Students collaborate and present their work"
   ];
 
-  const flow = [
-    { step: "Curiosity", icon: <Lightbulb /> },
-    { step: "Exploration", icon: <Compass /> },
-    { step: "Creation", icon: <Hammer /> },
-    { step: "Impact", icon: <Rocket /> }
-  ];
-
   return (
     <section className="py-16 md:py-32 bg-spot-cream px-6 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiMwMDAwMDAiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')] opacity-50" />
@@ -148,7 +142,7 @@ const WhyStudioLearning = () => {
           <p className="text-xl text-spot-charcoal/70 max-w-2xl mx-auto">The philosophy behind our hands-on, project-based approach.</p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-center mb-12 md:mb-24">
+        <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-center">
           <div className="space-y-6">
             {points.map((point, i) => (
               <motion.div 
@@ -167,32 +161,10 @@ const WhyStudioLearning = () => {
             ))}
           </div>
           <div className="relative">
-            <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800&auto=format&fit=crop" alt="Students collaborating" className="rounded-3xl shadow-2xl transform rotate-2" />
+            <img src="https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=800&auto=format&fit=crop" alt="Students collaborating" className="rounded-3xl shadow-2xl transform rotate-2" />
             <div className="absolute -bottom-10 -left-10 bg-spot-pastel-yellow p-6 rounded-3xl shadow-xl transform -rotate-6 border border-black/5">
               <p className="font-handwriting text-2xl text-spot-charcoal">"I made this!"</p>
             </div>
-          </div>
-        </div>
-
-        {/* Visual Flow */}
-        <div className="relative pt-10">
-          <div className="absolute top-1/2 left-0 w-full h-1 bg-spot-charcoal/10 -translate-y-1/2 hidden md:block" />
-          <div className="flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
-            {flow.map((item, i) => (
-              <motion.div 
-                key={i}
-                className="flex flex-col items-center gap-4 bg-spot-cream p-4"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.2 }}
-              >
-                <div className="w-20 h-20 rounded-full bg-white shadow-lg border-4 border-spot-charcoal flex items-center justify-center text-spot-red transform hover:scale-110 transition-transform hover:rotate-12">
-                  {item.icon}
-                </div>
-                <h3 className="font-display font-bold text-2xl uppercase tracking-wider">{item.step}</h3>
-              </motion.div>
-            ))}
           </div>
         </div>
       </div>
@@ -212,7 +184,7 @@ const ExploreStudios = () => {
       age: "6-10 yrs", 
       category: "Creative Arts",
       color: "bg-spot-pastel-pink",
-      img: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=600&auto=format&fit=crop"
+      img: "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=600&auto=format&fit=crop"
     },
     { 
       name: "Machine Marvels", 
@@ -220,7 +192,7 @@ const ExploreStudios = () => {
       age: "8-14 yrs", 
       category: "Engineering & Making",
       color: "bg-spot-pastel-blue",
-      img: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=600&auto=format&fit=crop"
+      img: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=600&auto=format&fit=crop"
     },
     { 
       name: "WildJar", 
@@ -228,7 +200,7 @@ const ExploreStudios = () => {
       age: "7-12 yrs", 
       category: "Science & Nature",
       color: "bg-spot-pastel-green",
-      img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=600&auto=format&fit=crop"
+      img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=600&auto=format&fit=crop"
     },
     { 
       name: "Inkubator", 
@@ -236,7 +208,7 @@ const ExploreStudios = () => {
       age: "9-14 yrs", 
       category: "Communication & Storytelling",
       color: "bg-spot-cream",
-      img: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=600&auto=format&fit=crop"
+      img: "https://images.unsplash.com/photo-1589903308904-1010c2294adc?q=80&w=600&auto=format&fit=crop"
     },
     { 
       name: "Body Dynamics", 
@@ -244,7 +216,7 @@ const ExploreStudios = () => {
       age: "6-10 yrs", 
       category: "Creative Arts",
       color: "bg-spot-pastel-yellow",
-      img: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=600&auto=format&fit=crop"
+      img: "https://images.unsplash.com/photo-1511629091441-ee46146481b6?q=80&w=600&auto=format&fit=crop"
     },
     { 
       name: "Astra Stargaze", 
@@ -253,7 +225,7 @@ const ExploreStudios = () => {
       category: "Science & Nature",
       color: "bg-spot-charcoal",
       textColor: "text-white",
-      img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600&auto=format&fit=crop"
+      img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=600&auto=format&fit=crop"
     },
     { 
       name: "Spot Sherlock", 
@@ -262,7 +234,7 @@ const ExploreStudios = () => {
       category: "Science & Nature",
       color: "bg-spot-red",
       textColor: "text-white",
-      img: "https://images.unsplash.com/photo-1555679427-1f6dfcce943b?q=80&w=600&auto=format&fit=crop"
+      img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600&auto=format&fit=crop"
     },
     { 
       name: "Junior MBA", 
@@ -270,7 +242,7 @@ const ExploreStudios = () => {
       age: "10-14 yrs", 
       category: "Entrepreneurship",
       color: "bg-spot-pastel-blue",
-      img: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=600&auto=format&fit=crop"
+      img: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=600&auto=format&fit=crop"
     }
   ];
 
@@ -340,11 +312,9 @@ const ExploreStudios = () => {
 
 const FeaturedProjects = () => {
   const projects = [
-    { title: "Cardboard Arcade", studio: "Machine Marvels", img: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop" },
-    { title: "Community Mural", studio: "Artlore", img: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=800&auto=format&fit=crop" },
-    { title: "Micro-ecosystems", studio: "WildJar", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&auto=format&fit=crop" },
-    { title: "Kids News Podcast", studio: "Inkubator", img: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=800&auto=format&fit=crop" },
-    { title: "Lemonade Stand 2.0", studio: "Junior MBA", img: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800&auto=format&fit=crop" },
+    { id: "mechanical-robot-arm", title: "Mechanical Robot Arm", studio: "Machine Marvels", img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800&auto=format&fit=crop" },
+    { id: "comic-book-series", title: "Design a Comic Book Series", studio: "Artlore", img: "https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=800&auto=format&fit=crop" },
+    { id: "fermentation-science", title: "Fermentation Science Experiment", studio: "WildJar", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&auto=format&fit=crop" }
   ];
 
   return (
@@ -353,35 +323,39 @@ const FeaturedProjects = () => {
         <div className="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-16 gap-6">
           <div>
             <h2 className="font-display text-3xl md:text-4xl lg:text-5xl lg:text-6xl font-black uppercase tracking-tighter mb-4">Featured Projects</h2>
-            <p className="text-xl text-spot-cream/70 max-w-xl">See what our students have been building, creating, and launching.</p>
+            <p className="text-xl text-spot-cream/70 max-w-xl">See what our students have been building, creating, and launching inside the studios.</p>
           </div>
-          <button className="flex items-center gap-2 font-bold hover:text-spot-pastel-pink transition-colors">
-            View All Projects <ArrowRight size={20} />
-          </button>
         </div>
 
-        <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 hide-scrollbar">
+        <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 hide-scrollbar mb-12">
           {projects.map((project, i) => (
-            <motion.div 
-              key={i}
-              className={`group relative overflow-hidden rounded-3xl aspect-square ${i === 0 ? 'md:col-span-2 md:aspect-auto' : ''}`}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <img src={project.img} alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
-              
-              <div className="absolute inset-0 p-8 flex flex-col justify-end translate-y-8 group-hover:translate-y-0 transition-transform duration-300">
-                <div className="text-spot-pastel-yellow font-bold text-sm uppercase tracking-wider mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">{project.studio}</div>
-                <h3 className="font-display text-3xl font-bold text-white mb-4">{project.title}</h3>
-                <button className="w-12 h-12 rounded-full bg-white text-spot-charcoal flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-200 hover:bg-spot-red hover:text-white">
-                  <ArrowRight size={20} />
-                </button>
-              </div>
-            </motion.div>
+            <Link to={`/projects/${project.id}`} key={i} className="block group relative overflow-hidden rounded-3xl aspect-square md:aspect-auto md:h-[400px]">
+              <motion.div 
+                className="w-full h-full"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <img src={project.img} alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+                
+                <div className="absolute inset-0 p-8 flex flex-col justify-end translate-y-8 group-hover:translate-y-0 transition-transform duration-300">
+                  <div className="text-spot-pastel-yellow font-bold text-sm uppercase tracking-wider mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">{project.studio}</div>
+                  <h3 className="font-display text-3xl font-bold text-white mb-4">{project.title}</h3>
+                  <div className="w-12 h-12 rounded-full bg-white text-spot-charcoal flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-200 hover:bg-spot-red hover:text-white">
+                    <ArrowRight size={20} />
+                  </div>
+                </div>
+              </motion.div>
+            </Link>
           ))}
+        </div>
+
+        <div className="flex justify-center mt-8">
+          <Link to="/projects" className="px-8 py-4 bg-spot-cream text-spot-charcoal font-bold rounded-full text-lg hover:bg-white transition-colors flex items-center gap-2 shadow-xl hover:scale-105 active:scale-95">
+            View All Projects <ArrowRight size={20} />
+          </Link>
         </div>
       </div>
     </section>
@@ -428,42 +402,18 @@ const HowItWorks = () => {
   );
 };
 
-const Gallery = () => {
-  const images = [
-    "https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=800&auto=format&fit=crop", // building
-    "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=800&auto=format&fit=crop", // painting
-    "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&auto=format&fit=crop", // science
-    "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800&auto=format&fit=crop", // collaborating
-    "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=800&auto=format&fit=crop"  // presenting/team
-  ];
 
-  return (
-    <section className="py-12 md:py-24 bg-spot-cream px-6">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-black uppercase tracking-tighter mb-12 text-center">Inside the Studios</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {images.map((img, i) => (
-            <motion.div 
-              key={i} 
-              className={`rounded-3xl overflow-hidden shadow-md ${i === 0 ? 'col-span-2 row-span-2' : ''}`}
-              whileHover={{ scale: 1.02 }}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <img src={img} alt="Studio activity" className="w-full h-full object-cover aspect-square" />
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
 
 const EnrollmentForm = () => {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitted(true);
+  };
+
   return (
-    <section className="py-16 md:py-32 px-6 max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 md:gap-16 items-center">
+    <section id="enroll" className="py-16 md:py-32 px-6 max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 md:gap-16 items-center">
       <div>
         <h2 className="font-display text-3xl md:text-4xl lg:text-5xl lg:text-6xl font-black uppercase tracking-tighter mb-6">Join a <span className="text-spot-red">Studio</span></h2>
         <p className="text-xl text-spot-charcoal/80 mb-10">
@@ -497,45 +447,78 @@ const EnrollmentForm = () => {
 
       <div className="bg-white p-10 rounded-[3rem] shadow-2xl border border-black/5 relative">
         <div className="absolute -top-6 -right-6 text-spot-red font-handwriting text-4xl transform rotate-12">Let's go!</div>
-        <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-          <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 md:grid md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Child's Name</label>
-              <input type="text" className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red transition-colors" />
-            </div>
-            <div>
-              <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Age</label>
-              <input type="text" className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red transition-colors" />
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Interested Studio</label>
-            <select className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red transition-colors appearance-none">
-              <option>Select a studio...</option>
-              <option>Artlore</option>
-              <option>Machine Marvels</option>
-              <option>WildJar</option>
-              <option>Inkubator</option>
-              <option>Body Dynamics</option>
-              <option>Astra Stargaze</option>
-              <option>Spot Sherlock</option>
-              <option>Junior MBA</option>
-            </select>
-          </div>
-          <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 md:grid md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Parent Email</label>
-              <input type="email" className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red transition-colors" />
-            </div>
-            <div>
-              <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Phone</label>
-              <input type="tel" className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red transition-colors" />
-            </div>
-          </div>
-          <button className="w-full py-5 bg-spot-charcoal text-white font-bold rounded-xl text-lg hover:bg-spot-red transition-colors mt-4 shadow-lg">
-            Submit Application
-          </button>
-        </form>
+        
+        <AnimatePresence mode="wait">
+          {!isSubmitted ? (
+            <motion.form 
+              key="form"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="space-y-6" 
+              onSubmit={handleSubmit}
+            >
+              <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 md:grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Child's Name</label>
+                  <input type="text" required className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red transition-colors" />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Age</label>
+                  <input type="text" required className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red transition-colors" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Interested Studio</label>
+                <select required className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red transition-colors appearance-none">
+                  <option value="">Select a studio...</option>
+                  <option>Artlore</option>
+                  <option>Machine Marvels</option>
+                  <option>WildJar</option>
+                  <option>Inkubator</option>
+                  <option>Body Dynamics</option>
+                  <option>Astra Stargaze</option>
+                  <option>Spot Sherlock</option>
+                  <option>Junior MBA</option>
+                </select>
+              </div>
+              <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 md:grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Parent Email</label>
+                  <input type="email" required className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red transition-colors" />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Phone</label>
+                  <input type="tel" required className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red transition-colors" />
+                </div>
+              </div>
+              <button type="submit" className="w-full py-5 bg-spot-charcoal text-white font-bold rounded-xl text-lg hover:bg-spot-red transition-colors mt-4 shadow-lg">
+                Submit Application
+              </button>
+            </motion.form>
+          ) : (
+            <motion.div
+              key="success"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-12"
+            >
+              <div className="w-20 h-20 bg-spot-pastel-green/20 text-spot-pastel-green rounded-full flex items-center justify-center mx-auto mb-6">
+                <Star size={40} fill="currentColor" />
+              </div>
+              <h3 className="font-display text-3xl font-bold mb-4">Application Received!</h3>
+              <p className="text-xl text-spot-charcoal/70 mb-8">
+                Thank you for your interest in SPOT Studios. We'll review your application and get back to you within 48 hours to schedule a tour.
+              </p>
+              <button 
+                onClick={() => setIsSubmitted(false)}
+                className="px-8 py-3 bg-spot-charcoal text-white font-bold rounded-full hover:bg-black transition-colors"
+              >
+                Submit Another Application
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
@@ -592,53 +575,19 @@ const Testimonials = () => {
   );
 };
 
-const FinalCTA = () => {
-  return (
-    <section className="py-20 md:py-40 px-6 text-center relative overflow-hidden bg-spot-charcoal text-spot-cream">
-      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-overlay" />
-      <div className="absolute inset-0 bg-gradient-to-t from-spot-charcoal via-transparent to-spot-charcoal" />
-      
-      <div className="relative z-10 max-w-4xl mx-auto">
-        <h2 className="font-display text-3xl md:text-4xl lg:text-5xl lg:text-7xl lg:text-[80px] font-black uppercase tracking-tighter mb-10 leading-[0.9]">
-          Let Your Child <br/>
-          <span className="text-spot-pastel-yellow">Explore, Build</span> <br/>
-          and <span className="text-spot-pastel-pink">Create.</span>
-        </h2>
-        
-        <div className="flex flex-col sm:flex-row justify-center gap-6">
-          <motion.button 
-            className="px-10 py-5 bg-spot-red text-white font-bold rounded-full text-xl hover:bg-red-700 transition-colors shadow-2xl shadow-spot-red/20"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Join a Studio
-          </motion.button>
-          <motion.button 
-            className="px-10 py-5 bg-transparent border-2 border-spot-cream text-spot-cream font-bold rounded-full text-xl hover:bg-spot-cream hover:text-spot-charcoal transition-colors shadow-2xl"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Book a Visit
-          </motion.button>
-        </div>
-      </div>
-    </section>
-  );
-};
+
 
 export default function Studios() {
   return (
     <div className="relative bg-spot-cream">
       <HeroSection />
+      <ExploreStudios />
       <WhatAreStudios />
       <WhyStudioLearning />
-      <ExploreStudios />
       <FeaturedProjects />
       <HowItWorks />
-      <Gallery />
-      <EnrollmentForm />
       <Testimonials />
-      <FinalCTA />
+      <EnrollmentForm />
     </div>
   );
 }

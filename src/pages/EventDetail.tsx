@@ -15,7 +15,7 @@ const EVENT_DATA = {
   location: 'In Person - SPOT Studio',
   price: '$45',
   seatsAvailable: 12,
-  image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80',
+  image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80',
   description: 'Build and program your first robot using recycled materials and basic electronics.',
   about: 'In this hands-on workshop, children will dive into the world of robotics by building their very own moving creations. We believe in learning through making, so participants will use a mix of recycled materials, simple motors, and basic circuitry to bring their ideas to life. This isn\'t about following a step-by-step manual; it\'s about understanding how things work and creatively solving problems when they don\'t.',
   whyValuable: 'Robotics teaches more than just coding and engineering. It fosters resilience, spatial reasoning, and creative confidence. By starting with raw materials instead of pre-packaged kits, children learn that they have the power to invent and modify the world around them.',
@@ -44,7 +44,7 @@ const EVENT_DATA = {
     name: 'Sarah Jenkins',
     expertise: 'Creative Technologist & Educator',
     bio: 'Sarah has spent the last decade designing interactive learning experiences for children. She previously worked at the MIT Media Lab and is passionate about making technology accessible and playful.',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80'
+    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80'
   },
   pricing: {
     regular: '$45',
@@ -81,7 +81,7 @@ const RELATED_EVENTS = [
     category: 'Kids Workshops',
     date: 'Nov 12, 2026',
     price: '$30',
-    image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?auto=format&fit=crop&q=80',
   },
   {
     id: 'creative-coding-camp',
@@ -89,7 +89,7 @@ const RELATED_EVENTS = [
     category: 'Camps',
     date: 'Dec 10 - Dec 14, 2026',
     price: '$250',
-    image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80',
   },
   {
     id: 'future-of-learning-panel',
@@ -97,7 +97,7 @@ const RELATED_EVENTS = [
     category: 'Parent Sessions',
     date: 'Oct 20, 2026',
     price: 'Free',
-    image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80',
   }
 ];
 

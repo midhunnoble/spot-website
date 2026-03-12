@@ -7,28 +7,30 @@ const PROJECT_DATA = {
   id: 'mechanical-robot-arm',
   title: 'Mechanical Robot Arm',
   student: 'Aarav & Team',
-  category: 'Engineering & Maker',
+  program: 'Machine Marvels Studio',
   ageGroup: 'Ages 10-12',
-  description: 'A fully functional mechanical arm built using hydraulic syringes and laser-cut wood.',
-  image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80',
-  fullDescription: 'The goal of this project was to understand the principles of hydraulics and mechanical advantage. Aarav and his team started by researching how heavy machinery operates. They then designed a prototype using cardboard and plastic syringes filled with water. After several iterations to improve stability and range of motion, they moved to laser-cutting wood for the final structure. The resulting arm can rotate, extend, and grip objects using four independent hydraulic controls.',
-  objectives: [
-    'Understand Pascal\'s principle and basic fluid dynamics.',
-    'Apply mechanical advantage to lift heavier objects.',
-    'Design and prototype using CAD software and laser cutters.',
-    'Collaborate effectively to troubleshoot leaks and structural weaknesses.'
+  summary: 'A fully functional mechanical arm built using hydraulic syringes and laser-cut wood.',
+  image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80',
+  bigQuestion: 'How can we use water pressure to lift heavy objects?',
+  whatChildrenDid: 'Aarav and his team started by researching how heavy machinery operates. They designed a prototype using cardboard and plastic syringes filled with water. After several iterations to improve stability and range of motion, they moved to laser-cutting wood for the final structure. The resulting arm can rotate, extend, and grip objects using four independent hydraulic controls.',
+  conceptsExplored: [
+    'Pascal\'s Principle and fluid dynamics',
+    'Mechanical advantage and leverage',
+    'Structural integrity and weight distribution',
+    'Prototyping and iterative design'
   ],
-  processPhotos: [
-    { url: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80', caption: 'Early cardboard prototyping' },
-    { url: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80', caption: 'Testing the hydraulic syringes' },
-    { url: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?auto=format&fit=crop&q=80', caption: 'Assembling the laser-cut parts' }
-  ],
-  outcomeVideo: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80', // Using image as placeholder for video thumbnail
-  skillsGained: [
-    { title: 'Engineering Design Process', desc: 'Moving from idea to sketch, prototype, and final product.' },
+  skillsDeveloped: [
+    { title: 'Engineering Design', desc: 'Moving from idea to sketch, prototype, and final product.' },
     { title: 'Physics Application', desc: 'Seeing theoretical physics work in the real world.' },
     { title: 'Resilience', desc: 'Overcoming multiple failures during the prototyping phase.' }
   ],
+  processPhotos: [
+    { url: 'https://images.unsplash.com/photo-1585468273280-7c6536979201?auto=format&fit=crop&q=80', caption: 'Early cardboard prototyping' },
+    { url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80', caption: 'Testing the hydraulic syringes' },
+    { url: 'https://images.unsplash.com/photo-1581092335397-9583eb92d232?auto=format&fit=crop&q=80', caption: 'Assembling the laser-cut parts' }
+  ],
+  finalOutcome: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80', // Using image as placeholder for video thumbnail
+  reflection: '"I didn\'t think water could be so strong. When our first cardboard arm collapsed, we had to figure out how to make the base wider. It was frustrating but so cool when it finally picked up the block!" - Aarav',
   studioLink: '/studios'
 };
 
@@ -56,7 +58,7 @@ export default function ProjectDetail() {
             transition={{ duration: 0.6 }}
           >
             <span className="inline-block py-1 px-3 rounded-full bg-spot-pastel-yellow text-spot-charcoal font-bold text-sm tracking-wider uppercase mb-6">
-              {project.category}
+              {project.program}
             </span>
             <h1 className="font-display font-black text-5xl md:text-7xl text-spot-charcoal tracking-tighter mb-6 leading-tight">
               {project.title}
@@ -65,11 +67,10 @@ export default function ProjectDetail() {
             <div className="flex flex-wrap gap-6 mb-8 text-spot-charcoal/80 font-medium">
               <div className="flex items-center gap-2"><User size={20} className="text-spot-red" /> {project.student}</div>
               <div className="flex items-center gap-2"><Users size={20} className="text-spot-red" /> {project.ageGroup}</div>
-              <div className="flex items-center gap-2"><Tag size={20} className="text-spot-red" /> {project.category}</div>
             </div>
 
             <p className="text-xl text-spot-charcoal/80 leading-relaxed mb-8">
-              {project.description}
+              {project.summary}
             </p>
           </motion.div>
 
@@ -88,32 +89,40 @@ export default function ProjectDetail() {
       <section className="py-16 px-6 max-w-4xl mx-auto">
         <div className="space-y-16">
           
-          {/* Description */}
-          <div>
-            <h2 className="font-display font-black text-3xl text-spot-charcoal mb-6">The Challenge</h2>
-            <p className="text-lg text-spot-charcoal/80 leading-relaxed">
-              {project.fullDescription}
+          {/* Big Question */}
+          <div className="bg-spot-red text-white p-10 rounded-[3rem] shadow-xl text-center transform -rotate-1">
+            <h2 className="font-display font-black text-2xl text-spot-pastel-yellow mb-4 uppercase tracking-widest">The Big Question</h2>
+            <p className="font-display font-bold text-3xl md:text-4xl leading-tight">
+              "{project.bigQuestion}"
             </p>
           </div>
 
-          {/* Learning Objectives */}
+          {/* What Children Did */}
+          <div>
+            <h2 className="font-display font-black text-3xl text-spot-charcoal mb-6">What Children Did</h2>
+            <p className="text-lg text-spot-charcoal/80 leading-relaxed">
+              {project.whatChildrenDid}
+            </p>
+          </div>
+
+          {/* Concepts Explored */}
           <div className="bg-spot-pastel-blue/20 p-8 rounded-3xl border border-spot-pastel-blue/50">
             <h2 className="font-display font-black text-2xl text-spot-charcoal mb-6 flex items-center gap-3">
-              <Target className="text-spot-red" /> Learning Objectives
+              <Target className="text-spot-red" /> Concepts Explored
             </h2>
             <ul className="space-y-4">
-              {project.objectives.map((obj, index) => (
+              {project.conceptsExplored.map((concept, index) => (
                 <li key={index} className="flex items-start gap-3 text-spot-charcoal/80 font-medium">
                   <CheckCircle2 size={20} className="text-spot-pastel-blue shrink-0 mt-0.5" />
-                  <span>{obj}</span>
+                  <span>{concept}</span>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Build Process */}
+          {/* Build Process Gallery */}
           <div>
-            <h2 className="font-display font-black text-3xl text-spot-charcoal mb-8">The Build Process</h2>
+            <h2 className="font-display font-black text-3xl text-spot-charcoal mb-8">Process Gallery</h2>
             <div className="grid sm:grid-cols-3 gap-6">
               {project.processPhotos.map((photo, index) => (
                 <div key={index} className="group">
@@ -130,24 +139,32 @@ export default function ProjectDetail() {
           <div>
             <h2 className="font-display font-black text-3xl text-spot-charcoal mb-8">Final Outcome</h2>
             <div className="relative rounded-[2rem] overflow-hidden shadow-xl shadow-black/10 group cursor-pointer">
-              <img src={project.outcomeVideo} alt="Final Outcome" className="w-full aspect-video object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={project.finalOutcome} alt="Final Outcome" className="w-full aspect-video object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/40 transition-colors">
                 <PlayCircle size={80} className="text-white opacity-90 group-hover:scale-110 transition-transform" />
               </div>
             </div>
           </div>
 
-          {/* What We Learned */}
+          {/* Skills Developed */}
           <div className="bg-spot-charcoal text-spot-cream p-10 rounded-[3rem] shadow-xl">
-            <h2 className="font-display font-black text-3xl text-spot-pastel-yellow mb-8">What We Learned</h2>
+            <h2 className="font-display font-black text-3xl text-spot-pastel-yellow mb-8">Skills Developed</h2>
             <div className="grid sm:grid-cols-3 gap-8">
-              {project.skillsGained.map((skill, index) => (
+              {project.skillsDeveloped.map((skill, index) => (
                 <div key={index}>
                   <h4 className="font-bold text-lg text-white mb-2">{skill.title}</h4>
                   <p className="text-sm text-spot-cream/70 leading-relaxed">{skill.desc}</p>
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Reflection */}
+          <div className="bg-spot-pastel-yellow/30 p-10 rounded-[3rem] text-center">
+            <h2 className="font-display font-black text-2xl text-spot-charcoal mb-6 uppercase tracking-widest opacity-50">Student Reflection</h2>
+            <p className="font-display font-bold text-2xl md:text-3xl text-spot-charcoal leading-tight italic">
+              {project.reflection}
+            </p>
           </div>
 
         </div>
@@ -162,7 +179,7 @@ export default function ProjectDetail() {
           to={project.studioLink}
           className="inline-flex items-center gap-3 px-10 py-5 bg-spot-red text-white font-bold rounded-full hover:bg-red-700 transition-colors text-xl shadow-xl shadow-spot-red/20"
         >
-          Explore the Studio <ArrowRight size={24} />
+          Explore This Studio <ArrowRight size={24} />
         </Link>
       </section>
 

@@ -14,6 +14,10 @@ const EventDetail = React.lazy(() => import('./pages/EventDetail'));
 const Projects = React.lazy(() => import('./pages/Projects'));
 const ProjectDetail = React.lazy(() => import('./pages/ProjectDetail'));
 const Philosophy = React.lazy(() => import('./pages/Philosophy'));
+const Contact = React.lazy(() => import('./pages/Contact'));
+const NotFound = React.lazy(() => import('./pages/NotFound'));
+const Privacy = React.lazy(() => import('./pages/Privacy'));
+const Terms = React.lazy(() => import('./pages/Terms'));
 
 // Loading fallback
 const PageLoader = () => (
@@ -40,6 +44,10 @@ export default function App() {
             <Route path="/philosophy" element={<Philosophy />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
         <Footer />

@@ -45,13 +45,13 @@ const HeroSection = () => {
       {/* Floating Collage Images */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div style={{ y: y1 }} className="absolute top-32 left-10 md:left-20 w-48 md:w-64 aspect-square rounded-2xl overflow-hidden shadow-2xl border-8 border-white transform -rotate-6 z-0">
-          <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=600&auto=format&fit=crop" alt="Children collaborating" className="w-full h-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=600&auto=format&fit=crop" alt="Children collaborating" className="w-full h-full object-cover" />
         </motion.div>
         <motion.div style={{ y: y2 }} className="absolute bottom-20 right-10 md:right-20 w-56 md:w-72 aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border-8 border-white transform rotate-3 z-0">
-          <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=600&auto=format&fit=crop" alt="Child building" className="w-full h-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1585468273280-7c6536979201?q=80&w=600&auto=format&fit=crop" alt="Child building" className="w-full h-full object-cover" />
         </motion.div>
         <motion.div style={{ y: y3 }} className="absolute top-1/3 right-1/4 w-32 aspect-square rounded-full overflow-hidden shadow-xl border-4 border-spot-pastel-pink z-0 hidden lg:block">
-          <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=400&auto=format&fit=crop" alt="Science experiment" className="w-full h-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=400&auto=format&fit=crop" alt="Science experiment" className="w-full h-full object-cover" />
         </motion.div>
       </div>
 
@@ -85,8 +85,7 @@ const SpotStory = () => {
     { phase: "Idea Phase", year: "2021", desc: "An experiment in learning begins, questioning why traditional schooling fails curious and creative learners." },
     { phase: "First Studios", year: "2022", desc: "Small after-school maker spaces open, focusing on project-based learning and creative exploration." },
     { phase: "Microschool Launch", year: "2023", desc: "SPOT officially launches as a full-time alternative education program in Bangalore." },
-    { phase: "Community Growth", year: "2024", desc: "Expanding to include neurodiversity friendly classrooms and a broader network of mentors." },
-    { phase: "Future Farm School", year: "2026+", desc: "A visionary nature learning space integrating agriculture, ecology, and hands-on building." }
+    { phase: "Community Growth", year: "2024", desc: "Expanding to include neurodiversity friendly classrooms and a broader network of mentors." }
   ];
 
   return (
@@ -420,7 +419,6 @@ const FutureVision = () => {
           
           <ul className="space-y-6">
             {[
-              { title: "SPOT Farm School", desc: "Integrating agriculture, ecology, and hands-on building in nature.", icon: <Leaf /> },
               { title: "Student Internships", desc: "Connecting older students with real-world industry mentors.", icon: <Briefcase /> },
               { title: "Research Driven Models", desc: "Publishing our findings to help transform traditional education globally.", icon: <BookOpen /> }
             ].map((item, i) => (
@@ -443,11 +441,11 @@ const FutureVision = () => {
 
 const Gallery = () => {
   const images = [
-    "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=800&auto=format&fit=crop"
+    "https://images.unsplash.com/photo-1585468273280-7c6536979201?q=80&w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=800&auto=format&fit=crop"
   ];
 
   return (
@@ -493,9 +491,9 @@ const JoinJourney = () => {
           <Link to="/studios" className="px-8 py-4 bg-spot-charcoal text-spot-cream font-bold rounded-full text-lg hover:bg-black transition-colors shadow-xl hover:scale-105 active:scale-95">
             Explore Studios
           </Link>
-          <button className="px-8 py-4 bg-spot-red text-white font-bold rounded-full text-lg hover:bg-red-700 transition-colors shadow-xl shadow-spot-red/20 hover:scale-105 active:scale-95">
+          <Link to="/contact" className="px-8 py-4 bg-spot-red text-white font-bold rounded-full text-lg hover:bg-red-700 transition-colors shadow-xl shadow-spot-red/20 hover:scale-105 active:scale-95">
             Book an Open House
-          </button>
+          </Link>
           <Link to="/careers" className="px-8 py-4 bg-transparent border-2 border-spot-charcoal text-spot-charcoal font-bold rounded-full text-lg hover:bg-spot-charcoal hover:text-spot-cream transition-colors shadow-xl hover:scale-105 active:scale-95">
             Join the Team
           </Link>

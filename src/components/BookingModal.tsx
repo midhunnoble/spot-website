@@ -23,11 +23,26 @@ export const BookingModal = ({ isOpen, onClose, eventTitle = 'SPOT Event' }: Boo
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Booking submitted:', { ...formData, eventSelected: eventTitle });
     // Handle submission logic here
-    onClose();
+    setIsSubmitted(true);
+    setTimeout(() => {
+      setIsSubmitted(false);
+      onClose();
+      setFormData({
+        fullName: '',
+        email: '',
+        phone: '',
+        childName: '',
+        childAge: '',
+        seats: '1',
+        notes: ''
+      });
+    }, 3000);
   };
 
   return (
@@ -62,7 +77,22 @@ export const BookingModal = ({ isOpen, onClose, eventTitle = 'SPOT Event' }: Boo
             </div>
 
             <div className="p-6 sm:p-8 overflow-y-auto hide-scrollbar">
-              <form id="booking-form" onSubmit={handleSubmit} className="space-y-5">
+              {isSubmitted ? (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex flex-col items-center justify-center py-12 text-center"
+                >
+                  <div className="w-20 h-20 bg-spot-pastel-green rounded-full flex items-center justify-center text-spot-charcoal mb-6">
+                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                  </div>
+                  <h3 className="font-display font-black text-3xl text-spot-charcoal mb-4">Request Received!</h3>
+                  <p className="text-spot-charcoal/70 text-lg">
+                    Thank you for your interest. We'll be in touch shortly to confirm your booking for {eventTitle}.
+                  </p>
+                </motion.div>
+              ) : (
+                <form id="booking-form" onSubmit={handleSubmit} className="space-y-5">
                 <div>
                   <label htmlFor="fullName" className="block text-sm font-bold text-spot-charcoal mb-1">Full Name *</label>
                   <input required type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all" placeholder="Jane Doe" />
@@ -112,17 +142,20 @@ export const BookingModal = ({ isOpen, onClose, eventTitle = 'SPOT Event' }: Boo
                   <textarea id="notes" name="notes" value={formData.notes} onChange={handleChange} rows={3} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all resize-none" placeholder="Any special requirements or questions?"></textarea>
                 </div>
               </form>
+              )}
             </div>
 
-            <div className="p-6 sm:p-8 border-t border-black/5 bg-white shrink-0">
-              <button 
-                type="submit" 
-                form="booking-form"
-                className="w-full py-4 bg-spot-red text-white font-bold rounded-xl hover:bg-red-700 transition-colors text-lg shadow-lg shadow-spot-red/20"
-              >
-                Reserve My Spot
-              </button>
-            </div>
+            {!isSubmitted && (
+              <div className="p-6 sm:p-8 border-t border-black/5 bg-white shrink-0">
+                <button 
+                  type="submit" 
+                  form="booking-form"
+                  className="w-full py-4 bg-spot-red text-white font-bold rounded-xl hover:bg-red-700 transition-colors text-lg shadow-lg shadow-spot-red/20"
+                >
+                  Reserve My Spot
+                </button>
+              </div>
+            )}
           </motion.div>
         </div>
       )}

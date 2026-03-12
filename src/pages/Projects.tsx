@@ -6,27 +6,27 @@ import { ArrowRight, Lightbulb, Compass, Hammer, Presentation, PlayCircle, Star,
 const PROJECTS_DATA = [
   {
     id: 'mechanical-robot-arm',
-    title: 'Mechanical Robot Arm',
+    title: 'Mechanical robot arm - Building circuits',
     student: 'Aarav & Team',
     category: 'Engineering & Maker',
     ageGroup: 'Ages 10-12',
     description: 'A fully functional mechanical arm built using hydraulic syringes and laser-cut wood.',
-    image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80',
     featured: true,
   },
   {
     id: 'comic-book-series',
-    title: 'Design a Comic Book Series',
+    title: 'Design a comic book - Creating Art with Artlore',
     student: 'Maya',
-    category: 'Storytelling & Media',
+    category: 'Art & Creative',
     ageGroup: 'Ages 8-10',
     description: 'An original 12-page comic book exploring themes of friendship and space exploration.',
-    image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?auto=format&fit=crop&q=80',
     featured: false,
   },
   {
     id: 'fermentation-science',
-    title: 'Fermentation Science Experiment',
+    title: 'Making Pickles - Fermentation Lab',
     student: 'Science Studio Group B',
     category: 'Science & Nature',
     ageGroup: 'Ages 11-14',
@@ -35,34 +35,54 @@ const PROJECTS_DATA = [
     featured: false,
   },
   {
-    id: 'space-podcast',
-    title: 'Podcast on Space Exploration',
-    student: 'Leo & Sam',
-    category: 'Storytelling & Media',
-    ageGroup: 'Ages 12-15',
-    description: 'A 3-episode podcast series interviewing local astronomers and discussing Mars missions.',
-    image: 'https://images.unsplash.com/photo-1589903308904-1010c2294adc?auto=format&fit=crop&q=80',
-    featured: true,
-  },
-  {
-    id: 'student-startup-pitch',
-    title: 'Startup Pitch: Eco-Pencils',
+    id: 'branding-shop',
+    title: 'Designing Branding for a Shop',
     student: 'Entrepreneurship Club',
     category: 'Entrepreneurship',
     ageGroup: 'Ages 13-16',
-    description: 'A business plan and pitch for pencils made from recycled newspaper with seeds at the end.',
-    image: 'https://images.unsplash.com/photo-1511629091441-ee46146481b6?auto=format&fit=crop&q=80',
+    description: 'A complete branding package including logo, color palette, and marketing materials for a local shop.',
+    image: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&q=80',
     featured: false,
   },
   {
-    id: '3d-printed-machine',
-    title: '3D Printed Sorting Machine',
+    id: 'building-terrarium',
+    title: 'Building a Terrarium',
+    student: 'Eco Explorers',
+    category: 'Science & Nature',
+    ageGroup: 'Ages 8-12',
+    description: 'Creating a self-sustaining miniature ecosystem inside a glass container.',
+    image: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&q=80',
+    featured: false,
+  },
+  {
+    id: '3d-printing-designing',
+    title: '3D printing and designing',
     student: 'Maker Studio Advanced',
     category: 'Engineering & Maker',
     ageGroup: 'Ages 14-18',
     description: 'A prototype machine that sorts colored marbles using a color sensor and 3D printed mechanisms.',
-    image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1581092335397-9583eb92d232?auto=format&fit=crop&q=80',
     featured: false,
+  },
+  {
+    id: 'baking-studio',
+    title: 'Baking Studio - Design cakes and cookies',
+    student: 'Culinary Arts Group',
+    category: 'Art & Creative',
+    ageGroup: 'Ages 10-15',
+    description: 'Learning the science of baking and the art of decorating custom cakes and cookies.',
+    image: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80',
+    featured: false,
+  },
+  {
+    id: 'ai-studio',
+    title: 'AI Studio - Designing programs with AI',
+    student: 'Tech Innovators',
+    category: 'Engineering & Maker',
+    ageGroup: 'Ages 12-16',
+    description: 'Exploring artificial intelligence to design and build interactive programs and tools.',
+    image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80',
+    featured: true,
   }
 ];
 
@@ -89,7 +109,7 @@ export default function Projects() {
       <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden px-6 py-20">
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80" 
+            src="https://images.unsplash.com/photo-1585468273280-7c6536979201?auto=format&fit=crop&q=80" 
             alt="Children working on projects" 
             className="w-full h-full object-cover opacity-20"
           />
@@ -243,8 +263,8 @@ export default function Projects() {
                 </Link>
               </div>
               <div className="mt-12 grid grid-cols-2 gap-4">
-                <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80" alt="Prototyping" className="rounded-2xl h-48 w-full object-cover" />
-                <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80" alt="Final Robot" className="rounded-2xl h-48 w-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80" alt="Prototyping" className="rounded-2xl h-48 w-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80" alt="Final Robot" className="rounded-2xl h-48 w-full object-cover" />
               </div>
             </div>
 
@@ -252,21 +272,21 @@ export default function Projects() {
               <div className="absolute top-0 right-0 w-64 h-64 bg-spot-pastel-blue/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
               <div className="relative z-10">
                 <span className="inline-block py-1 px-3 rounded-full bg-spot-pastel-blue/20 text-spot-pastel-blue font-bold text-xs tracking-wider uppercase mb-6">
-                  Storytelling Studio
+                  Art & Creative Studio
                 </span>
                 <h3 className="font-display font-black text-3xl md:text-4xl mb-6 leading-tight">
-                  Launching a Podcast on Space Exploration
+                  Designing a Comic Book with Artlore
                 </h3>
                 <p className="text-spot-cream/80 mb-8 text-lg leading-relaxed">
-                  Leo and Sam combined their love for astronomy and media to produce a 3-episode podcast. They learned audio editing, interview techniques, and how to script engaging narratives.
+                  Maya combined her love for drawing and storytelling to produce a 12-page comic book. She learned character design, panel layout, and how to script engaging narratives.
                 </p>
-                <Link to="/projects/space-podcast" className="inline-flex items-center gap-2 font-bold text-spot-pastel-blue hover:text-white transition-colors">
+                <Link to="/projects/comic-book-series" className="inline-flex items-center gap-2 font-bold text-spot-pastel-blue hover:text-white transition-colors">
                   Read the full story <ArrowRight size={20} />
                 </Link>
               </div>
               <div className="mt-12 grid grid-cols-2 gap-4">
-                <img src="https://images.unsplash.com/photo-1589903308904-1010c2294adc?auto=format&fit=crop&q=80" alt="Recording" className="rounded-2xl h-48 w-full object-cover" />
-                <img src="https://images.unsplash.com/photo-1516280440502-61266b72689b?auto=format&fit=crop&q=80" alt="Editing" className="rounded-2xl h-48 w-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?auto=format&fit=crop&q=80" alt="Drawing" className="rounded-2xl h-48 w-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80" alt="Comic Book" className="rounded-2xl h-48 w-full object-cover" />
               </div>
             </div>
           </div>
@@ -305,22 +325,22 @@ export default function Projects() {
         <h2 className="font-display font-black text-4xl text-spot-charcoal mb-10">The Gallery of Making</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="col-span-2 row-span-2 rounded-3xl overflow-hidden relative group">
-            <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80" alt="Making" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <img src="https://images.unsplash.com/photo-1585468273280-7c6536979201?auto=format&fit=crop&q=80" alt="Making" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
               <PlayCircle size={64} className="text-white opacity-80 group-hover:opacity-100 transition-opacity" />
             </div>
           </div>
           <div className="rounded-3xl overflow-hidden h-48 md:h-auto">
-            <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80" alt="Making" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+            <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&q=80" alt="Making" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
           </div>
           <div className="rounded-3xl overflow-hidden h-48 md:h-auto">
-            <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80" alt="Making" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+            <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80" alt="Making" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
           </div>
           <div className="rounded-3xl overflow-hidden h-48 md:h-auto">
-            <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80" alt="Making" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+            <img src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80" alt="Making" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
           </div>
           <div className="rounded-3xl overflow-hidden h-48 md:h-auto">
-            <img src="https://images.unsplash.com/photo-1511629091441-ee46146481b6?auto=format&fit=crop&q=80" alt="Making" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+            <img src="https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?auto=format&fit=crop&q=80" alt="Making" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
           </div>
         </div>
       </section>
@@ -371,9 +391,9 @@ export default function Projects() {
           <Link to="/studios" className="px-8 py-4 bg-spot-red text-white font-bold rounded-full hover:bg-red-700 transition-colors text-lg shadow-lg shadow-spot-red/20">
             Explore Studios
           </Link>
-          <button className="px-8 py-4 bg-white text-spot-charcoal font-bold rounded-full hover:bg-spot-pastel-yellow transition-colors text-lg border-2 border-spot-charcoal/10">
+          <Link to="/contact" className="px-8 py-4 bg-white text-spot-charcoal font-bold rounded-full hover:bg-spot-pastel-yellow transition-colors text-lg border-2 border-spot-charcoal/10">
             Book an Open House
-          </button>
+          </Link>
         </div>
       </section>
 
