@@ -51,7 +51,7 @@ const PROJECTS_DATA = [
     category: 'Science & Nature',
     ageGroup: 'Ages 8-12',
     description: 'Creating a self-sustaining miniature ecosystem inside a glass container.',
-    image: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1528319725582-ddc096101511?auto=format&fit=crop&q=80',
     featured: false,
   },
   {
@@ -109,7 +109,7 @@ export default function Projects() {
       <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden px-6 py-20">
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://images.unsplash.com/photo-1585468273280-7c6536979201?auto=format&fit=crop&q=80" 
+            src="https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80" 
             alt="Children working on projects" 
             className="w-full h-full object-cover opacity-20"
           />
@@ -325,13 +325,13 @@ export default function Projects() {
         <h2 className="font-display font-black text-4xl text-spot-charcoal mb-10">The Gallery of Making</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="col-span-2 row-span-2 rounded-3xl overflow-hidden relative group">
-            <img src="https://images.unsplash.com/photo-1585468273280-7c6536979201?auto=format&fit=crop&q=80" alt="Making" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80" alt="Making" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
               <PlayCircle size={64} className="text-white opacity-80 group-hover:opacity-100 transition-opacity" />
             </div>
           </div>
           <div className="rounded-3xl overflow-hidden h-48 md:h-auto">
-            <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&q=80" alt="Making" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+            <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80" alt="Making" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
           </div>
           <div className="rounded-3xl overflow-hidden h-48 md:h-auto">
             <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80" alt="Making" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />

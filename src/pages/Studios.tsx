@@ -12,7 +12,7 @@ const HeroSection = () => {
     <section className="relative min-h-screen w-full overflow-hidden bg-spot-charcoal flex items-center justify-center pt-20 pb-32 text-spot-cream">
       {/* Dynamic Background */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 left-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1585468273280-7c6536979201?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay" />
+        <div className="absolute top-0 left-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay" />
       </div>
       
       <motion.div 
@@ -59,7 +59,7 @@ const HeroSection = () => {
             <img src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=600&auto=format&fit=crop" alt="Building robots" className="w-full h-full object-cover" />
           </motion.div>
           <motion.div style={{ y: y2 }} className="absolute bottom-20 left-0 w-72 h-64 rounded-3xl overflow-hidden shadow-2xl border-4 border-spot-charcoal z-30">
-            <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=600&auto=format&fit=crop" alt="Painting" className="w-full h-full object-cover" />
+            <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=600&auto=format&fit=crop" alt="Painting" className="w-full h-full object-cover" />
           </motion.div>
           <motion.div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-spot-pastel-yellow rounded-full mix-blend-multiply filter blur-xl opacity-50 z-10 animate-pulse" />
         </div>
@@ -184,7 +184,7 @@ const ExploreStudios = () => {
       age: "6-10 yrs", 
       category: "Creative Arts",
       color: "bg-spot-pastel-pink",
-      img: "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=600&auto=format&fit=crop"
+      img: "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=600&auto=format&fit=crop"
     },
     { 
       name: "Machine Marvels", 

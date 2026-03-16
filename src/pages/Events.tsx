@@ -14,7 +14,7 @@ const EVENTS_DATA = [
     audience: 'Ages 8-12',
     location: 'In Person - SPOT Studio',
     price: '$45',
-    image: 'https://images.unsplash.com/photo-1585468273280-7c6536979201?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80',
     description: 'Build and program your first robot using recycled materials and basic electronics.',
     featured: true
   },
@@ -134,7 +134,7 @@ export default function Events() {
       <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden px-6 py-20">
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://images.unsplash.com/photo-1585468273280-7c6536979201?auto=format&fit=crop&q=80" 
+            src="https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80" 
             alt="Children in a workshop" 
             className="w-full h-full object-cover opacity-20"
           />
@@ -379,7 +379,7 @@ export default function Events() {
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="col-span-2 row-span-2 relative rounded-3xl overflow-hidden group">
-            <img src="https://images.unsplash.com/photo-1585468273280-7c6536979201?auto=format&fit=crop&q=80" alt="Highlight" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80" alt="Highlight" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
               <PlayCircle size={64} className="text-white opacity-80 group-hover:opacity-100 transition-opacity" />
             </div>
@@ -430,7 +430,7 @@ export default function Events() {
           </div>
           <div className="md:w-1/2 relative z-10">
             <div className="polaroid rotate-3">
-              <img src="https://images.unsplash.com/photo-1585468273280-7c6536979201?auto=format&fit=crop&q=80" alt="School Partnership" className="w-full h-64 object-cover" />
+              <img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80" alt="School Partnership" className="w-full h-64 object-cover" />
               <div className="polaroid-caption">School Partnerships</div>
             </div>
           </div>

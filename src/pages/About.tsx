@@ -48,7 +48,7 @@ const HeroSection = () => {
           <img src="https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=600&auto=format&fit=crop" alt="Children collaborating" className="w-full h-full object-cover" />
         </motion.div>
         <motion.div style={{ y: y2 }} className="absolute bottom-20 right-10 md:right-20 w-56 md:w-72 aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border-8 border-white transform rotate-3 z-0">
-          <img src="https://images.unsplash.com/photo-1585468273280-7c6536979201?q=80&w=600&auto=format&fit=crop" alt="Child building" className="w-full h-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=600&auto=format&fit=crop" alt="Child building" className="w-full h-full object-cover" />
         </motion.div>
         <motion.div style={{ y: y3 }} className="absolute top-1/3 right-1/4 w-32 aspect-square rounded-full overflow-hidden shadow-xl border-4 border-spot-pastel-pink z-0 hidden lg:block">
           <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=400&auto=format&fit=crop" alt="Science experiment" className="w-full h-full object-cover" />
@@ -407,7 +407,7 @@ const FutureVision = () => {
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 md:gap-16 items-center">
         <div className="order-2 lg:order-1 grid grid-cols-2 gap-4 relative">
           <div className="absolute inset-0 bg-spot-pastel-green/20 rounded-full filter blur-3xl -z-10" />
-          <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=600&auto=format&fit=crop" alt="Nature learning" className="rounded-[2rem] w-full aspect-square object-cover" />
+          <img src="https://images.unsplash.com/photo-1528319725582-ddc096101511?q=80&w=600&auto=format&fit=crop" alt="Nature learning" className="rounded-[2rem] w-full aspect-square object-cover" />
           <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=600&auto=format&fit=crop" alt="Research" className="rounded-[2rem] w-full aspect-square object-cover transform translate-y-8" />
         </div>
         
@@ -441,9 +441,9 @@ const FutureVision = () => {
 
 const Gallery = () => {
   const images = [
-    "https://images.unsplash.com/photo-1585468273280-7c6536979201?q=80&w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=800&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=800&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=800&auto=format&fit=crop"
   ];

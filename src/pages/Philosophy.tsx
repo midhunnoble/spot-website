@@ -32,7 +32,7 @@ export default function Philosophy() {
     <main className="pt-20 pb-20 overflow-hidden">
       {/* Section 1: Hero */}
       <section className="relative min-h-[80vh] flex items-center justify-center px-6 py-20">
-        <div className="absolute inset-0 z-0 bg-fixed bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1585468273280-7c6536979201?auto=format&fit=crop&q=80)' }}>
+        <div className="absolute inset-0 z-0 bg-fixed bg-center bg-cover" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80)' }}>
           <div className="absolute inset-0 bg-gradient-to-b from-spot-cream/90 via-spot-cream/80 to-spot-cream" />
         </div>
         
@@ -458,7 +458,7 @@ export default function Philosophy() {
       <section className="py-12 px-6 max-w-7xl mx-auto">
         <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 pb-8">
           {[
-            'https://images.unsplash.com/photo-1585468273280-7c6536979201?auto=format&fit=crop&q=80',
+            'https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80',
             'https://images.unsplash.com/photo-1627556592933-ffe99c1c9dd8?auto=format&fit=crop&q=80',
             'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80',
             'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80',

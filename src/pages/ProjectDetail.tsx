@@ -25,7 +25,7 @@ const PROJECT_DATA = {
     { title: 'Resilience', desc: 'Overcoming multiple failures during the prototyping phase.' }
   ],
   processPhotos: [
-    { url: 'https://images.unsplash.com/photo-1585468273280-7c6536979201?auto=format&fit=crop&q=80', caption: 'Early cardboard prototyping' },
+    { url: 'https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80', caption: 'Early cardboard prototyping' },
     { url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80', caption: 'Testing the hydraulic syringes' },
     { url: 'https://images.unsplash.com/photo-1581092335397-9583eb92d232?auto=format&fit=crop&q=80', caption: 'Assembling the laser-cut parts' }
   ],

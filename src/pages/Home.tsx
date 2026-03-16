@@ -34,14 +34,14 @@ const HeroSection = () => {
       <motion.div style={{ y: y1 }} className="absolute top-24 left-10 md:left-20 hidden lg:block z-10">
         <div className="relative p-3 bg-white shadow-xl transform -rotate-6 hover:rotate-0 transition-transform duration-300">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-4 bg-white/80 border border-black/10 shadow-sm transform -rotate-2" /> {/* Tape */}
-          <img src="https://images.unsplash.com/photo-1585468273280-7c6536979201?q=80&w=400&auto=format&fit=crop" alt="Science" className="w-48 h-56 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+          <img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=400&auto=format&fit=crop" alt="Science" className="w-48 h-56 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
         </div>
       </motion.div>
 
       <motion.div style={{ y: y2 }} className="absolute bottom-32 right-10 md:right-20 hidden lg:block z-10">
         <div className="relative p-3 bg-white shadow-xl transform rotate-6 hover:rotate-0 transition-transform duration-300">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-4 bg-white/80 border border-black/10 shadow-sm transform rotate-3" /> {/* Tape */}
-          <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=400&auto=format&fit=crop" alt="Art" className="w-56 h-48 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+          <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=400&auto=format&fit=crop" alt="Art" className="w-56 h-48 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
         </div>
       </motion.div>
 
@@ -384,7 +384,7 @@ const StudentProjects = () => {
     { title: "Design a comic book - Creating Art with Artlore", img: "https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=800&auto=format&fit=crop", rotate: 3 },
     { title: "Making Pickles - Fermentation Lab", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&auto=format&fit=crop", rotate: -1 },
     { title: "Designing Branding for a Shop", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=800&auto=format&fit=crop", rotate: 2 },
-    { title: "Building a Terrarium", img: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=800&auto=format&fit=crop", rotate: -3 },
+    { title: "Building a Terrarium", img: "https://images.unsplash.com/photo-1528319725582-ddc096101511?q=80&w=800&auto=format&fit=crop", rotate: -3 },
     { title: "3D printing and designing", img: "https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=800&auto=format&fit=crop", rotate: 1 },
     { title: "Baking Studio - Design cakes and cookies", img: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=800&auto=format&fit=crop", rotate: -2 },
     { title: "AI Studio - Designing programs with AI", img: "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800&auto=format&fit=crop", rotate: 2 },
@@ -471,8 +471,8 @@ const Programs = () => {
       
       <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 md:grid md:grid-cols-3 gap-8 hide-scrollbar">
         {[
-          { title: "Microschool", desc: "Full-time alternative to traditional schooling.", color: "bg-spot-cream", img: "https://images.unsplash.com/photo-1585468273280-7c6536979201?q=80&w=600&auto=format&fit=crop" },
-          { title: "After School Studios", desc: "Deep dives into specific passions and skills.", color: "bg-spot-pastel-pink", img: "https://images.unsplash.com/photo-1588072432836-e10032774350?q=80&w=600&auto=format&fit=crop" },
+          { title: "Microschool", desc: "Full-time alternative to traditional schooling.", color: "bg-spot-cream", img: "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=600&auto=format&fit=crop" },
+          { title: "After School Studios", desc: "Deep dives into specific passions and skills.", color: "bg-spot-pastel-pink", img: "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=600&auto=format&fit=crop" },
           { title: "SPOT in School", desc: "Bringing our studio model to traditional schools.", color: "bg-spot-pastel-blue", img: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=600&auto=format&fit=crop" }
         ].map((prog, i) => (
           <motion.div

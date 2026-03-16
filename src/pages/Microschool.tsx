@@ -33,7 +33,7 @@ const HeroSection = () => {
       <motion.div style={{ y: y2 }} className="absolute bottom-40 right-10 md:right-20 hidden lg:block z-10">
         <div className="relative p-3 bg-white shadow-xl transform rotate-6 hover:rotate-0 transition-transform duration-300">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-4 bg-white/80 border border-black/10 shadow-sm transform rotate-3" />
-          <img src="https://images.unsplash.com/photo-1585468273280-7c6536979201?q=80&w=400&auto=format&fit=crop" alt="Building" className="w-64 h-56 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+          <img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=400&auto=format&fit=crop" alt="Building" className="w-64 h-56 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
         </div>
       </motion.div>
 
@@ -408,7 +408,7 @@ const Projects = () => {
     { title: "Design a comic book - Creating Art with Artlore", img: "https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=800&auto=format&fit=crop", rotate: 3 },
     { title: "Making Pickles - Fermentation Lab", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&auto=format&fit=crop", rotate: -1 },
     { title: "Designing Branding for a Shop", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=800&auto=format&fit=crop", rotate: 2 },
-    { title: "Building a Terrarium", img: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=800&auto=format&fit=crop", rotate: -3 },
+    { title: "Building a Terrarium", img: "https://images.unsplash.com/photo-1528319725582-ddc096101511?q=80&w=800&auto=format&fit=crop", rotate: -3 },
     { title: "3D printing and designing", img: "https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=800&auto=format&fit=crop", rotate: 1 },
     { title: "Baking Studio - Design cakes and cookies", img: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=800&auto=format&fit=crop", rotate: -2 },
     { title: "AI Studio - Designing programs with AI", img: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=800&auto=format&fit=crop", rotate: 2 },
@@ -465,7 +465,7 @@ const Community = () => {
 
 const Gallery = () => {
   const images = [
-    "https://images.unsplash.com/photo-1585468273280-7c6536979201?q=80&w=600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=600&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=600&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=600&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=600&auto=format&fit=crop"
