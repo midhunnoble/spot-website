@@ -5,126 +5,212 @@ import { Link } from 'react-router-dom';
 
 // --- Components ---
 
-const HeroSection = () => {
+const FloatingArtifact = ({ children, className, depth = 1, delay = 0 }: { children: React.ReactNode, className: string, depth?: number, delay?: number }) => {
   const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 1000], [0, -150]);
-  const y2 = useTransform(scrollY, [0, 1000], [0, 200]);
-  const y3 = useTransform(scrollY, [0, 1000], [0, -100]);
+  const y = useTransform(scrollY, [0, 1000], [0, -200 * depth]);
+  
+  return (
+    <motion.div 
+      style={{ y }} 
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 1, delay, ease: [0.23, 1, 0.32, 1] }}
+      className={`absolute z-10 preserve-3d ${className}`}
+    >
+      <motion.div 
+        animate={{ 
+          rotateY: [0, 5, 0],
+          rotateX: [0, -5, 0],
+          y: [0, -10, 0]
+        }}
+        transition={{ 
+          duration: 5, 
+          repeat: Infinity, 
+          ease: "easeInOut",
+          delay: delay * 0.5
+        }}
+        className="w-full h-full"
+      >
+        {children}
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const HeroSection = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth - 0.5) * 20,
+        y: (e.clientY / window.innerHeight - 0.5) * 20
+      });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden bg-spot-cream flex items-center justify-center pt-20 pb-32">
-      {/* Background abstract blobs */}
-      <motion.div 
-        className="absolute top-20 left-10 w-72 h-72 bg-spot-pastel-pink rounded-full mix-blend-multiply filter blur-3xl opacity-70"
-        animate={{ x: [0, 30, 0], y: [0, -30, 0] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div 
-        className="absolute bottom-20 right-10 w-96 h-96 bg-spot-pastel-yellow rounded-full mix-blend-multiply filter blur-3xl opacity-70"
-        animate={{ x: [0, -40, 0], y: [0, 40, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-spot-pastel-blue rounded-full mix-blend-multiply filter blur-3xl opacity-50"
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-      />
+    <section className="relative min-h-[110vh] w-full overflow-hidden bg-spot-cream flex items-center justify-center pt-20 pb-40 perspective-1000">
+      {/* Background Mesh Gradients */}
+      <div className="absolute inset-0 z-0">
+        <motion.div 
+          className="absolute top-[-10%] left-[-5%] w-[60%] h-[60%] bg-spot-pastel-pink/40 rounded-full blur-[120px]"
+          animate={{ 
+            x: [0, 40, 0],
+            y: [0, 60, 0],
+            scale: [1, 1.1, 1]
+          }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div 
+          className="absolute bottom-[-10%] right-[-5%] w-[50%] h-[50%] bg-spot-pastel-blue/40 rounded-full blur-[100px]"
+          animate={{ 
+            x: [0, -30, 0],
+            y: [0, -50, 0],
+            scale: [1, 1.2, 1]
+          }}
+          transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div 
+          className="absolute top-[20%] right-[10%] w-[40%] h-[40%] bg-spot-pastel-yellow/30 rounded-full blur-[80px]"
+          animate={{ 
+            x: [0, 20, 0],
+            y: [0, -20, 0]
+          }}
+          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+        />
+      </div>
 
-      {/* Floating Collage Images */}
-      <motion.div style={{ y: y1 }} className="absolute top-24 left-10 md:left-20 hidden lg:block z-10">
-        <div className="relative p-3 bg-white shadow-xl transform -rotate-6 hover:rotate-0 transition-transform duration-300">
-          <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-4 bg-white/80 border border-black/10 shadow-sm transform -rotate-2" /> {/* Tape */}
-          <img src="/assets/real-photos/media__1773735470601.jpg" alt="Science and Tech" className="w-48 h-56 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+      {/* Floating Learning Artifacts */}
+      <FloatingArtifact depth={0.6} delay={0.2} className="top-1/4 left-8 md:left-24 lg:block hidden">
+        <div className="glass-morphism p-2 rounded-2xl shadow-2xl rotate-[-12deg] group hover:rotate-0 transition-transform duration-500">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-10 h-3 bg-white/60 backdrop-blur-sm border border-black/5 rounded-full" />
+          <img 
+            src="/assets/real-photos/teen_3d_printing.png" 
+            alt="Student Work" 
+            className="w-40 h-48 object-cover rounded-xl grayscale hover:grayscale-0 transition-all duration-500" 
+          />
         </div>
-      </motion.div>
+      </FloatingArtifact>
 
-      <motion.div style={{ y: y2 }} className="absolute bottom-32 right-10 md:right-20 hidden lg:block z-10">
-        <div className="relative p-3 bg-white shadow-xl transform rotate-6 hover:rotate-0 transition-transform duration-300">
-          <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-4 bg-white/80 border border-black/10 shadow-sm transform rotate-3" /> {/* Tape */}
-          <img src="/assets/real-photos/media__1773735517503.jpg" alt="Creative Arts" className="w-56 h-48 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+      <FloatingArtifact depth={0.8} delay={0.4} className="bottom-1/4 right-8 md:right-24 lg:block hidden">
+        <div className="glass-morphism p-2 rounded-2xl shadow-2xl rotate-[8deg] group hover:rotate-0 transition-transform duration-500">
+          <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-10 h-3 bg-white/60 backdrop-blur-sm border border-black/5 rounded-full" />
+          <img 
+            src="/assets/real-photos/teen_ai.png" 
+            alt="AI Learning" 
+            className="w-48 h-40 object-cover rounded-xl grayscale hover:grayscale-0 transition-all duration-500" 
+          />
         </div>
-      </motion.div>
+      </FloatingArtifact>
 
-      <motion.div style={{ y: y3 }} className="absolute top-32 right-32 hidden xl:block z-10">
-        <div className="relative p-3 bg-white shadow-xl transform rotate-12 hover:rotate-0 transition-transform duration-300">
-          <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-4 bg-white/80 border border-black/10 shadow-sm transform -rotate-1" /> {/* Tape */}
-          <img src="/assets/real-photos/media__1773735470612.jpg" alt="Digital Creation" className="w-40 h-40 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+      <FloatingArtifact depth={1.2} delay={0.6} className="top-1/3 right-1/4 hidden xl:block">
+        <div className="bg-spot-charcoal text-white p-4 rounded-2xl shadow-2xl rotate-12 flex flex-col items-center gap-2 animate-float-subtle">
+           <Rocket className="text-spot-pastel-yellow" size={32} />
+           <span className="font-display font-bold text-xs uppercase tracking-widest">Builder Studio</span>
         </div>
-      </motion.div>
+      </FloatingArtifact>
 
-      <div className="relative z-20 max-w-5xl mx-auto px-6 text-center">
+      <FloatingArtifact depth={0.4} delay={0.8} className="bottom-1/3 left-1/4 hidden xl:block">
+        <div className="bg-spot-red text-white p-4 rounded-2xl shadow-2xl -rotate-12 flex flex-col items-center gap-2 animate-float-subtle">
+           <Brain className="text-spot-pastel-pink" size={32} />
+           <span className="font-display font-bold text-xs uppercase tracking-widest">Cognitive Focus</span>
+        </div>
+      </FloatingArtifact>
+
+      <div className="relative z-20 max-w-6xl mx-auto px-6 text-center">
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
-          className="relative inline-block"
+           style={{ 
+             x: mousePosition.x * 0.5,
+             y: mousePosition.y * 0.5,
+             rotateX: -mousePosition.y * 0.1,
+             rotateY: mousePosition.x * 0.1
+           }}
+           className="magnetic-content preserve-3d"
         >
-          <div className="absolute -top-12 -left-12 text-spot-red font-handwriting text-4xl transform -rotate-12 animate-pulse">
-            <Sparkles size={40} />
-          </div>
-          <h1 className="font-display text-5xl md:text-7xl lg:text-[110px] font-black tracking-tighter uppercase leading-[0.85] text-spot-charcoal mb-6 relative z-10">
-            Personalized <br className="md:hidden" />
-            Learning <br />
-            <span className="relative inline-block">
-              For Minds
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <span className="inline-block px-4 py-1.5 rounded-full bg-spot-charcoal/5 border border-spot-charcoal/10 font-display font-bold text-sm tracking-[0.2em] uppercase text-spot-charcoal/60 mb-8 backdrop-blur-sm">
+              Weightless Education
+            </span>
+          </motion.div>
+
+          <h1 className="font-display text-[10vw] md:text-[8vw] lg:text-[7.5vw] font-black tracking-tighter uppercase leading-[0.8] text-spot-charcoal mb-8 relative pointer-events-none drop-shadow-sm">
+            Personalized <br /> 
+            <span className="text-transparent stroke-charcoal" style={{ WebkitTextStroke: '1.5px var(--color-spot-charcoal)' }}>Learning</span> <br />
+            For Minds <br />
+            <span className="relative inline-block text-spot-red">
+              That Think
               <motion.div 
-                className="absolute top-1/2 left-0 w-full h-3 md:h-5 bg-spot-pastel-yellow -z-10 -translate-y-1/3 transform -rotate-1"
+                className="absolute -bottom-2 -left-2 w-[110%] h-4 bg-spot-pastel-yellow/60 -z-10 rounded-full"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
-                transition={{ duration: 0.6, delay: 1, ease: "circOut" }}
+                transition={{ duration: 1, delay: 1.2, ease: "circOut" }}
                 style={{ originX: 0 }}
               />
-            </span><br />
-            That Think Different.
+            </span><br className="md:hidden" />
+            Different.
           </h1>
         </motion.div>
 
-        <motion.p 
-          className="font-sans text-xl md:text-2xl max-w-2xl mx-auto mb-10 text-spot-charcoal/80 font-medium"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+        <motion.div
+           initial={{ opacity: 0, y: 20 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ duration: 1, delay: 0.8, ease: [0.23, 1, 0.32, 1] }}
+           className="max-w-3xl mx-auto"
         >
-          SPOT is a project-based learning studio designed around the unique strengths of every child. Built for curious teens, homeschoolers, gifted and twice-exceptional learners, and those who find traditional classrooms too limiting. Students learn by building, creating, experimenting, and solving real-world problems alongside mentors.
-        </motion.p>
+          <p className="font-sans text-lg md:text-xl lg:text-2xl text-spot-charcoal/70 mb-12 leading-relaxed font-medium">
+            SPOT is a project-based learning studio designed around the unique strengths of every child. <span className="text-spot-charcoal font-bold">Built for curious teens, homeschoolers, gifted and twice-exceptional learners</span>, and those who find traditional classrooms too limiting. Students learn by building, creating, experimenting, and solving real-world problems alongside mentors.
+          </p>
 
-        <motion.div 
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-        >
-          <Link to="/microschool" className="px-8 py-4 bg-spot-red text-white font-bold rounded-full text-lg hover:bg-red-700 transition-colors w-full sm:w-auto flex items-center justify-center gap-2 shadow-xl shadow-spot-red/20 hover:scale-105 active:scale-95">
-            Explore Microschool <ArrowRight size={20} />
-          </Link>
-          <Link to="/studios" className="px-8 py-4 bg-white border-2 border-spot-charcoal text-spot-charcoal font-bold rounded-full text-lg hover:bg-spot-charcoal hover:text-white transition-colors w-full sm:w-auto shadow-xl shadow-black/5 hover:scale-105 active:scale-95 flex items-center justify-center">
-            Explore Studios
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <Link to="/microschool" className="group relative">
+              <div className="absolute inset-0 bg-spot-red blur-lg opacity-40 group-hover:opacity-60 transition-opacity" />
+              <div className="relative glass-morphism-heavy px-10 py-5 bg-spot-red rounded-full flex items-center gap-3 text-white font-black text-lg tracking-tight hover:scale-105 active:scale-95 transition-all duration-300 border border-white/20">
+                Explore Microschool <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+            
+            <Link to="/studios" className="group relative">
+              <div className="relative glass-morphism-heavy px-10 py-5 rounded-full flex items-center gap-3 text-spot-charcoal font-black text-lg tracking-tight hover:scale-105 active:scale-95 transition-all duration-300 border-2 border-spot-charcoal/10 hover:border-spot-charcoal hover:bg-spot-charcoal hover:text-white">
+                Explore Studios
+              </div>
+            </Link>
+          </div>
         </motion.div>
       </div>
 
+      {/* Interactive Scroll Indicator */}
       <motion.div 
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-spot-charcoal/50"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ repeat: Infinity, duration: 2 }}
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 cursor-pointer group"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2 }}
+        onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
       >
-        <ArrowDown size={32} />
+        <span className="font-display font-bold text-xs uppercase tracking-widest text-spot-charcoal/30 group-hover:text-spot-red transition-colors">Orbit Down</span>
+        <motion.div 
+          className="w-[2px] h-12 bg-spot-charcoal/10 relative overflow-hidden rounded-full"
+        >
+          <motion.div 
+            className="absolute top-0 left-0 w-full h-full bg-spot-red origin-top"
+            animate={{ 
+              scaleY: [0, 1, 0],
+              y: ["-100%", "0%", "100%"]
+            }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
       </motion.div>
       
-      {/* Decorative scribbles */}
-      <div className="absolute bottom-20 left-20 hidden lg:block opacity-60">
-        <svg width="150" height="150" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <motion.path 
-            d="M20 100 C 50 20, 150 20, 180 100 C 150 180, 50 180, 20 100 Z" 
-            stroke="#D92D20" 
-            strokeWidth="3" 
-            strokeDasharray="10 10"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            style={{ originX: "100px", originY: "100px" }}
-          />
-        </svg>
-      </div>
+      {/* 3D Grid Overlay */}
+      <div className="absolute inset-0 z-10 pointer-events-none opacity-[0.03]" 
+           style={{ backgroundImage: 'radial-gradient(var(--color-spot-charcoal) 1px, transparent 0)', backgroundSize: '40px 40px' }} />
     </section>
   );
 };
