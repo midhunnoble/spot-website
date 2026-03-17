@@ -1,9 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
-import { ArrowRight, Users, Lightbulb, Heart, Compass, Zap, Briefcase, Clock, CheckCircle2, X, Star, Sparkles } from 'lucide-react';
+import { ArrowRight, Users, Lightbulb, Heart, Compass, Zap, Briefcase, Clock, CheckCircle2, X, Star, Sparkles, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 
 const ApplicationModal = ({ isOpen, onClose, defaultRole = "" }: { isOpen: boolean, onClose: () => void, defaultRole?: string }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    role: defaultRole,
+    introduction: '',
+    portfolio: ''
+  });
+
+  useEffect(() => {
+    setFormData(prev => ({ ...prev, role: defaultRole }));
+  }, [defaultRole]);
+
   // Prevent scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -13,6 +29,41 @@ const ApplicationModal = ({ isOpen, onClose, defaultRole = "" }: { isOpen: boole
     }
     return () => { document.body.style.overflow = 'unset'; };
   }, [isOpen]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase
+        .from('leads')
+        .insert([{
+          type: 'career',
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          metadata: {
+            role: formData.role,
+            introduction: formData.introduction,
+            portfolio: formData.portfolio
+          }
+        }]);
+
+      if (error) throw error;
+
+      setIsSubmitted(true);
+      setTimeout(() => {
+        setIsSubmitted(false);
+        onClose();
+        setFormData({ name: '', email: '', phone: '', role: '', introduction: '', portfolio: '' });
+      }, 3000);
+    } catch (err) {
+      console.error('Error submitting application:', err);
+      alert('Failed to submit. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -39,51 +90,103 @@ const ApplicationModal = ({ isOpen, onClose, defaultRole = "" }: { isOpen: boole
             </div>
             
             <div className="p-6 sm:p-10 overflow-y-auto">
-              <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-                <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 sm:grid sm:grid-cols-2 gap-6">
+              {isSubmitted ? (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex flex-col items-center justify-center py-12 text-center"
+                >
+                  <div className="w-20 h-20 bg-spot-pastel-green rounded-full flex items-center justify-center text-spot-charcoal mb-6">
+                    <CheckCircle2 size={40} />
+                  </div>
+                  <h3 className="font-display text-3xl font-black uppercase tracking-tighter mb-4">Application Sent!</h3>
+                  <p className="text-spot-charcoal/70 text-lg">
+                    Thanks for your interest in joining SPOT. Our team will review your profile and get back to you soon.
+                  </p>
+                </motion.div>
+              ) : (
+              <form className="space-y-6" onSubmit={handleSubmit}>
+                <div className="grid sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Full Name</label>
-                    <input type="text" className="w-full p-4 rounded-xl bg-white border border-black/10 focus:outline-none focus:border-spot-red transition-colors" placeholder="Jane Doe" />
+                    <input 
+                      required
+                      type="text" 
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      className="w-full p-4 rounded-xl bg-white border border-black/10 focus:outline-none focus:border-spot-red transition-colors" 
+                      placeholder="Jane Doe" 
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Email</label>
-                    <input type="email" className="w-full p-4 rounded-xl bg-white border border-black/10 focus:outline-none focus:border-spot-red transition-colors" placeholder="jane@example.com" />
+                    <input 
+                      required
+                      type="email" 
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      className="w-full p-4 rounded-xl bg-white border border-black/10 focus:outline-none focus:border-spot-red transition-colors" 
+                      placeholder="jane@example.com" 
+                    />
                   </div>
                 </div>
                 
-                <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 sm:grid sm:grid-cols-2 gap-6">
+                <div className="grid sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Phone</label>
-                    <input type="tel" className="w-full p-4 rounded-xl bg-white border border-black/10 focus:outline-none focus:border-spot-red transition-colors" placeholder="(555) 123-4567" />
+                    <input 
+                      required
+                      type="tel" 
+                      value={formData.phone}
+                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      className="w-full p-4 rounded-xl bg-white border border-black/10 focus:outline-none focus:border-spot-red transition-colors" 
+                      placeholder="(555) 123-4567" 
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Position Applying For</label>
-                    <input type="text" defaultValue={defaultRole} className="w-full p-4 rounded-xl bg-white border border-black/10 focus:outline-none focus:border-spot-red transition-colors" placeholder="e.g. Maker Studio Mentor" />
+                    <input 
+                      required
+                      type="text" 
+                      value={formData.role}
+                      onChange={(e) => setFormData({...formData, role: e.target.value})}
+                      className="w-full p-4 rounded-xl bg-white border border-black/10 focus:outline-none focus:border-spot-red transition-colors" 
+                      placeholder="e.g. Maker Studio Mentor" 
+                    />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Short Introduction</label>
-                  <textarea rows={4} className="w-full p-4 rounded-xl bg-white border border-black/10 focus:outline-none focus:border-spot-red transition-colors resize-none" placeholder="Tell us why you want to build the future of education with us..."></textarea>
+                  <textarea 
+                    rows={4} 
+                    value={formData.introduction}
+                    onChange={(e) => setFormData({...formData, introduction: e.target.value})}
+                    className="w-full p-4 rounded-xl bg-white border border-black/10 focus:outline-none focus:border-spot-red transition-colors resize-none" 
+                    placeholder="Tell us why you want to build the future of education with us..."
+                  ></textarea>
                 </div>
 
-                <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 sm:grid sm:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Upload Resume</label>
-                    <div className="w-full p-4 rounded-xl bg-white border border-black/10 border-dashed flex items-center justify-center text-spot-charcoal/50 hover:bg-black/5 hover:text-spot-charcoal cursor-pointer transition-colors">
-                      <span>Choose file...</span>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Portfolio / LinkedIn</label>
-                    <input type="url" className="w-full p-4 rounded-xl bg-white border border-black/10 focus:outline-none focus:border-spot-red transition-colors" placeholder="https://" />
-                  </div>
+                <div>
+                  <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Portfolio / LinkedIn</label>
+                  <input 
+                    type="url" 
+                    value={formData.portfolio}
+                    onChange={(e) => setFormData({...formData, portfolio: e.target.value})}
+                    className="w-full p-4 rounded-xl bg-white border border-black/10 focus:outline-none focus:border-spot-red transition-colors" 
+                    placeholder="https://" 
+                  />
                 </div>
 
-                <button className="w-full py-5 bg-spot-red text-white font-bold rounded-xl text-lg hover:bg-red-700 transition-colors mt-4 shadow-lg shadow-spot-red/20">
-                  Send Application
+                <button 
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full py-5 bg-spot-red text-white font-bold rounded-xl text-lg hover:bg-red-700 transition-colors mt-4 shadow-lg shadow-spot-red/20 disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {isSubmitting ? <><Loader2 className="animate-spin" size={20} /> Sending...</> : "Send Application"}
                 </button>
               </form>
+              )}
             </div>
           </motion.div>
         </div>
@@ -105,17 +208,24 @@ const HeroSection = ({ onApply }: { onApply: () => void }) => {
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-spot-cream text-spot-charcoal pt-32 pb-20">
-      {/* Minimal floating accents */}
-      <motion.div
-        className="absolute top-1/4 left-1/4 w-4 h-4 rounded-full bg-spot-red"
-        animate={{ y: [0, -20, 0], opacity: [0.5, 1, 0.5] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute bottom-1/3 right-1/4 w-8 h-8 rounded-full bg-spot-pastel-blue"
-        animate={{ y: [0, 30, 0], opacity: [0.5, 1, 0.5] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-      />
+      {/* 3D Background Accents */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <motion.div 
+          className="absolute top-1/4 -right-20 w-[600px] h-[600px] bg-spot-pastel-pink/10 rounded-full blur-[120px]"
+          animate={{ x: [0, 50, 0], y: [0, 30, 0] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div 
+          className="absolute -bottom-20 -left-20 w-[500px] h-[500px] bg-spot-pastel-blue/10 rounded-full blur-[100px]"
+          animate={{ x: [0, -40, 0], y: [0, -20, 0] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+        />
+        <img 
+          src="/assets/real-photos/studio_atmosphere.png" 
+          alt="" 
+          className="absolute top-[10%] left-[-5%] w-[40%] opacity-[0.03] grayscale blur-sm rotate-[-15deg]"
+        />
+      </div>
 
       {/* Rotating Badge */}
       <div className="absolute right-10 bottom-20 hidden lg:flex items-center justify-center w-32 h-32">
@@ -126,57 +236,57 @@ const HeroSection = ({ onApply }: { onApply: () => void }) => {
         >
           <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
             <path id="circlePath" d="M 50, 50 m -40, 0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0" fill="none" />
-            <text className="text-[10.5px] font-bold uppercase tracking-[0.15em] fill-spot-charcoal">
+            <text className="text-[10.5px] font-bold uppercase tracking-[0.15em] fill-spot-charcoal/40">
               <textPath href="#circlePath" startOffset="0%">
                 We are hiring • Join the team • Build the future • 
               </textPath>
             </text>
           </svg>
         </motion.div>
-        <Star className="absolute text-spot-red" size={24} />
+        <Star className="absolute text-spot-red opacity-30" size={24} />
       </div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 flex flex-col items-center text-center">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
-          className="mb-8"
+          className="mb-10"
         >
-          <span className="px-5 py-2 border border-spot-charcoal/20 rounded-full text-sm font-bold tracking-widest uppercase text-spot-charcoal/60">
+          <span className="px-6 py-2.5 bg-white/40 glass-morphism rounded-full text-[10px] font-black tracking-[0.3em] uppercase text-spot-charcoal/50 border border-white/80">
             Careers at SPOT
           </span>
         </motion.div>
 
-        <h1 className="font-display text-5xl md:text-7xl lg:text-[120px] font-black uppercase tracking-tighter leading-[0.85] mb-8 flex flex-col items-center">
-          <span className="overflow-hidden block pb-2">
+        <h1 className="font-display text-5xl md:text-7xl lg:text-[140px] font-black uppercase tracking-tighter leading-[0.8] mb-12 flex flex-col items-center">
+          <span className="overflow-hidden block pb-3">
             <motion.span
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
               className="block"
             >
               BUILD THE
             </motion.span>
           </span>
-          <span className="overflow-hidden block pb-2">
+          <span className="overflow-hidden block pb-3">
             <motion.span
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
               className="block"
             >
               FUTURE OF
             </motion.span>
           </span>
-          <span className="text-spot-red block h-[1.1em] relative w-full flex justify-center overflow-hidden">
+          <span className="text-spot-red block h-[0.9em] relative w-full flex justify-center overflow-hidden italic">
             <AnimatePresence mode="wait">
               <motion.span
                 key={currentWord}
-                initial={{ y: "100%", opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: "-100%", opacity: 0 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ y: "100%", opacity: 0, rotateX: 90 }}
+                animate={{ y: 0, opacity: 1, rotateX: 0 }}
+                exit={{ y: "-100%", opacity: 0, rotateX: -90 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 className="absolute"
               >
                 {words[currentWord]}
@@ -188,29 +298,29 @@ const HeroSection = ({ onApply }: { onApply: () => void }) => {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8 }}
-          className="font-sans text-xl md:text-2xl text-spot-charcoal/70 font-medium max-w-2xl mx-auto mb-12"
+          transition={{ duration: 1, delay: 1 }}
+          className="font-sans text-xl md:text-3xl text-spot-charcoal/50 font-bold max-w-3xl mx-auto mb-16 leading-tight tracking-tight"
         >
-          Join a community of educators, makers and storytellers designing a new kind of school.
+          Join a community of educators, creators, and builders reimagining how children learn.
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1 }}
-          className="flex flex-col sm:flex-row gap-4"
+          transition={{ duration: 0.8, delay: 1.2 }}
+          className="flex flex-col sm:flex-row gap-6"
         >
           <button
             onClick={() => document.getElementById('open-roles')?.scrollIntoView({ behavior: 'smooth' })}
-            className="px-8 py-4 bg-spot-charcoal text-spot-cream font-bold rounded-full text-lg hover:bg-black transition-colors shadow-lg hover:scale-105 active:scale-95"
+            className="px-12 py-6 bg-spot-charcoal text-spot-cream font-black uppercase text-xs tracking-widest rounded-full hover:bg-black transition-all shadow-[0_20px_40px_rgba(0,0,0,0.1)] hover:scale-105 active:scale-95"
           >
-            View Open Roles
+            Explore Open Roles
           </button>
           <button
             onClick={onApply}
-            className="px-8 py-4 bg-transparent border-2 border-spot-charcoal text-spot-charcoal font-bold rounded-full text-lg hover:bg-spot-charcoal hover:text-spot-cream transition-colors shadow-lg hover:scale-105 active:scale-95"
+            className="px-12 py-6 bg-transparent border-2 border-spot-charcoal/20 text-spot-charcoal font-black uppercase text-xs tracking-widest rounded-full hover:bg-spot-charcoal hover:text-spot-cream transition-all hover:scale-105 active:scale-95"
           >
-            Apply Now
+            Direct Application
           </button>
         </motion.div>
       </div>
@@ -219,97 +329,68 @@ const HeroSection = ({ onApply }: { onApply: () => void }) => {
 };
 
 const WhyWorkAtSpot = () => {
-  const features = [
-    { title: "Small Cohort Teaching", icon: <Users size={24} />, color: "bg-spot-pastel-pink" },
-    { title: "Studio Based Learning", icon: <Lightbulb size={24} />, color: "bg-spot-pastel-yellow" },
+  const values = [
+    { title: "Child First", desc: "Every choice centers on the learner's growth and well-being." },
+    { title: "Data Over Drama", desc: "We observe and iterate without ego." },
+    { title: "Psychological Safety", desc: "A space where educators take risks and fail safely." },
     { title: "Creative Freedom", icon: <Compass size={24} />, color: "bg-spot-pastel-blue" },
-    { title: "Real Impact on Children", icon: <Heart size={24} />, color: "bg-spot-pastel-green" }
+    { title: "Real Impact", icon: <Heart size={24} />, color: "bg-spot-pastel-green" }
   ];
 
   return (
-    <section className="py-16 md:py-32 px-6 max-w-7xl mx-auto">
-      <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-center">
+    <section className="py-16 md:py-24 px-6 max-w-7xl mx-auto">
+      <div className="grid lg:grid-cols-2 gap-16 items-center">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl lg:text-7xl font-black uppercase tracking-tighter mb-6 leading-none">
+          <h2 className="font-display text-4xl md:text-6xl font-black uppercase tracking-tighter mb-8 leading-[0.9]">
             Education <br/><span className="text-spot-red">Needs Builders.</span>
           </h2>
-          <p className="font-handwriting text-3xl text-spot-charcoal/60 mb-10 transform -rotate-2">SPOT is not a traditional school.</p>
+          <p className="font-handwriting text-3xl text-spot-charcoal/40 mb-10 transform -rotate-1">SPOT is not a traditional school.</p>
           
-          <div className="space-y-6 text-xl text-spot-charcoal/80 font-medium">
-            <p>
+          <div className="space-y-6 text-xl text-spot-charcoal/80 font-bold leading-tight tracking-tight">
+            <p className="italic">
               We are a learning studio where educators experiment, build and grow alongside children.
             </p>
             <p>
-              If you believe education should be creative, humane and deeply engaging, SPOT might be the place for you.
+              Join us if you believe education should be creative, neuro-affirmative, and deeply engaging.
             </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 mt-12">
+            {values.map((v, i) => (
+              <motion.div
+                key={i}
+                className={`p-6 rounded-2xl bg-white border border-black/5 shadow-sm hover:shadow-md transition-shadow`}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <h3 className="font-display font-black text-base uppercase leading-none mb-2">{v.title}</h3>
+                <p className="text-xs text-spot-charcoal/60 leading-tight">{v.desc}</p>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
 
-        <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 sm:grid sm:grid-cols-2 gap-6 hide-scrollbar">
-          {features.map((feat, i) => (
-            <motion.div
-              key={i}
-              className={`min-w-[85vw] md:min-w-0 snap-center ${feat.color} p-8 rounded-3xl flex flex-col items-start gap-4 shadow-sm border border-black/5`}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              whileHover={{ y: -5, scale: 1.02 }}
-            >
-              <div className="p-4 bg-white/50 rounded-full text-spot-charcoal">
-                {feat.icon}
-              </div>
-              <h3 className="font-display font-bold text-xl leading-tight">{feat.title}</h3>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const SpotCulture = () => {
-  const values = [
-    { title: "Child First Decisions", desc: "Every choice we make centers around what is best for the learner's growth and well-being." },
-    { title: "Data Before Drama", desc: "We look at evidence, observe carefully, and iterate on our methods without ego." },
-    { title: "Psychological Safety", desc: "A space where educators and students alike can take risks, fail, and learn without judgment." },
-    { title: "Ownership of Space and Ideas", desc: "We empower our team to take charge of their studios and bring their unique passions to life." },
-    { title: "Reflection and Growth", desc: "Continuous learning isn't just for the kids. We constantly reflect and evolve our craft." }
-  ];
-
-  return (
-    <section className="py-16 md:py-32 bg-spot-charcoal text-spot-cream px-6">
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8 md:gap-16">
-        <div className="lg:col-span-5">
-          <div className="sticky top-32">
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl lg:text-6xl font-black uppercase tracking-tighter mb-6">The SPOT <br/><span className="text-spot-pastel-pink">Culture</span></h2>
-            <p className="text-xl text-spot-cream/70 mb-8">
-              Teachers collaborate openly, share ideas and continuously evolve their craft. We are building an ecosystem of support and innovation.
-            </p>
-            <div className="hidden lg:block w-24 h-1 bg-spot-red rounded-full" />
-          </div>
-        </div>
-
-        <div className="lg:col-span-7 space-y-8">
-          {values.map((val, i) => (
-            <motion.div 
-              key={i}
-              className="min-w-[85vw] md:min-w-0 snap-center bg-white/5 border border-white/10 p-8 rounded-3xl backdrop-blur-sm hover:bg-white/10 transition-colors"
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-            >
-              <h3 className="font-display text-2xl font-bold mb-3 text-spot-pastel-yellow">{val.title}</h3>
-              <p className="text-lg text-spot-cream/80">{val.desc}</p>
-            </motion.div>
-          ))}
-        </div>
+        <motion.div 
+          className="relative"
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1 }}
+        >
+           <div className="aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl relative">
+             <img 
+               src="/assets/real-photos/facilitator_child.png" 
+               alt="Facilitation at SPOT" 
+               className="w-full h-full object-cover"
+             />
+             <div className="absolute inset-0 bg-gradient-to-t from-spot-charcoal/40 to-transparent" />
+           </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -378,25 +459,25 @@ const OpenRoles = ({ onApply }: { onApply: (role: string) => void }) => {
           </div>
         </div>
 
-        <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 md:grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {roles.map((role, i) => (
             <motion.div 
               key={i}
-              className="min-w-[85vw] md:min-w-0 snap-center bg-white p-8 rounded-3xl shadow-sm border border-black/5 flex flex-col h-full group hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-              initial={{ opacity: 0, y: 20 }}
+              className="min-w-[85vw] md:min-w-0 snap-center glass-morphism p-10 rounded-[3rem] shadow-2xl border border-white/40 flex flex-col h-full group hover:bg-white/40 transition-all duration-500 hover:-translate-y-2 relative overflow-hidden"
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
             >
-              <div className="flex gap-2 mb-4">
-                <span className="px-3 py-1 bg-spot-charcoal/5 text-spot-charcoal rounded-full text-xs font-bold uppercase tracking-wider">{role.loc}</span>
-                <span className="px-3 py-1 bg-spot-pastel-pink/30 text-spot-charcoal rounded-full text-xs font-bold uppercase tracking-wider">{role.type}</span>
+              <div className="flex gap-3 mb-6">
+                <span className="px-4 py-1.5 glass-morphism-heavy text-spot-charcoal rounded-xl text-[10px] font-black uppercase tracking-widest">{role.loc}</span>
+                <span className="px-4 py-1.5 bg-spot-pastel-pink rounded-xl text-spot-red text-[10px] font-black uppercase tracking-widest">{role.type}</span>
               </div>
-              <h3 className="font-display text-2xl font-bold mb-3 group-hover:text-spot-red transition-colors">{role.title}</h3>
-              <p className="text-spot-charcoal/70 mb-8 flex-grow">{role.desc}</p>
+              <h3 className="font-display text-3xl font-black uppercase tracking-tighter mb-6 group-hover:text-spot-red transition-colors leading-none">{role.title}</h3>
+              <p className="text-spot-charcoal/70 mb-10 font-bold leading-tight text-lg flex-grow">{role.desc}</p>
               <button 
                 onClick={() => onApply(role.title)}
-                className="w-full py-3 border-2 border-spot-charcoal text-spot-charcoal font-bold rounded-full hover:bg-spot-charcoal hover:text-white transition-colors flex items-center justify-center gap-2"
+                className="w-full py-4 bg-spot-charcoal text-white font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-spot-red transition-all flex items-center justify-center gap-3 shadow-xl haptic-feedback"
               >
                 Apply Now <ArrowRight size={18} />
               </button>
@@ -447,40 +528,63 @@ const Benefits = () => {
 
 const MeetTheTeam = () => {
   return (
-    <section className="py-16 md:py-32 bg-spot-charcoal text-spot-cream px-6 relative overflow-hidden">
-      <div className="absolute top-10 right-10 text-spot-cream/5 font-display text-[300px] leading-none font-black">"</div>
+    <section className="py-24 md:py-48 bg-spot-charcoal text-spot-cream px-6 relative overflow-hidden">
+      <div className="absolute top-10 right-10 text-spot-cream/5 font-display text-[300px] leading-none font-black hidden lg:block">"</div>
       
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 md:gap-16 items-center relative z-10">
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-16 md:gap-32 items-center relative z-10">
         <motion.div
+          className="lg:col-span-12 mb-20 text-center"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+        >
+          <h2 className="font-display text-4xl md:text-6xl lg:text-[100px] font-black uppercase tracking-tighter mb-10 leading-[0.8]">Meet the <span className="text-spot-pastel-pink">Collective.</span></h2>
+          <div className="w-24 h-2 bg-spot-red mx-auto rounded-full" />
+        </motion.div>
+
+        <motion.div
+          className="lg:col-span-5 space-y-12"
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl lg:text-6xl font-black uppercase tracking-tighter mb-10">Meet the <span className="text-spot-pastel-pink">Team</span></h2>
-          
-          <div className="space-y-8">
-            <p className="font-display text-3xl md:text-4xl leading-tight font-medium">
+          <div className="space-y-10">
+            <p className="font-display text-4xl md:text-5xl leading-[1.1] font-bold italic tracking-tighter text-spot-pastel-yellow">
               "At SPOT I feel like I am building something meaningful every day. It's the creative freedom I always wanted as an educator."
             </p>
-            <div>
-              <div className="font-bold text-xl text-spot-pastel-yellow">Pooja Latisha</div>
-              <div className="text-spot-cream/60 uppercase tracking-wider text-sm font-bold mt-1">Lead Learning Designer</div>
+            <div className="flex items-center gap-6">
+              <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-spot-pastel-yellow">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format" alt="Pooja" className="w-full h-full object-cover" />
+              </div>
+              <div>
+                <div className="font-black text-2xl uppercase">Pooja Latisha</div>
+                <div className="text-spot-cream/40 uppercase tracking-[0.2em] text-[10px] font-black mt-1">Lead Learning Designer</div>
+              </div>
             </div>
           </div>
         </motion.div>
 
         <motion.div 
-          className="relative"
-          initial={{ opacity: 0, scale: 0.9 }}
+          className="lg:col-span-7 relative"
+          initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 1 }}
         >
-          <div className="aspect-[4/5] rounded-[3rem] overflow-hidden border-8 border-spot-charcoal shadow-2xl relative z-10">
-            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop" alt="Pooja Latisha at SPOT" className="w-full h-full object-cover" />
+          <div className="aspect-video rounded-[4rem] overflow-hidden shadow-[0_80px_120px_rgba(0,0,0,0.4)] relative border-[12px] border-white/5 rotate-[-2deg] hover:rotate-0 transition-transform duration-700">
+            <img 
+              src="/assets/real-photos/team_collab.png" 
+              alt="The SPOT Team collaborating" 
+              className="w-full h-full object-cover grayscale-[0.5] hover:grayscale-0 transition-all duration-[1.5s]" 
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-spot-charcoal/80 via-transparent to-transparent" />
+            <div className="absolute bottom-12 left-12">
+               <span className="px-5 py-2 glass-morph-heavy rounded-full text-white text-[10px] font-black uppercase tracking-widest border border-white/20">Studio HQ • Bangalore</span>
+            </div>
           </div>
-          <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-spot-red rounded-full mix-blend-screen filter blur-3xl opacity-50 z-0" />
+          
+          {/* Accent Element */}
+          <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-spot-pastel-pink opacity-10 rounded-full blur-[100px] pointer-events-none" />
         </motion.div>
       </div>
     </section>
@@ -492,7 +596,7 @@ const MeetTheTeam = () => {
 const FinalCTA = ({ onApply }: { onApply: () => void }) => {
   return (
     <section className="py-20 md:py-40 px-6 text-center relative overflow-hidden bg-spot-charcoal text-spot-cream">
-      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-10 mix-blend-overlay" />
+      <div className="absolute inset-0 bg-[url('/assets/real-photos/studio_atmosphere.png')] bg-cover bg-center opacity-10 mix-blend-overlay" />
       
       <div className="relative z-10 max-w-4xl mx-auto">
         <h2 className="font-display text-3xl md:text-4xl lg:text-5xl lg:text-7xl lg:text-[80px] font-black uppercase tracking-tighter mb-8 leading-[0.9]">
@@ -549,7 +653,6 @@ export default function Careers() {
 
       <HeroSection onApply={() => handleApply()} />
       <WhyWorkAtSpot />
-      <SpotCulture />
       <EducatorMindset />
       <OpenRoles onApply={handleApply} />
       <Benefits />

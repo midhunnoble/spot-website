@@ -34,21 +34,21 @@ const HeroSection = () => {
       <motion.div style={{ y: y1 }} className="absolute top-24 left-10 md:left-20 hidden lg:block z-10">
         <div className="relative p-3 bg-white shadow-xl transform -rotate-6 hover:rotate-0 transition-transform duration-300">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-4 bg-white/80 border border-black/10 shadow-sm transform -rotate-2" /> {/* Tape */}
-          <img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=400&auto=format&fit=crop" alt="Science" className="w-48 h-56 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+          <img src="/assets/real-photos/media__1773735470601.jpg" alt="Science and Tech" className="w-48 h-56 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
         </div>
       </motion.div>
 
       <motion.div style={{ y: y2 }} className="absolute bottom-32 right-10 md:right-20 hidden lg:block z-10">
         <div className="relative p-3 bg-white shadow-xl transform rotate-6 hover:rotate-0 transition-transform duration-300">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-4 bg-white/80 border border-black/10 shadow-sm transform rotate-3" /> {/* Tape */}
-          <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=400&auto=format&fit=crop" alt="Art" className="w-56 h-48 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+          <img src="/assets/real-photos/media__1773735517503.jpg" alt="Creative Arts" className="w-56 h-48 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
         </div>
       </motion.div>
 
       <motion.div style={{ y: y3 }} className="absolute top-32 right-32 hidden xl:block z-10">
         <div className="relative p-3 bg-white shadow-xl transform rotate-12 hover:rotate-0 transition-transform duration-300">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-4 bg-white/80 border border-black/10 shadow-sm transform -rotate-1" /> {/* Tape */}
-          <img src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=300&auto=format&fit=crop" alt="Robotics" className="w-40 h-40 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+          <img src="/assets/real-photos/media__1773735470612.jpg" alt="Digital Creation" className="w-40 h-40 object-cover grayscale hover:grayscale-0 transition-all duration-500" />
         </div>
       </motion.div>
 
@@ -63,26 +63,19 @@ const HeroSection = () => {
             <Sparkles size={40} />
           </div>
           <h1 className="font-display text-5xl md:text-7xl lg:text-[110px] font-black tracking-tighter uppercase leading-[0.85] text-spot-charcoal mb-6 relative z-10">
-            School is <br className="md:hidden" />
+            Personalized <br className="md:hidden" />
+            Learning <br />
             <span className="relative inline-block">
-              Broken
+              For Minds
               <motion.div 
-                className="absolute top-1/2 left-0 w-full h-3 md:h-5 bg-spot-red -translate-y-1/2 transform -rotate-2"
+                className="absolute top-1/2 left-0 w-full h-3 md:h-5 bg-spot-pastel-yellow -z-10 -translate-y-1/3 transform -rotate-1"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
                 transition={{ duration: 0.6, delay: 1, ease: "circOut" }}
                 style={{ originX: 0 }}
               />
-            </span>.<br />
-            <span className="relative inline-block mt-4 md:mt-0">
-              <span className="relative z-10">SPOT</span>
-              <motion.div 
-                className="absolute -inset-2 md:-inset-4 bg-spot-pastel-yellow -z-10 rounded-xl transform -rotate-2"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 1.4, type: "spring" }}
-              />
-            </span> is where children<br />build their world.
+            </span><br />
+            That Think Different.
           </h1>
         </motion.div>
 
@@ -92,7 +85,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          A microschool and studio ecosystem where children explore art, science, technology and entrepreneurship through real world learning.
+          SPOT is a project-based learning studio designed around the unique strengths of every child. Built for curious teens, homeschoolers, gifted and twice-exceptional learners, and those who find traditional classrooms too limiting. Students learn by building, creating, experimenting, and solving real-world problems alongside mentors.
         </motion.p>
 
         <motion.div 
@@ -380,14 +373,14 @@ const LearningJourney = () => {
 
 const StudentProjects = () => {
   const projects = [
-    { title: "Mechanical robot arm - Building circuits", img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800&auto=format&fit=crop", rotate: -2 },
-    { title: "Design a comic book - Creating Art with Artlore", img: "https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=800&auto=format&fit=crop", rotate: 3 },
-    { title: "Making Pickles - Fermentation Lab", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&auto=format&fit=crop", rotate: -1 },
-    { title: "Designing Branding for a Shop", img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=800&auto=format&fit=crop", rotate: 2 },
-    { title: "Building a Terrarium", img: "https://images.unsplash.com/photo-1528319725582-ddc096101511?q=80&w=800&auto=format&fit=crop", rotate: -3 },
-    { title: "3D printing and designing", img: "https://images.unsplash.com/photo-1581092335397-9583eb92d232?q=80&w=800&auto=format&fit=crop", rotate: 1 },
-    { title: "Baking Studio - Design cakes and cookies", img: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=800&auto=format&fit=crop", rotate: -2 },
-    { title: "AI Studio - Designing programs with AI", img: "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800&auto=format&fit=crop", rotate: 2 },
+    { title: "Mechanical robot arm - Building circuits", img: "/assets/real-photos/mechanical_robot_arm_teen.png", rotate: -2 },
+    { title: "Design a comic book - Creating Art with Artlore", img: "/assets/real-photos/teen_comic_design.png", rotate: 3 },
+    { title: "Making Pickles - Fermentation Lab", img: "/assets/real-photos/teen_pickles.png", rotate: -1 },
+    { title: "Designing Branding for a Shop", img: "/assets/real-photos/teen_branding.png", rotate: 2 },
+    { title: "Building a Terrarium", img: "/assets/real-photos/teen_terrarium.png", rotate: -3 },
+    { title: "3D printing and designing", img: "/assets/real-photos/teen_3d_printing.png", rotate: 1 },
+    { title: "Baking Studio - Design cakes and cookies", img: "/assets/real-photos/teen_baking.png", rotate: -2 },
+    { title: "AI Studio - Designing programs with AI", img: "/assets/real-photos/teen_ai.png", rotate: 2 },
   ];
 
   return (
@@ -504,14 +497,16 @@ const Programs = () => {
 };
 
 const Impact = () => {
+  const stats = [
+    { num: "1000+", label: "Children Impacted" },
+    { num: "50+", label: "After School Learners" },
+    { num: "1:3", label: "Teacher–Student Ratio" }
+  ];
+
   return (
     <section className="py-12 md:py-24 bg-spot-charcoal text-spot-cream px-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-10 text-center">
-        {[
-          { num: "1000+", label: "Children impacted" },
-          { num: "50+", label: "After school learners" },
-          { num: "10+", label: "Studios" }
-        ].map((stat, i) => (
+        {stats.map((stat, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, scale: 0.5 }}
@@ -519,7 +514,7 @@ const Impact = () => {
             viewport={{ once: true }}
             transition={{ type: "spring", delay: i * 0.1 }}
           >
-            <div className="font-display text-3xl md:text-4xl lg:text-5xl lg:text-7xl font-black text-spot-pastel-yellow mb-4">{stat.num}</div>
+            <div className="font-display text-4xl md:text-5xl lg:text-7xl font-black text-spot-pastel-yellow mb-4">{stat.num}</div>
             <div className="font-sans text-lg text-spot-cream/80">{stat.label}</div>
           </motion.div>
         ))}

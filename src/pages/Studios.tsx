@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import { ArrowRight, Lightbulb, Compass, Hammer, Rocket, Users, Target, Briefcase, ChevronLeft, ChevronRight, Star, Sparkles } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 const HeroSection = () => {
   const { scrollY } = useScroll();
@@ -12,7 +12,7 @@ const HeroSection = () => {
     <section className="relative min-h-screen w-full overflow-hidden bg-spot-charcoal flex items-center justify-center pt-20 pb-32 text-spot-cream">
       {/* Dynamic Background */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 left-0 w-full h-full bg-[url('https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay" />
+        <div className="absolute top-0 left-0 w-full h-full bg-[url('/assets/real-photos/media__1773735367725.jpg')] bg-cover bg-center mix-blend-overlay" />
       </div>
       
       <motion.div 
@@ -56,10 +56,10 @@ const HeroSection = () => {
 
         <div className="relative h-[600px] hidden lg:block">
           <motion.div style={{ y: y1 }} className="absolute top-0 right-0 w-64 h-80 rounded-3xl overflow-hidden shadow-2xl border-4 border-spot-charcoal z-20">
-            <img src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=600&auto=format&fit=crop" alt="Building robots" className="w-full h-full object-cover" />
+            <img src="/assets/real-photos/media__1773735470829.jpg" alt="Building projects" className="w-full h-full object-cover" />
           </motion.div>
           <motion.div style={{ y: y2 }} className="absolute bottom-20 left-0 w-72 h-64 rounded-3xl overflow-hidden shadow-2xl border-4 border-spot-charcoal z-30">
-            <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=600&auto=format&fit=crop" alt="Painting" className="w-full h-full object-cover" />
+            <img src="/assets/real-photos/media__1773735492801.jpg" alt="Creative studio" className="w-full h-full object-cover" />
           </motion.div>
           <motion.div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-spot-pastel-yellow rounded-full mix-blend-multiply filter blur-xl opacity-50 z-10 animate-pulse" />
         </div>
@@ -172,7 +172,7 @@ const WhyStudioLearning = () => {
   );
 };
 
-const ExploreStudios = () => {
+const ExploreStudios = ({ onEnroll }: { onEnroll: (name: string) => void }) => {
   const [filter, setFilter] = useState('All');
 
   const categories = ['All', 'Creative Arts', 'Engineering & Making', 'Science & Nature', 'Communication & Storytelling', 'Entrepreneurship'];
@@ -294,7 +294,10 @@ const ExploreStudios = () => {
                 <h3 className="font-display text-3xl font-black mb-4 leading-none">{studio.name}</h3>
                 <p className="font-medium opacity-90 mb-8 flex-grow">{studio.desc}</p>
                 <div className="flex gap-3 mt-auto">
-                  <button className={`flex-1 py-3 rounded-full font-bold text-sm transition-colors ${studio.textColor === 'text-white' ? 'bg-white text-spot-charcoal hover:bg-spot-cream' : 'bg-spot-charcoal text-white hover:bg-black'}`}>
+                  <button 
+                    onClick={() => onEnroll(studio.name)}
+                    className={`flex-1 py-3 rounded-full font-bold text-sm transition-colors ${studio.textColor === 'text-white' ? 'bg-white text-spot-charcoal hover:bg-spot-cream' : 'bg-spot-charcoal text-white hover:bg-black'}`}
+                  >
                     Enroll
                   </button>
                   <button className={`px-4 py-3 rounded-full font-bold text-sm border-2 transition-colors ${studio.textColor === 'text-white' ? 'border-white/30 hover:border-white' : 'border-black/10 hover:border-black/30'}`}>
@@ -404,7 +407,7 @@ const HowItWorks = () => {
 
 
 
-const EnrollmentForm = () => {
+const EnrollmentForm = ({ selectedStudio, setSelectedStudio }: { selectedStudio: string, setSelectedStudio: (val: string) => void }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -470,16 +473,21 @@ const EnrollmentForm = () => {
               </div>
               <div>
                 <label className="block text-sm font-bold mb-2 uppercase tracking-wider text-spot-charcoal/60">Interested Studio</label>
-                <select required className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red transition-colors appearance-none">
+                <select 
+                  required 
+                  value={selectedStudio}
+                  onChange={(e) => setSelectedStudio(e.target.value)}
+                  className="w-full p-4 rounded-xl bg-spot-cream border border-black/10 focus:outline-none focus:border-spot-red transition-colors appearance-none"
+                >
                   <option value="">Select a studio...</option>
-                  <option>Artlore</option>
-                  <option>Machine Marvels</option>
-                  <option>WildJar</option>
-                  <option>Inkubator</option>
-                  <option>Body Dynamics</option>
-                  <option>Astra Stargaze</option>
-                  <option>Spot Sherlock</option>
-                  <option>Junior MBA</option>
+                  <option value="Artlore">Artlore</option>
+                  <option value="Machine Marvels">Machine Marvels</option>
+                  <option value="WildJar">WildJar</option>
+                  <option value="Inkubator">Inkubator</option>
+                  <option value="Body Dynamics">Body Dynamics</option>
+                  <option value="Astra Stargaze">Astra Stargaze</option>
+                  <option value="Spot Sherlock">Spot Sherlock</option>
+                  <option value="Junior MBA">Junior MBA</option>
                 </select>
               </div>
               <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 md:grid md:grid-cols-2 gap-6">
@@ -578,16 +586,27 @@ const Testimonials = () => {
 
 
 export default function Studios() {
+  const [searchParams] = useSearchParams();
+  const [selectedStudio, setSelectedStudio] = useState(searchParams.get('studio') || '');
+
+  const handleEnroll = (studioName: string) => {
+    setSelectedStudio(studioName);
+    const element = document.getElementById('enroll');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="relative bg-spot-cream">
       <HeroSection />
-      <ExploreStudios />
+      <ExploreStudios onEnroll={handleEnroll} />
       <WhatAreStudios />
       <WhyStudioLearning />
       <FeaturedProjects />
       <HowItWorks />
       <Testimonials />
-      <EnrollmentForm />
+      <EnrollmentForm selectedStudio={selectedStudio} setSelectedStudio={setSelectedStudio} />
     </div>
   );
 }

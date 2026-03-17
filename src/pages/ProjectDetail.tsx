@@ -1,47 +1,60 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ArrowLeft, User, Users, Tag, Target, CheckCircle2, PlayCircle, ArrowRight } from 'lucide-react';
-
-const PROJECT_DATA = {
-  id: 'mechanical-robot-arm',
-  title: 'Mechanical Robot Arm',
-  student: 'Aarav & Team',
-  program: 'Machine Marvels Studio',
-  ageGroup: 'Ages 10-12',
-  summary: 'A fully functional mechanical arm built using hydraulic syringes and laser-cut wood.',
-  image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80',
-  bigQuestion: 'How can we use water pressure to lift heavy objects?',
-  whatChildrenDid: 'Aarav and his team started by researching how heavy machinery operates. They designed a prototype using cardboard and plastic syringes filled with water. After several iterations to improve stability and range of motion, they moved to laser-cutting wood for the final structure. The resulting arm can rotate, extend, and grip objects using four independent hydraulic controls.',
-  conceptsExplored: [
-    'Pascal\'s Principle and fluid dynamics',
-    'Mechanical advantage and leverage',
-    'Structural integrity and weight distribution',
-    'Prototyping and iterative design'
-  ],
-  skillsDeveloped: [
-    { title: 'Engineering Design', desc: 'Moving from idea to sketch, prototype, and final product.' },
-    { title: 'Physics Application', desc: 'Seeing theoretical physics work in the real world.' },
-    { title: 'Resilience', desc: 'Overcoming multiple failures during the prototyping phase.' }
-  ],
-  processPhotos: [
-    { url: 'https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80', caption: 'Early cardboard prototyping' },
-    { url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80', caption: 'Testing the hydraulic syringes' },
-    { url: 'https://images.unsplash.com/photo-1581092335397-9583eb92d232?auto=format&fit=crop&q=80', caption: 'Assembling the laser-cut parts' }
-  ],
-  finalOutcome: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80', // Using image as placeholder for video thumbnail
-  reflection: '"I didn\'t think water could be so strong. When our first cardboard arm collapsed, we had to figure out how to make the base wider. It was frustrating but so cool when it finally picked up the block!" - Aarav',
-  studioLink: '/studios'
-};
+import { ArrowLeft, User, Users, Tag, Target, CheckCircle2, PlayCircle, ArrowRight, Loader2, Star } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 export default function ProjectDetail() {
   const { id } = useParams();
-  
-  // In a real app, fetch data based on ID. Using mock data here.
-  const project = PROJECT_DATA;
+  const [project, setProject] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProject() {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('projects')
+          .select('*')
+          .eq('id', id)
+          .single();
+
+        if (error) throw error;
+        setProject(data);
+        window.scrollTo(0, 0);
+      } catch (err) {
+        console.error('Error fetching project:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchProject();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-spot-cream flex flex-col items-center justify-center space-y-6">
+        <Loader2 className="w-12 h-12 text-spot-red animate-spin" />
+        <p className="font-display font-black text-xl uppercase tracking-tighter text-spot-charcoal/40 tracking-widest">Entering Project Archive...</p>
+      </div>
+    );
+  }
+
+  if (!project) {
+    return (
+      <div className="min-h-screen bg-spot-cream flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-4xl font-display font-black mb-6 uppercase">Project Not Found</h2>
+          <Link to="/projects" className="text-spot-red font-bold underline flex items-center gap-2">
+            <ArrowLeft size={20} /> Back to Portfolio
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <main className="pt-20 pb-20">
+    <main className="pt-20 pb-20 bg-spot-cream min-h-screen">
       {/* Back Link */}
       <div className="max-w-7xl mx-auto px-6 pt-8 pb-4">
         <Link to="/projects" className="inline-flex items-center gap-2 text-spot-charcoal/60 hover:text-spot-red font-bold transition-colors">
@@ -57,20 +70,20 @@ export default function ProjectDetail() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <span className="inline-block py-1 px-3 rounded-full bg-spot-pastel-yellow text-spot-charcoal font-bold text-sm tracking-wider uppercase mb-6">
-              {project.program}
+            <span className="inline-block py-1.5 px-4 rounded-full bg-spot-pastel-yellow text-spot-charcoal border border-black/5 font-black text-[10px] tracking-widest uppercase mb-6">
+              {project.category}
             </span>
-            <h1 className="font-display font-black text-5xl md:text-7xl text-spot-charcoal tracking-tighter mb-6 leading-tight">
+            <h1 className="font-display font-black text-5xl md:text-7xl lg:text-8xl text-spot-charcoal tracking-tighter mb-8 leading-[0.9]">
               {project.title}
             </h1>
             
-            <div className="flex flex-wrap gap-6 mb-8 text-spot-charcoal/80 font-medium">
-              <div className="flex items-center gap-2"><User size={20} className="text-spot-red" /> {project.student}</div>
-              <div className="flex items-center gap-2"><Users size={20} className="text-spot-red" /> {project.ageGroup}</div>
+            <div className="flex flex-wrap gap-8 mb-10 text-spot-charcoal/80 font-bold uppercase text-xs tracking-widest">
+              <div className="flex items-center gap-3"><User size={18} className="text-spot-red" /> {project.student_name}</div>
+              <div className="flex items-center gap-3"><Users size={18} className="text-spot-red" /> {project.age_group}</div>
             </div>
 
-            <p className="text-xl text-spot-charcoal/80 leading-relaxed mb-8">
-              {project.summary}
+            <p className="text-xl md:text-2xl text-spot-charcoal/80 leading-snug mb-8 font-medium italic">
+              {project.summary || project.description}
             </p>
           </motion.div>
 
@@ -78,108 +91,132 @@ export default function ProjectDetail() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="rounded-[3rem] overflow-hidden shadow-2xl shadow-black/10 border border-black/5"
+            className="rounded-[3.5rem] overflow-hidden shadow-2xl shadow-black/10 border border-black/5 aspect-4/3"
           >
-            <img src={project.image} alt={project.title} className="w-full h-full object-cover aspect-square md:aspect-[4/3]" />
+            <img src={project.image_url} alt={project.title} className="w-full h-full object-cover" />
           </motion.div>
         </div>
       </section>
 
       {/* Project Details */}
-      <section className="py-16 px-6 max-w-4xl mx-auto">
-        <div className="space-y-16">
+      <section className="py-24 px-6 max-w-4xl mx-auto">
+        <div className="space-y-24">
           
           {/* Big Question */}
-          <div className="bg-spot-red text-white p-10 rounded-[3rem] shadow-xl text-center transform -rotate-1">
-            <h2 className="font-display font-black text-2xl text-spot-pastel-yellow mb-4 uppercase tracking-widest">The Big Question</h2>
-            <p className="font-display font-bold text-3xl md:text-4xl leading-tight">
-              "{project.bigQuestion}"
-            </p>
-          </div>
+          {project.big_question && (
+            <div className="bg-spot-red text-white p-12 rounded-[4rem] shadow-2xl text-center transform -rotate-1 relative overflow-hidden">
+               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl" />
+              <h2 className="font-display font-black text-[10px] text-spot-pastel-yellow mb-6 uppercase tracking-[0.3em]">The Big Question</h2>
+              <p className="font-display font-bold text-3xl md:text-4.5xl leading-tight">
+                "{project.big_question}"
+              </p>
+            </div>
+          )}
 
           {/* What Children Did */}
           <div>
-            <h2 className="font-display font-black text-3xl text-spot-charcoal mb-6">What Children Did</h2>
-            <p className="text-lg text-spot-charcoal/80 leading-relaxed">
-              {project.whatChildrenDid}
-            </p>
+            <h2 className="font-display text-4xl font-black uppercase tracking-tighter mb-8 flex items-center gap-4">
+               <span className="w-12 h-1 bg-spot-red rounded-full" /> The Process
+            </h2>
+            <div className="prose prose-xl font-medium text-spot-charcoal/80 leading-relaxed italic">
+              <p>{project.what_children_did || project.description}</p>
+            </div>
           </div>
 
           {/* Concepts Explored */}
-          <div className="bg-spot-pastel-blue/20 p-8 rounded-3xl border border-spot-pastel-blue/50">
-            <h2 className="font-display font-black text-2xl text-spot-charcoal mb-6 flex items-center gap-3">
-              <Target className="text-spot-red" /> Concepts Explored
-            </h2>
-            <ul className="space-y-4">
-              {project.conceptsExplored.map((concept, index) => (
-                <li key={index} className="flex items-start gap-3 text-spot-charcoal/80 font-medium">
-                  <CheckCircle2 size={20} className="text-spot-pastel-blue shrink-0 mt-0.5" />
-                  <span>{concept}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {project.concepts_explored && project.concepts_explored.length > 0 && (
+            <div className="bg-spot-pastel-blue/10 p-12 rounded-[3.5rem] border border-spot-pastel-blue/30 relative">
+               <div className="absolute -top-6 left-12 px-6 py-2 bg-spot-pastel-blue text-white rounded-full font-black uppercase text-[10px] tracking-widest shadow-lg">
+                  Concepts Explored
+               </div>
+              <ul className="grid sm:grid-cols-2 gap-6 pt-4">
+                {project.concepts_explored.map((concept: string, index: number) => (
+                  <li key={index} className="flex items-start gap-4 text-spot-charcoal font-bold uppercase tracking-tighter">
+                    <CheckCircle2 size={24} className="text-spot-pastel-blue shrink-0" />
+                    <span className="text-lg leading-tight">{concept}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Build Process Gallery */}
-          <div>
-            <h2 className="font-display font-black text-3xl text-spot-charcoal mb-8">Process Gallery</h2>
-            <div className="grid sm:grid-cols-3 gap-6">
-              {project.processPhotos.map((photo, index) => (
-                <div key={index} className="group">
-                  <div className="rounded-2xl overflow-hidden mb-3 h-48">
-                    <img src={photo.url} alt={photo.caption} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          {project.process_photos && project.process_photos.length > 0 && (
+            <div>
+              <h2 className="font-display text-4xl font-black uppercase tracking-tighter mb-12">Process Gallery</h2>
+              <div className="grid sm:grid-cols-3 gap-8">
+                {project.process_photos.map((photo: any, index: number) => (
+                  <div key={index} className="group">
+                    <div className="rounded-[2.5rem] overflow-hidden mb-4 aspect-square border border-black/5 shadow-xl">
+                      <img src={photo.url} alt={photo.caption} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    </div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-spot-charcoal/30 text-center">{photo.caption}</p>
                   </div>
-                  <p className="text-sm font-bold text-spot-charcoal/60 text-center">{photo.caption}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Final Outcome */}
-          <div>
-            <h2 className="font-display font-black text-3xl text-spot-charcoal mb-8">Final Outcome</h2>
-            <div className="relative rounded-[2rem] overflow-hidden shadow-xl shadow-black/10 group cursor-pointer">
-              <img src={project.finalOutcome} alt="Final Outcome" className="w-full aspect-video object-cover group-hover:scale-105 transition-transform duration-700" />
-              <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/40 transition-colors">
-                <PlayCircle size={80} className="text-white opacity-90 group-hover:scale-110 transition-transform" />
+                ))}
               </div>
             </div>
-          </div>
+          )}
+
+          {/* Final Outcome */}
+          {project.final_outcome_url && (
+            <div>
+              <h2 className="font-display text-4xl font-black uppercase tracking-tighter mb-10 flex items-center gap-4 text-spot-red">
+                 Final Outcome
+              </h2>
+              <div className="relative rounded-[4rem] overflow-hidden shadow-2xl border border-black/5 group cursor-pointer aspect-video">
+                <img src={project.final_outcome_url} alt="Final Outcome" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/20 transition-all backdrop-blur-sm group-hover:backdrop-blur-none">
+                  <div className="w-24 h-24 bg-white/20 backdrop-blur-xl border border-white/30 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                     <PlayCircle size={64} className="text-white fill-white/20" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Skills Developed */}
-          <div className="bg-spot-charcoal text-spot-cream p-10 rounded-[3rem] shadow-xl">
-            <h2 className="font-display font-black text-3xl text-spot-pastel-yellow mb-8">Skills Developed</h2>
-            <div className="grid sm:grid-cols-3 gap-8">
-              {project.skillsDeveloped.map((skill, index) => (
-                <div key={index}>
-                  <h4 className="font-bold text-lg text-white mb-2">{skill.title}</h4>
-                  <p className="text-sm text-spot-cream/70 leading-relaxed">{skill.desc}</p>
-                </div>
-              ))}
+          {project.skills_developed && project.skills_developed.length > 0 && (
+            <div className="bg-spot-charcoal text-spot-cream p-12 rounded-[4rem] shadow-2xl relative overflow-hidden">
+               <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-spot-red via-spot-pastel-blue to-spot-pastel-yellow" />
+              <h2 className="font-display text-3xl font-black text-spot-pastel-yellow mb-12 uppercase tracking-tighter">Skills Developed</h2>
+              <div className="grid sm:grid-cols-3 gap-10">
+                {project.skills_developed.map((skill: any, index: number) => (
+                  <div key={index} className="space-y-3">
+                    <h4 className="font-black text-lg text-white uppercase tracking-tighter italic">{skill.title}</h4>
+                    <p className="text-[13px] font-medium text-spot-cream/50 leading-relaxed italic">{skill.desc}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Reflection */}
-          <div className="bg-spot-pastel-yellow/30 p-10 rounded-[3rem] text-center">
-            <h2 className="font-display font-black text-2xl text-spot-charcoal mb-6 uppercase tracking-widest opacity-50">Student Reflection</h2>
-            <p className="font-display font-bold text-2xl md:text-3xl text-spot-charcoal leading-tight italic">
-              {project.reflection}
-            </p>
-          </div>
+          {project.reflection && (
+            <div className="bg-spot-pastel-yellow/20 p-16 rounded-[4rem] text-center border-2 border-dashed border-spot-pastel-yellow/40 relative">
+               <div className="absolute -top-8 left-1/2 -translate-x-1/2 p-4 bg-spot-pastel-yellow rounded-2xl shadow-xl">
+                  <Star size={32} className="text-spot-charcoal" fill="currentColor" />
+               </div>
+              <h2 className="font-display font-black text-[10px] text-spot-charcoal/30 mb-8 uppercase tracking-[0.4em]">Student Reflection</h2>
+              <p className="font-display font-bold text-2xl md:text-3.5xl text-spot-charcoal leading-tight italic">
+                "{project.reflection}"
+              </p>
+              <div className="mt-8 font-black uppercase text-xs tracking-widest text-spot-charcoal/40">— {project.student_name}</div>
+            </div>
+          )}
 
         </div>
       </section>
 
       {/* Final CTA */}
-      <section className="py-24 px-6 text-center max-w-3xl mx-auto">
-        <h2 className="font-display font-black text-4xl md:text-5xl text-spot-charcoal mb-8 tracking-tighter">
-          Inspired by this project?
+      <section className="py-32 px-6 text-center max-w-4xl mx-auto">
+        <h2 className="font-display font-black text-5xl md:text-7xl text-spot-charcoal mb-12 tracking-tighter uppercase leading-[0.85]">
+          Inspired by this <span className="text-spot-red">Maker Voyage?</span>
         </h2>
         <Link 
-          to={project.studioLink}
-          className="inline-flex items-center gap-3 px-10 py-5 bg-spot-red text-white font-bold rounded-full hover:bg-red-700 transition-colors text-xl shadow-xl shadow-spot-red/20"
+          to={project.studio_link || '/studios'}
+          className="inline-flex items-center gap-4 px-12 py-6 bg-spot-charcoal text-white font-black uppercase tracking-[0.2em] rounded-3xl hover:bg-black transition-all text-sm shadow-2xl shadow-black/20 group haptic-feedback"
         >
-          Explore This Studio <ArrowRight size={24} />
+          Explore This Studio <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
         </Link>
       </section>
 

@@ -32,23 +32,31 @@ const HeroSection = () => {
   const y3 = useTransform(scrollY, [0, 1000], [0, 100]);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-spot-cream text-spot-charcoal pt-20 pb-32">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-spot-cream text-spot-charcoal pt-24 pb-32 antigravity-perspective">
       {/* SEO Keywords hidden */}
       <div className="hidden">
         <h1>microschool in Bangalore</h1>
         <h2>alternative education programs</h2>
         <h3>project based learning schools</h3>
-        <h4>neurodiversity friendly schools</h4>
-        <h5>creative learning environments for children</h5>
+        <h4>personalized learning spaces</h4>
+        <h5>creative learning environments for teens</h5>
       </div>
 
       {/* Floating Collage Images */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <motion.div style={{ y: y1 }} className="absolute top-32 left-10 md:left-20 w-48 md:w-64 aspect-square rounded-2xl overflow-hidden shadow-2xl border-8 border-white transform -rotate-6 z-0">
-          <img src="https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=600&auto=format&fit=crop" alt="Children collaborating" className="w-full h-full object-cover" />
+      <div className="absolute inset-0 pointer-events-none overflow-hidden antigravity-perspective">
+        <motion.div 
+          style={{ y: y1 }} 
+          className="absolute top-32 left-10 md:left-20 w-48 md:w-64 aspect-square rounded-[2rem] overflow-hidden shadow-2xl border-4 border-spot-charcoal transform -rotate-6 z-0"
+          whileHover={{ rotate: 0, scale: 1.1, z: 50 }}
+        >
+          <img src="https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=600&auto=format&fit=crop" alt="Children collaborating" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
         </motion.div>
-        <motion.div style={{ y: y2 }} className="absolute bottom-20 right-10 md:right-20 w-56 md:w-72 aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border-8 border-white transform rotate-3 z-0">
-          <img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=600&auto=format&fit=crop" alt="Child building" className="w-full h-full object-cover" />
+        <motion.div 
+          style={{ y: y2 }} 
+          className="absolute bottom-20 right-10 md:right-20 w-56 md:w-72 aspect-[4/3] rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-spot-charcoal transform rotate-3 z-0"
+          whileHover={{ rotate: 0, scale: 1.1, z: 80 }}
+        >
+          <img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=600&auto=format&fit=crop" alt="Child building" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
         </motion.div>
         <motion.div style={{ y: y3 }} className="absolute top-1/3 right-1/4 w-32 aspect-square rounded-full overflow-hidden shadow-xl border-4 border-spot-pastel-pink z-0 hidden lg:block">
           <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=400&auto=format&fit=crop" alt="Science experiment" className="w-full h-full object-cover" />
@@ -57,21 +65,35 @@ const HeroSection = () => {
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center mt-20">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="inline-block px-4 py-2 bg-spot-pastel-yellow/30 text-spot-charcoal border border-spot-pastel-yellow rounded-full font-bold tracking-wider uppercase text-sm mb-8 backdrop-blur-sm">
+          <div className="inline-block px-5 py-2 glass-morphism border border-spot-red/20 text-spot-red rounded-full font-black tracking-widest uppercase text-xs mb-8 shadow-xl">
             Our Story
           </div>
-          <h1 className="font-display text-5xl md:text-7xl lg:text-[100px] font-black tracking-tighter uppercase leading-[0.85] mb-8">
-            Reimagining <br />
-            <span className="text-spot-red">How Children Learn.</span>
+          <h1 className="font-display text-5xl md:text-7xl lg:text-[100px] font-black tracking-tighter uppercase leading-[0.82] mb-8">
+            <motion.span
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="inline-block"
+            >
+              Reimagining
+            </motion.span> <br />
+            <motion.span
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="inline-block text-spot-red"
+            >
+              How Children Learn.
+            </motion.span>
           </h1>
-          <p className="font-sans text-xl md:text-3xl mb-12 text-spot-charcoal/80 font-medium max-w-3xl mx-auto leading-tight">
+          <p className="font-sans text-xl md:text-2xl mb-12 text-spot-charcoal/80 font-medium max-w-3xl mx-auto leading-tight">
             SPOT is a microschool and studio ecosystem where curiosity, creativity and real world learning come together.
           </p>
-          <Link to="/studios" className="inline-flex items-center gap-2 px-8 py-4 bg-spot-charcoal text-spot-cream font-bold rounded-full text-lg hover:bg-spot-red transition-colors shadow-xl hover:scale-105 active:scale-95">
+          <Link to="/studios" className="inline-flex items-center gap-4 px-10 py-5 bg-spot-charcoal text-spot-cream font-black uppercase tracking-widest rounded-2xl text-sm hover:bg-spot-red transition-all shadow-2xl hover:scale-105 active:scale-95 haptic-feedback">
             Explore Our Studios <ArrowRight size={20} />
           </Link>
         </motion.div>
@@ -85,7 +107,7 @@ const SpotStory = () => {
     { phase: "Idea Phase", year: "2021", desc: "An experiment in learning begins, questioning why traditional schooling fails curious and creative learners." },
     { phase: "First Studios", year: "2022", desc: "Small after-school maker spaces open, focusing on project-based learning and creative exploration." },
     { phase: "Microschool Launch", year: "2023", desc: "SPOT officially launches as a full-time alternative education program in Bangalore." },
-    { phase: "Community Growth", year: "2024", desc: "Expanding to include neurodiversity friendly classrooms and a broader network of mentors." }
+    { phase: "Community Growth", year: "2024", desc: "Expanding to include personalized learning environments and a broader network of mentors." }
   ];
 
   return (
@@ -174,14 +196,15 @@ const TraditionalVsSpot = () => {
 
           {/* SPOT Learning */}
           <motion.div 
-            className="min-w-[85vw] md:min-w-0 snap-center bg-spot-charcoal text-spot-cream p-8 md:p-12 rounded-[3rem] shadow-2xl relative overflow-hidden transform md:-translate-y-8"
+            className="min-w-[85vw] md:min-w-0 snap-center bg-spot-charcoal text-spot-cream p-10 md:p-14 rounded-[3.5rem] shadow-2xl border border-white/5 relative overflow-hidden transform md:-translate-y-8"
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            whileHover={{ y: -15, scale: 1.02 }}
           >
-            <div className="absolute top-0 right-0 w-48 h-48 bg-spot-pastel-pink/20 rounded-bl-full filter blur-2xl -z-0" />
-            <h3 className="font-display text-4xl font-bold mb-8 text-spot-pastel-yellow">SPOT Learning</h3>
-            <ul className="space-y-6 relative z-10">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-spot-pastel-pink/20 rounded-bl-full filter blur-[100px] -z-0" />
+            <h3 className="font-display text-4xl font-black mb-10 text-spot-pastel-yellow uppercase tracking-tighter leading-none">SPOT Learning</h3>
+            <ul className="space-y-8 relative z-10">
               {[
                 "Project-based exploration",
                 "Individualized learning pathways",
@@ -189,8 +212,10 @@ const TraditionalVsSpot = () => {
                 "Creative freedom and ownership",
                 "Stage-based collaborative cohorts"
               ].map((item, i) => (
-                <li key={i} className="flex items-center gap-4 text-xl font-medium">
-                  <CheckCircle2 className="text-spot-pastel-green shrink-0" />
+                <li key={i} className="flex items-center gap-5 text-xl font-bold tracking-tight">
+                  <div className="p-1 bg-spot-pastel-green rounded-lg text-spot-charcoal shadow-lg">
+                    <CheckCircle2 size={24} />
+                  </div>
                   <span>{item}</span>
                 </li>
               ))}
@@ -207,7 +232,7 @@ const Philosophy = () => {
     { title: "Executive Function", desc: "Developing self-regulation, planning, and focus.", icon: <Brain size={32} />, color: "bg-spot-pastel-pink" },
     { title: "Studio Based", desc: "Learning in immersive, domain-specific environments.", icon: <Hammer size={32} />, color: "bg-spot-pastel-yellow" },
     { title: "Project Based", desc: "Tackling real-world challenges to build practical skills.", icon: <Target size={32} />, color: "bg-spot-pastel-blue" },
-    { title: "Belonging", desc: "Fostering an inclusive, neurodiversity-friendly community.", icon: <Heart size={32} />, color: "bg-spot-red", textColor: "text-white" },
+    { title: "Belonging", desc: "Fostering an inclusive community for divergent minds.", icon: <Heart size={32} />, color: "bg-spot-red", textColor: "text-white" },
     { title: "Individual Pathways", desc: "Honoring each child's unique pace and interests.", icon: <Compass size={32} />, color: "bg-spot-pastel-green" }
   ];
 
@@ -221,25 +246,28 @@ const Philosophy = () => {
           <p className="font-handwriting text-3xl text-spot-charcoal/60 transform -rotate-2">The SPOT Philosophy</p>
         </div>
 
-        <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 hide-scrollbar">
-          {pillars.map((pillar, i) => (
-            <motion.div 
-              key={i}
-              className={`min-w-[85vw] md:min-w-0 snap-center ${pillar.color} ${pillar.textColor || 'text-spot-charcoal'} p-8 rounded-[2.5rem] shadow-sm border border-black/5 flex flex-col items-start gap-6 hover:scale-105 transition-transform duration-300 ${i === 3 ? 'md:col-span-2 lg:col-span-1' : ''} ${i === 4 ? 'md:col-span-2 lg:col-span-2' : ''}`}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <div className={`p-4 rounded-full ${pillar.textColor === 'text-white' ? 'bg-white/20' : 'bg-white/50'}`}>
-                {pillar.icon}
-              </div>
-              <div>
-                <h3 className="font-display text-2xl font-bold mb-2">{pillar.title}</h3>
-                <p className={`text-lg ${pillar.textColor === 'text-white' ? 'text-white/90' : 'text-spot-charcoal/70'}`}>{pillar.desc}</p>
-              </div>
-            </motion.div>
-          ))}
+        <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 hide-scrollbar">
+          {pillars.map((pillar, i) => {
+            const isSpecial = pillar.title === "Belonging";
+            return (
+              <motion.div 
+                key={i}
+                className={`min-w-[85vw] md:min-w-0 snap-center ${isSpecial ? 'bg-spot-red ring-8 ring-spot-red/20' : `glass-morphism ${pillar.color}`} ${pillar.textColor || 'text-spot-charcoal'} p-10 rounded-[3rem] shadow-xl border ${isSpecial ? 'border-white/40' : 'border-white/40'} flex flex-col items-start gap-8 hover:scale-110 transition-all duration-500 hover:shadow-2xl ${i === 3 ? 'md:col-span-2 lg:col-span-1' : ''} ${i === 4 ? 'md:col-span-2 lg:col-span-2' : ''}`}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className={`p-5 rounded-2xl shadow-xl ${isSpecial ? 'bg-white text-spot-red' : 'bg-white/70 text-spot-charcoal'}`}>
+                  {React.cloneElement(pillar.icon as React.ReactElement, { size: 36 })}
+                </div>
+                <div>
+                  <h3 className="font-display text-4xl font-black mb-4 uppercase tracking-tighter leading-[0.85]">{pillar.title}</h3>
+                  <p className={`text-xl font-medium leading-tight ${isSpecial ? 'text-white' : 'text-spot-charcoal/70'}`}>{pillar.desc}</p>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -288,10 +316,12 @@ const Culture = () => {
 
 const Team = () => {
   const team = [
-    { name: "Dr. Maya Patel", role: "Co-Founder & Head of Learning", quote: "Education should be an adventure, not a chore.", bg: "Former neuroscientist turned educator. Passionate about executive function.", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600&auto=format&fit=crop" },
-    { name: "James Chen", role: "Co-Founder & Studio Director", quote: "We build environments where kids can surprise themselves.", bg: "Industrial designer and maker. Believes in learning through building.", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=600&auto=format&fit=crop" },
-    { name: "Aisha Rahman", role: "Lead Storytelling Mentor", quote: "Every child has a story. We just give them the microphone.", bg: "Published author and podcaster. Leads the Inkubator studio.", img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=600&auto=format&fit=crop" },
-    { name: "David Kim", role: "Engineering Facilitator", quote: "Failure is just data for the next iteration.", bg: "Robotics engineer. Guides the Machine Marvels studio.", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&auto=format&fit=crop" }
+    { name: "Midhun Noble", role: "Founder", quote: "Education should be an adventure, not a chore.", bg: "Founder of SPOT. Passionate about reimagining education for divergent minds.", img: "/assets/team/midhun.jpg" },
+    { name: "Pooja Yatisha", role: "SPOT Guide", quote: "Learning happens through connection.", bg: "Guiding learners through their project journeys with empathy.", img: "/assets/team/pooja.png" },
+    { name: "Arvin Yasir", role: "Partnerships and Marketing", quote: "Building a community of innovators.", bg: "Connecting SPOT with parents and partners who think differently.", img: "/assets/team/arvin.jpg" },
+    { name: "Lakshmi Sridhar", role: "SPOT Mentor", quote: "Mentorship is about lighting the path, not leading it.", bg: "Supporting students as they explore their passions and build real-world skills.", img: "/assets/team/lakshmi.png" },
+    { name: "Shaima N", role: "Academic Coordinator", quote: "Supporting children where they are.", bg: "Ensures the smooth operation of our microschool and studio ecosystem.", img: "/assets/team/shaima.png" },
+    { name: "Dr Bindiya Shajith", role: "Program Architect", quote: "Designing protocols for personalized growth.", bg: "Architecting our neuro-affirmative and stage-based cohorts.", img: "/assets/real-photos/studio_atmosphere.png" }
   ];
 
   return (
@@ -351,8 +381,8 @@ const Collaborators = () => {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=600&auto=format&fit=crop" alt="Workshop" className="rounded-3xl w-full h-48 object-cover" />
-          <img src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?q=80&w=600&auto=format&fit=crop" alt="Guest Mentor" className="rounded-3xl w-full h-48 object-cover transform translate-y-8" />
+          <img src="/assets/real-photos/mentor_teen_collab.png" alt="Engineering Mentor Collab" className="rounded-3xl w-full h-64 object-cover" />
+          <img src="/assets/real-photos/workshop_collaboration.png" alt="Workshop Hands-on Collaboration" className="rounded-3xl w-full h-64 object-cover transform translate-y-8" />
         </div>
       </div>
     </section>
@@ -441,11 +471,21 @@ const FutureVision = () => {
 
 const Gallery = () => {
   const images = [
-    "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=800&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=800&auto=format&fit=crop"
+    "/assets/real-photos/teen_3d_printing.png",
+    "/assets/real-photos/teen_ai.png",
+    "/assets/real-photos/teen_baking.png",
+    "/assets/real-photos/teen_branding.png",
+    "/assets/real-photos/teen_comic_design.png",
+    "/assets/real-photos/teen_pickles.png",
+    "/assets/real-photos/teen_terrarium.png",
+    "/assets/real-photos/media__1773735517512.jpg",
+    "/assets/real-photos/media__1773735501749.jpg",
+    "/assets/real-photos/media__1773735492774.jpg",
+    "/assets/real-photos/media__1773735470545.jpg",
+    "/assets/real-photos/media__1773735492793.jpg",
+    "/assets/real-photos/media__1773735517503.jpg",
+    "/assets/real-photos/mechanical_robot_arm_teen.png",
+    "/assets/real-photos/clay_figures_2.jpg"
   ];
 
   return (
@@ -507,13 +547,11 @@ export default function About() {
   return (
     <div className="relative bg-spot-cream">
       <HeroSection />
-      <SpotStory />
       <TraditionalVsSpot />
       <Philosophy />
       <Culture />
       <Team />
       <Collaborators />
-      <Impact />
       <FutureVision />
       <Gallery />
       <JoinJourney />

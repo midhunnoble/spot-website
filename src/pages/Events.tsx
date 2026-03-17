@@ -107,12 +107,14 @@ export default function Events() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [selectedEventTitle, setSelectedEventTitle] = useState('');
+  const [selectedEventPrice, setSelectedEventPrice] = useState('');
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const tabs = ['All Events', 'Kids Workshops', 'Parent Sessions', 'Educator Trainings', 'Camps', 'School Programs', 'Online', 'In Person'];
 
-  const handleBookNow = (title: string) => {
+  const handleBookNow = (title: string, price: string) => {
     setSelectedEventTitle(title);
+    setSelectedEventPrice(price);
     setIsBookingModalOpen(true);
   };
 
@@ -248,7 +250,7 @@ export default function Events() {
                   <div className="flex items-center justify-between pt-4 border-t border-black/5">
                     <span className="font-black text-xl text-spot-charcoal">{event.price}</span>
                     <button 
-                      onClick={() => handleBookNow(event.title)}
+                      onClick={() => handleBookNow(event.title, event.price)}
                       className="px-6 py-2.5 bg-spot-charcoal text-white font-bold rounded-full hover:bg-spot-red transition-colors text-sm"
                     >
                       Book Now
@@ -316,7 +318,7 @@ export default function Events() {
                       Details
                     </Link>
                     <button 
-                      onClick={() => handleBookNow(event.title)}
+                      onClick={() => handleBookNow(event.title, event.price)}
                       className="px-4 py-2.5 bg-spot-red text-white font-bold rounded-xl hover:bg-red-700 transition-colors text-sm"
                     >
                       Book Now
@@ -494,6 +496,7 @@ export default function Events() {
         isOpen={isBookingModalOpen} 
         onClose={() => setIsBookingModalOpen(false)} 
         eventTitle={selectedEventTitle} 
+        eventPrice={selectedEventPrice}
       />
     </main>
   );

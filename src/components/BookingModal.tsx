@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
   eventTitle?: string;
+  eventPrice?: string;
 }
 
-export const BookingModal = ({ isOpen, onClose, eventTitle = 'SPOT Event' }: BookingModalProps) => {
+export const BookingModal = ({ isOpen, onClose, eventTitle = 'SPOT Event', eventPrice = '' }: BookingModalProps) => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -18,31 +20,57 @@ export const BookingModal = ({ isOpen, onClose, eventTitle = 'SPOT Event' }: Boo
     seats: '1',
     notes: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Booking submitted:', { ...formData, eventSelected: eventTitle });
-    // Handle submission logic here
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsSubmitted(false);
-      onClose();
-      setFormData({
-        fullName: '',
-        email: '',
-        phone: '',
-        childName: '',
-        childAge: '',
-        seats: '1',
-        notes: ''
-      });
-    }, 3000);
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase
+        .from('leads')
+        .insert([{
+          type: eventTitle.toLowerCase().includes('tour') ? 'tour' : 'event_booking',
+          name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          metadata: {
+            child_name: formData.childName,
+            child_age: formData.childAge,
+            seats: formData.seats,
+            event_title: eventTitle,
+            event_price: eventPrice,
+            notes: formData.notes
+          }
+        }]);
+
+      if (error) throw error;
+
+      setIsSubmitted(true);
+      setTimeout(() => {
+        setIsSubmitted(false);
+        onClose();
+        setFormData({
+          fullName: '',
+          email: '',
+          phone: '',
+          childName: '',
+          childAge: '',
+          seats: '1',
+          notes: ''
+        });
+      }, 3000);
+    } catch (err) {
+      console.error('Error submitting booking:', err);
+      alert('Failed to book. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -150,9 +178,10 @@ export const BookingModal = ({ isOpen, onClose, eventTitle = 'SPOT Event' }: Boo
                 <button 
                   type="submit" 
                   form="booking-form"
-                  className="w-full py-4 bg-spot-red text-white font-bold rounded-xl hover:bg-red-700 transition-colors text-lg shadow-lg shadow-spot-red/20"
+                  disabled={isSubmitting}
+                  className="w-full py-4 bg-spot-red text-white font-bold rounded-xl hover:bg-red-700 transition-colors text-lg shadow-lg shadow-spot-red/20 disabled:opacity-50 flex items-center justify-center gap-2"
                 >
-                  Reserve My Spot
+                  {isSubmitting ? <><Loader2 className="animate-spin" size={20} /> Booking...</> : "Reserve My Spot"}
                 </button>
               </div>
             )}
