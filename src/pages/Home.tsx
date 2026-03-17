@@ -52,11 +52,11 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative min-h-[110vh] w-full overflow-hidden bg-spot-cream flex items-center justify-center pt-20 pb-40 perspective-1000">
+    <section className="relative min-h-screen w-full overflow-hidden bg-spot-cream flex items-center justify-center pt-20 pb-32 perspective-1000">
       {/* Background Mesh Gradients */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 overflow-hidden">
         <motion.div 
-          className="absolute top-[-10%] left-[-5%] w-[60%] h-[60%] bg-spot-pastel-pink/40 rounded-full blur-[120px]"
+          className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-spot-pastel-pink/20 rounded-full blur-[120px]"
           animate={{ 
             x: [0, 40, 0],
             y: [0, 60, 0],
@@ -65,7 +65,7 @@ const HeroSection = () => {
           transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
         />
         <motion.div 
-          className="absolute bottom-[-10%] right-[-5%] w-[50%] h-[50%] bg-spot-pastel-blue/40 rounded-full blur-[100px]"
+          className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-spot-pastel-blue/20 rounded-full blur-[100px]"
           animate={{ 
             x: [0, -30, 0],
             y: [0, -50, 0],
@@ -73,22 +73,14 @@ const HeroSection = () => {
           }}
           transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
         />
-        <motion.div 
-          className="absolute top-[20%] right-[10%] w-[40%] h-[40%] bg-spot-pastel-yellow/30 rounded-full blur-[80px]"
-          animate={{ 
-            x: [0, 20, 0],
-            y: [0, -20, 0]
-          }}
-          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-        />
       </div>
 
       {/* Floating Learning Artifacts */}
-      <FloatingArtifact depth={0.6} delay={0.2} className="top-1/4 left-8 md:left-24 lg:block hidden">
+      <FloatingArtifact depth={0.6} delay={0.2} className="top-20 left-4 md:left-12 lg:block hidden">
         <div className="glass-morphism p-2 rounded-2xl shadow-2xl rotate-[-12deg] group hover:rotate-0 transition-transform duration-500">
           <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-10 h-3 bg-white/60 backdrop-blur-sm border border-black/5 rounded-full" />
           <img 
-            src="/assets/real-photos/teen_3d_printing.png" 
+            src="/assets/real-photos/teen_laptop.jpg" 
             alt="Student Work" 
             className="w-40 h-48 object-cover rounded-xl grayscale hover:grayscale-0 transition-all duration-500" 
           />
@@ -106,14 +98,14 @@ const HeroSection = () => {
         </div>
       </FloatingArtifact>
 
-      <FloatingArtifact depth={1.2} delay={0.6} className="top-1/3 right-1/4 hidden xl:block">
+      <FloatingArtifact depth={1.2} delay={0.6} className="top-10 right-10 hidden xl:block">
         <div className="bg-spot-charcoal text-white p-4 rounded-2xl shadow-2xl rotate-12 flex flex-col items-center gap-2 animate-float-subtle">
            <Rocket className="text-spot-pastel-yellow" size={32} />
            <span className="font-display font-bold text-xs uppercase tracking-widest">Builder Studio</span>
         </div>
       </FloatingArtifact>
 
-      <FloatingArtifact depth={0.4} delay={0.8} className="bottom-1/3 left-1/4 hidden xl:block">
+      <FloatingArtifact depth={0.4} delay={0.8} className="bottom-20 left-10 hidden xl:block">
         <div className="bg-spot-red text-white p-4 rounded-2xl shadow-2xl -rotate-12 flex flex-col items-center gap-2 animate-float-subtle">
            <Brain className="text-spot-pastel-pink" size={32} />
            <span className="font-display font-bold text-xs uppercase tracking-widest">Cognitive Focus</span>
@@ -164,20 +156,20 @@ const HeroSection = () => {
            transition={{ duration: 1, delay: 0.8, ease: [0.23, 1, 0.32, 1] }}
            className="max-w-3xl mx-auto"
         >
-          <p className="font-sans text-lg md:text-xl lg:text-2xl text-spot-charcoal/70 mb-12 leading-relaxed font-medium">
-            SPOT is a project-based learning studio designed around the unique strengths of every child. <span className="text-spot-charcoal font-bold">Built for curious teens, homeschoolers, gifted and twice-exceptional learners</span>, and those who find traditional classrooms too limiting. Students learn by building, creating, experimenting, and solving real-world problems alongside mentors.
+          <p className="font-sans text-xl md:text-2xl lg:text-3xl text-spot-charcoal/80 mb-12 leading-tight font-bold tracking-tight">
+            A Studio based Microschool Where <span className="text-spot-red">curious minds</span> learn by building, not memorising.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-30">
             <Link to="/microschool" className="group relative">
-              <div className="absolute inset-0 bg-spot-red blur-lg opacity-40 group-hover:opacity-60 transition-opacity" />
-              <div className="relative glass-morphism-heavy px-10 py-5 bg-spot-red rounded-full flex items-center gap-3 text-white font-black text-lg tracking-tight hover:scale-105 active:scale-95 transition-all duration-300 border border-white/20">
+              <div className="absolute inset-0 bg-spot-red/30 blur-2xl group-hover:bg-spot-red/50 transition-all rounded-full" />
+              <div className="relative haptic-feedback px-10 py-5 bg-spot-red rounded-full flex items-center gap-3 text-white font-black text-xl tracking-tight hover:scale-105 transition-all duration-300 shadow-[0_15px_40px_rgba(217,45,32,0.4)] border border-white/10">
                 Explore Microschool <ArrowRight className="group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
             
             <Link to="/studios" className="group relative">
-              <div className="relative glass-morphism-heavy px-10 py-5 rounded-full flex items-center gap-3 text-spot-charcoal font-black text-lg tracking-tight hover:scale-105 active:scale-95 transition-all duration-300 border-2 border-spot-charcoal/10 hover:border-spot-charcoal hover:bg-spot-charcoal hover:text-white">
+              <div className="relative haptic-feedback px-10 py-5 bg-white border-2 border-spot-charcoal rounded-full flex items-center gap-3 text-spot-charcoal font-black text-xl tracking-tight hover:scale-105 transition-all duration-300 shadow-[0_10px_25px_rgba(0,0,0,0.08)]">
                 Explore Studios
               </div>
             </Link>
@@ -459,14 +451,14 @@ const LearningJourney = () => {
 
 const StudentProjects = () => {
   const projects = [
-    { title: "Mechanical robot arm - Building circuits", img: "/assets/real-photos/mechanical_robot_arm_teen.png", rotate: -2 },
-    { title: "Design a comic book - Creating Art with Artlore", img: "/assets/real-photos/teen_comic_design.png", rotate: 3 },
-    { title: "Making Pickles - Fermentation Lab", img: "/assets/real-photos/teen_pickles.png", rotate: -1 },
-    { title: "Designing Branding for a Shop", img: "/assets/real-photos/teen_branding.png", rotate: 2 },
-    { title: "Building a Terrarium", img: "/assets/real-photos/teen_terrarium.png", rotate: -3 },
-    { title: "3D printing and designing", img: "/assets/real-photos/teen_3d_printing.png", rotate: 1 },
+    { title: "3D Printed Lego Set - Machine Marvels", img: "/assets/real-photos/lego_3d_project.png", rotate: -2 },
+    { title: "Building a Terrarium - Nature Lab", img: "/assets/real-photos/terrarium_project.png", rotate: 3 },
+    { title: "Generating Story Books - AI Studio", img: "/assets/real-photos/storybook_project.png", rotate: -1 },
+    { title: "Halloween Costumes - Artlore", img: "/assets/real-photos/costumes_project.png", rotate: 2 },
+    { title: "Electric Village - Circuit Design", img: "/assets/real-photos/electric_village_project.png", rotate: -3 },
+    { title: "Robotics & Automation - Machine Marvels", img: "/assets/real-photos/mechanical_robot_arm_teen.png", rotate: 1 },
     { title: "Baking Studio - Design cakes and cookies", img: "/assets/real-photos/teen_baking.png", rotate: -2 },
-    { title: "AI Studio - Designing programs with AI", img: "/assets/real-photos/teen_ai.png", rotate: 2 },
+    { title: "Digital Branding - Design Concepts", img: "/assets/real-photos/teen_branding.png", rotate: 2 },
   ];
 
   return (
@@ -531,8 +523,8 @@ const WhoIsSpotFor = () => {
           </div>
         </div>
         <div className="relative">
-          <div className="aspect-square rounded-full overflow-hidden border-8 border-white shadow-xl">
-             <img src="https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=800&auto=format&fit=crop" alt="Child learning" className="w-full h-full object-cover" />
+          <div className="aspect-square rounded-3xl overflow-hidden border-8 border-white shadow-2xl rotate-3">
+             <img src="/assets/real-photos/IMG_4201.jpg" alt="Child learning" className="w-full h-full object-cover" />
           </div>
           <div className="absolute -bottom-10 -left-10 bg-spot-pastel-blue p-6 rounded-3xl shadow-lg transform -rotate-6 border border-black/5">
             <p className="font-handwriting text-3xl">"I love it here!"</p>
@@ -550,12 +542,13 @@ const Programs = () => {
       
       <div className="flex overflow-x-auto snap-x snap-mandatory pb-8 md:grid md:grid-cols-3 gap-8 hide-scrollbar">
         {[
-          { title: "Microschool", desc: "Full-time alternative to traditional schooling.", color: "bg-spot-cream", img: "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=600&auto=format&fit=crop" },
-          { title: "After School Studios", desc: "Deep dives into specific passions and skills.", color: "bg-spot-pastel-pink", img: "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=600&auto=format&fit=crop" },
-          { title: "SPOT in School", desc: "Bringing our studio model to traditional schools.", color: "bg-spot-pastel-blue", img: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=600&auto=format&fit=crop" }
+          { title: "Microschool", desc: "Full-time alternative to traditional schooling.", color: "bg-spot-cream", img: "/assets/real-photos/microschool_lego.jpg" },
+          { title: "After School Studios", desc: "Deep dives into specific passions and skills.", color: "bg-spot-pastel-pink", img: "/assets/real-photos/studios_cardboard.jpg" },
+          { title: "SPOT in School", desc: "Bringing our studio model to traditional schools.", color: "bg-spot-pastel-blue", img: "/assets/real-photos/spiderman_art.jpg" }
         ].map((prog, i) => (
-          <motion.div
+          <Link
             key={i}
+            to={prog.title === "SPOT in School" ? "/inschool" : (prog.title === "Microschool" ? "/microschool" : "/studios")}
             className={`min-w-[85vw] md:min-w-0 snap-center ${prog.color} rounded-3xl overflow-hidden shadow-sm border border-black/5 group cursor-pointer flex flex-col`}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -575,7 +568,7 @@ const Programs = () => {
                 Learn more <ArrowRight size={16} />
               </div>
             </div>
-          </motion.div>
+          </Link>
         ))}
       </div>
     </section>

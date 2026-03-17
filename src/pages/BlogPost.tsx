@@ -58,6 +58,32 @@ export default function BlogPost() {
     window.scrollTo(0, 0);
   }, [slug]);
 
+  const shareOnWhatsApp = () => {
+    const url = window.location.href;
+    const text = `Check out this insight from SPOT: ${post?.title}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
+  };
+
+  const shareOnGmail = () => {
+    const url = window.location.href;
+    const subject = `Insight from SPOT: ${post?.title}`;
+    const body = `I thought you might find this interesting: ${url}`;
+    window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+  };
+
+  const shareOther = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: post?.title,
+        text: post?.excerpt,
+        url: window.location.href,
+      }).catch(console.error);
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert('Link copied to clipboard!');
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center space-y-6">
@@ -89,7 +115,27 @@ export default function BlogPost() {
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Journal
           </Link>
           <div className="flex gap-2 pointer-events-auto">
-             <button className="p-3 bg-white shadow-xl rounded-full border border-black/5 hover:bg-spot-pastel-blue hover:text-spot-charcoal transition-all"><Share2 size={16} /></button>
+             <button 
+               onClick={shareOnWhatsApp}
+               className="p-3 bg-white shadow-xl rounded-full border border-black/5 hover:bg-green-500 hover:text-white transition-all"
+               title="Share on WhatsApp"
+             >
+               <Share2 size={16} />
+             </button>
+             <button 
+               onClick={shareOnGmail}
+               className="p-3 bg-white shadow-xl rounded-full border border-black/5 hover:bg-red-500 hover:text-white transition-all"
+               title="Share via Email"
+             >
+               <User size={16} />
+             </button>
+             <button 
+               onClick={shareOther}
+               className="p-3 bg-white shadow-xl rounded-full border border-black/5 hover:bg-spot-charcoal hover:text-white transition-all"
+               title="Other Share Options"
+             >
+               <Link2 size={16} />
+             </button>
           </div>
         </div>
       </nav>

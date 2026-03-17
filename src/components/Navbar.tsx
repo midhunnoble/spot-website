@@ -24,6 +24,7 @@ export const Navbar = () => {
       dropdown: [
         { name: 'Studios', path: '/studios' },
         { name: 'Makerverse (Summer Camp)', path: '/makerverse' },
+        { name: 'SPOT inSchool', path: '/inschool' },
         { name: 'Projects', path: '/projects' }
       ]
     },

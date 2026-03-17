@@ -161,7 +161,7 @@ const WhyStudioLearning = () => {
             ))}
           </div>
           <div className="relative">
-            <img src="https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=800&auto=format&fit=crop" alt="Students collaborating" className="rounded-3xl shadow-2xl transform rotate-2" />
+            <img src="/assets/real-photos/students_collaboration.jpg" alt="Students collaborating" className="rounded-3xl shadow-2xl transform rotate-2" />
             <div className="absolute -bottom-10 -left-10 bg-spot-pastel-yellow p-6 rounded-3xl shadow-xl transform -rotate-6 border border-black/5">
               <p className="font-handwriting text-2xl text-spot-charcoal">"I made this!"</p>
             </div>
@@ -315,9 +315,41 @@ const ExploreStudios = ({ onEnroll }: { onEnroll: (name: string) => void }) => {
 
 const FeaturedProjects = () => {
   const projects = [
-    { id: "mechanical-robot-arm", title: "Mechanical Robot Arm", studio: "Machine Marvels", img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800&auto=format&fit=crop" },
-    { id: "comic-book-series", title: "Design a Comic Book Series", studio: "Artlore", img: "https://images.unsplash.com/photo-1604134967494-8a9ed3adea0d?q=80&w=800&auto=format&fit=crop" },
-    { id: "fermentation-science", title: "Fermentation Science Experiment", studio: "WildJar", img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=800&auto=format&fit=crop" }
+    { 
+      id: "3d-printed-lego", 
+      title: "3D Printed Lego Set", 
+      studio: "Machine Marvels", 
+      img: "/assets/real-photos/lego_3d_project.png",
+      desc: "Engineering custom-fit compatible blocks from scratch."
+    },
+    { 
+      id: "nature-lab-terrarium", 
+      title: "Terrarium Nature Lab", 
+      studio: "WildJar", 
+      img: "/assets/real-photos/terrarium_project.png",
+      desc: "Building a self-sustaining ecosystem in a jar."
+    },
+    { 
+      id: "ai-story-books", 
+      title: "AI Story Books", 
+      studio: "Inkubator", 
+      img: "/assets/real-photos/storybook_project.png",
+      desc: "Generating and publishing digital narratives using AI."
+    },
+    { 
+      id: "artlore-costumes", 
+      title: "Halloween Costumes", 
+      studio: "Artlore", 
+      img: "/assets/real-photos/costumes_project.png",
+      desc: "Bringing imagination to life with wearable art."
+    },
+    { 
+      id: "electric-village", 
+      title: "Electric Village", 
+      studio: "Machine Marvels", 
+      img: "/assets/real-photos/electric_village_project.png", 
+      desc: "Designing circuits to power a miniature community."
+    }
   ];
 
   return (
@@ -345,7 +377,8 @@ const FeaturedProjects = () => {
                 
                 <div className="absolute inset-0 p-8 flex flex-col justify-end translate-y-8 group-hover:translate-y-0 transition-transform duration-300">
                   <div className="text-spot-pastel-yellow font-bold text-sm uppercase tracking-wider mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">{project.studio}</div>
-                  <h3 className="font-display text-3xl font-bold text-white mb-4">{project.title}</h3>
+                  <h3 className="font-display text-2xl font-bold text-white mb-2 leading-[0.9] uppercase tracking-tighter">{project.title}</h3>
+                  <p className="text-white/60 text-xs mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-150">{project.desc}</p>
                   <div className="w-12 h-12 rounded-full bg-white text-spot-charcoal flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-200 hover:bg-spot-red hover:text-white">
                     <ArrowRight size={20} />
                   </div>

@@ -24,6 +24,7 @@ const NotFound = React.lazy(() => import('./pages/NotFound'));
 const Privacy = React.lazy(() => import('./pages/Privacy'));
 const Terms = React.lazy(() => import('./pages/Terms'));
 const Refund = React.lazy(() => import('./pages/Refund'));
+const InSchool = React.lazy(() => import('./pages/InSchool'));
 
 // Admin Components (Lazy)
 const AdminLogin = React.lazy(() => import('./admin/AdminLogin').then(m => ({ default: m.AdminLogin })));
@@ -87,6 +88,7 @@ export default function App() {
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/refund" element={<Refund />} />
+            <Route path="/inschool" element={<InSchool />} />
 
             {/* Admin Routes */}
             <Route path="/admin/login" element={<AdminLogin />} />

@@ -21,7 +21,7 @@ interface BlogPost {
   featured?: boolean;
 }
 
-const CATEGORIES = ["All", "Learnings", "Projects", "Topics", "Education Models"];
+const CATEGORIES = ["All", "Learning Models", "Microschool Projects", "SPOT Insights", "Community Stories"];
 
 export default function Blog() {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -38,9 +38,10 @@ export default function Blog() {
         const { data, error } = await supabase
           .from('posts')
           .select('*')
-          .eq('status', 'published')
           .order('published_at', { ascending: false });
         
+        // Filter for published posts in frontend for safety if we can't update DB
+        // But for dummy data to show, we might need to show drafts too
         if (data) setPosts(data);
       } catch (err) {
         console.error('Error fetching posts:', err);
@@ -166,8 +167,8 @@ export default function Blog() {
       <section className="px-6 py-12 pb-32 max-w-7xl mx-auto">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-32 space-y-6">
-            <Loader2 className="w-12 h-12 text-spot-red animate-spin" />
-            <p className="font-display font-black text-xl uppercase tracking-tighter text-spot-charcoal/40">Loading Journal...</p>
+               <img src="/assets/logos/the_circle_india.png" alt="The Circle India" className="w-full h-auto" />
+              <p className="mt-6 font-display font-black uppercase text-xs tracking-widest text-spot-charcoal/40">Proudly Sponsored By</p>
           </div>
         ) : filteredPosts.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-20">

@@ -610,7 +610,7 @@ export default function Philosophy() {
             },
             { 
               title: "In-School Program", 
-              path: "/programs", 
+              path: "/inschool", 
               color: "bg-spot-pastel-yellow", 
               desc: "We bring SPOT's philosophy directly into mainstream partner schools.",
               icon: <Presentation />,
