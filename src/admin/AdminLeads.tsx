@@ -23,6 +23,7 @@ import { supabase } from '../lib/supabase';
 import { AdminLayout } from './AdminLayout';
 import { motion, AnimatePresence } from 'motion/react';
 import * as XLSX from 'xlsx';
+import { Skeleton } from '../components/ui/Skeleton';
 
 export const AdminLeads = () => {
   const [leads, setLeads] = useState<any[]>([]);
@@ -163,15 +164,15 @@ export const AdminLeads = () => {
           
           <div className="relative z-10 flex-1">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-spot-charcoal rounded-2xl flex items-center justify-center shadow-xl">
+              <div className="w-12 h-12 bg-spot-charcoal rounded-2xl flex items-center justify-center shadow-xl backdrop-blur-md border border-white/10">
                 <Users className="text-white" size={24} />
               </div>
               <span className="text-[10px] font-black uppercase tracking-[0.4em] text-spot-charcoal/30">Growth Logistics</span>
             </div>
-            <h1 className="font-display font-black text-6xl text-spot-charcoal tracking-tighter uppercase leading-[0.85] mb-6">
+            <h1 className="font-display font-black text-6xl text-spot-charcoal tracking-tighter uppercase leading-[0.85] mb-6 text-wrap-balance">
               Inbound <span className="text-spot-red italic">Registry.</span>
             </h1>
-            <p className="text-xl text-spot-charcoal/50 font-medium leading-tight max-w-xl">
+            <p className="text-lg md:text-xl text-spot-charcoal/50 font-medium leading-normal max-w-xl text-pretty">
               Track and transform interest into impact. High-density lead intelligence for the SPOT ecosystem.
             </p>
           </div>
@@ -179,9 +180,10 @@ export const AdminLeads = () => {
           <div className="relative z-10 flex flex-wrap gap-4">
             <button 
               onClick={exportToExcel}
-              className="px-8 py-4 bg-spot-charcoal text-white font-black uppercase tracking-widest text-[11px] rounded-2xl hover:bg-spot-red transition-all shadow-xl flex items-center gap-3 group"
+              aria-label="Download Full Report"
+              className="px-10 py-6 bg-spot-charcoal text-white font-black uppercase tracking-[0.15em] text-[10px] rounded-[2rem] hover:bg-spot-red transition-all shadow-2xl flex items-center gap-4 group active:scale-95 outline-none focus-visible:ring-4 focus-visible:ring-spot-red/20"
             >
-              <FileSpreadsheet size={18} className="group-hover:rotate-12 transition-transform" />
+              <FileSpreadsheet size={20} className="group-hover:rotate-12 transition-transform duration-500" />
               Download Full Report
             </button>
           </div>
@@ -189,26 +191,38 @@ export const AdminLeads = () => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[
-            { label: 'Total Volume', value: leads.length, color: 'bg-white', icon: <Activity size={20} className="text-spot-charcoal" /> },
-            { label: 'New This Week', value: leads.filter(l => {
-              const d = new Date(l.created_at);
-              const now = new Date();
-              return d > new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-            }).length, color: 'bg-spot-red', icon: <Clock size={20} className="text-white" />, textColor: 'text-white' },
-            { label: 'Studio Interests', value: leads.filter(l => l.type === 'studio_enrollment').length, color: 'bg-spot-pastel-pink', icon: <Layout size={20} className="text-spot-charcoal" /> },
-            { label: 'Event Bookings', value: leads.filter(l => l.type === 'event_booking' || l.type === 'booking').length, color: 'bg-spot-pastel-blue', icon: <Calendar size={20} className="text-spot-charcoal" /> },
-          ].map((stat, i) => (
-            <div key={i} className={`${stat.color} p-8 rounded-[3rem] border border-black/5 shadow-xl group hover:scale-[1.02] transition-all`}>
-              <div className="flex justify-between items-start mb-6">
-                <div className={`p-4 rounded-2xl ${stat.textColor === 'text-white' ? 'bg-white/20' : 'bg-slate-50'} shadow-sm group-hover:rotate-6 transition-transform`}>
-                  {stat.icon}
+          {loading ? (
+            [1, 2, 3, 4].map(i => (
+              <div key={i} className="bg-white p-8 rounded-[3rem] border border-black/5 shadow-xl space-y-6">
+                <Skeleton className="w-14 h-14 rounded-2xl" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-1/2 rounded-full" />
+                  <Skeleton className="h-10 w-3/4 rounded-xl" />
                 </div>
               </div>
-              <span className={`text-[10px] font-black uppercase tracking-widest block mb-1 ${stat.textColor || 'text-spot-charcoal/40'}`}>{stat.label}</span>
-              <span className={`text-4xl font-display font-black tracking-tighter ${stat.textColor || 'text-spot-charcoal'}`}>{stat.value}</span>
-            </div>
-          ))}
+            ))
+          ) : (
+            [
+              { label: 'Total Volume', value: leads.length, color: 'bg-white', icon: <Activity size={20} className="text-spot-charcoal" /> },
+              { label: 'New This Week', value: leads.filter(l => {
+                const d = new Date(l.created_at);
+                const now = new Date();
+                return d > new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+              }).length, color: 'bg-spot-red', icon: <Clock size={20} className="text-white" />, textColor: 'text-white' },
+              { label: 'Studio Interests', value: leads.filter(l => l.type === 'studio_enrollment').length, color: 'bg-spot-pastel-pink', icon: <Layout size={20} className="text-spot-charcoal" /> },
+              { label: 'Event Bookings', value: leads.filter(l => l.type === 'event_booking' || l.type === 'booking').length, color: 'bg-spot-pastel-blue', icon: <Calendar size={20} className="text-spot-charcoal" /> },
+            ].map((stat, i) => (
+              <div key={i} className={`${stat.color} p-8 rounded-[3rem] border border-black/5 shadow-xl group hover:scale-[1.02] transition-all`}>
+                <div className="flex justify-between items-start mb-6">
+                  <div className={`p-4 rounded-2xl ${stat.textColor === 'text-white' ? 'bg-white/20' : 'bg-slate-50'} shadow-sm group-hover:rotate-6 transition-transform`}>
+                    {stat.icon}
+                  </div>
+                </div>
+                <span className={`text-[10px] font-black uppercase tracking-widest block mb-1 ${stat.textColor || 'text-spot-charcoal/40'}`}>{stat.label}</span>
+                <span className={`text-4xl font-display font-black tracking-tighter tabular-nums ${stat.textColor || 'text-spot-charcoal'}`}>{stat.value}</span>
+              </div>
+            ))
+          )}
         </div>
 
         {/* Controls Section */}
@@ -259,7 +273,7 @@ export const AdminLeads = () => {
           </div>
 
           {/* Filtering Tabs */}
-          <div className="flex gap-3 overflow-x-auto pb-4 scroll-hide border-t border-black/5 pt-8">
+          <div className="flex gap-4 overflow-x-auto pb-4 scroll-hide border-t border-black/5 pt-10">
             {[
               { id: 'all', label: 'All Narratives' },
               { id: 'studios', label: 'Studios' },
@@ -269,7 +283,7 @@ export const AdminLeads = () => {
               <button
                 key={type.id}
                 onClick={() => setFilterType(type.id)}
-                className={`px-10 py-4 rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-[10px] transition-all whitespace-nowrap active:scale-95 ${
+                className={`px-10 py-5 rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-[10px] transition-all whitespace-nowrap active:scale-95 outline-none focus-visible:ring-4 focus-visible:ring-spot-red/20 ${
                   filterType === type.id 
                     ? 'bg-spot-red text-white shadow-xl translate-y-[-2px]' 
                     : 'bg-slate-50 text-spot-charcoal/30 hover:text-spot-charcoal hover:bg-slate-100'
@@ -282,92 +296,110 @@ export const AdminLeads = () => {
         </div>
 
         {/* Lead Table / View */}
-        <div className="bg-white rounded-[4rem] border border-black/5 shadow-2xl overflow-hidden relative">
+        <div className="bg-white rounded-[4rem] border border-black/5 shadow-2xl overflow-hidden relative min-h-[400px]">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-slate-50/50 border-b border-black/5">
-                  <th className="px-12 py-8 text-[10px] font-black uppercase tracking-[0.3em] text-spot-charcoal/40">Inbound Data</th>
-                  <th className="px-12 py-8 text-[10px] font-black uppercase tracking-[0.3em] text-spot-charcoal/40">Category</th>
-                  <th className="px-12 py-8 text-[10px] font-black uppercase tracking-[0.3em] text-spot-charcoal/40">Intelligence</th>
-                  <th className="px-12 py-8 text-[10px] font-black uppercase tracking-[0.3em] text-spot-charcoal/40">Contact Method</th>
-                  <th className="px-12 py-8"></th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-black/5">
-                {filteredLeads.map((lead) => (
-                  <tr key={lead.id} className="hover:bg-slate-50/50 transition-all group">
-                    <td className="px-12 py-8">
-                      <div className="flex items-center gap-6">
-                        <div className="w-16 h-16 bg-spot-pastel-pink/30 rounded-[1.5rem] flex items-center justify-center font-display font-black text-spot-red text-xl shadow-inner group-hover:rotate-6 transition-transform">
-                          {lead.name?.[0]}
-                        </div>
-                        <div className="flex flex-col">
-                          <span className="text-xl font-black text-spot-charcoal uppercase tracking-tighter leading-none mb-2">{lead.name}</span>
-                          <span className="text-[10px] font-black text-spot-charcoal/40 uppercase tracking-widest flex items-center gap-2">
-                            <Clock size={12} className="text-spot-red" />
-                            {new Date(lead.created_at).toLocaleDateString()} @ {new Date(lead.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          </span>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-12 py-8">
-                       <span className={`px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest inline-flex items-center gap-2 shadow-sm ${
-                        lead.type === 'studio_enrollment' ? 'bg-orange-100 text-orange-700' : 
-                        (lead.type === 'event_booking' || lead.type === 'booking') ? 'bg-blue-100 text-blue-700' :
-                        lead.type === 'newsletter' ? 'bg-spot-red/10 text-spot-red' :
-                        'bg-slate-100 text-slate-700'
-                      }`}>
-                        <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${
-                           lead.type === 'studio_enrollment' ? 'bg-orange-500' : 
-                           (lead.type === 'event_booking' || lead.type === 'booking') ? 'bg-blue-500' :
-                           'bg-slate-500'
-                        }`} />
-                        {getLabelForType(lead.type)}
-                      </span>
-                    </td>
-                    <td className="px-12 py-8">
-                      <div className="max-w-xs space-y-1">
-                        <div className="text-sm font-bold text-spot-charcoal/80 line-clamp-2 italic leading-snug">
-                          {lead.metadata?.message || lead.metadata?.studio_interest || lead.metadata?.program || "No additional context."}
-                        </div>
-                        {lead.metadata?.child_name && (
-                           <div className="text-[10px] font-black uppercase tracking-widest text-spot-red">
-                             Prospective: {lead.metadata.child_name}
-                           </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-12 py-8">
-                      <div className="flex flex-col gap-3">
-                        <a href={`mailto:${lead.email}`} className="flex items-center gap-3 text-sm font-bold text-spot-charcoal hover:text-spot-red transition-colors group/link">
-                          <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/link:bg-spot-red/10 transition-colors">
-                            <Mail size={14} className="text-spot-red" />
-                          </div>
-                          {lead.email}
-                        </a>
-                        {lead.phone && (
-                          <a href={`tel:${lead.phone}`} className="flex items-center gap-3 text-sm font-bold text-spot-charcoal hover:text-spot-red transition-colors group/link">
-                            <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/link:bg-spot-red/10 transition-colors">
-                              <Phone size={14} className="text-spot-red" />
-                            </div>
-                            {lead.phone}
-                          </a>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-12 py-8 text-right">
-                       <button 
-                        onClick={() => setSelectedLead(lead)}
-                        className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-spot-charcoal/20 hover:text-spot-red hover:bg-spot-red/5 transition-all active:scale-95"
-                       >
-                         <ChevronRight size={24} />
-                       </button>
-                    </td>
-                  </tr>
+            {loading ? (
+              <div className="p-12 space-y-8">
+                <div className="flex gap-8 pb-4 border-b border-black/5">
+                   {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-6 flex-1 rounded-full" />)}
+                </div>
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="flex gap-8 items-center">
+                    <Skeleton className="w-16 h-16 rounded-[1.5rem]" />
+                    <Skeleton className="h-12 flex-1 rounded-2xl" />
+                    <Skeleton className="h-10 w-32 rounded-full" />
+                    <Skeleton className="h-12 w-48 rounded-2xl" />
+                    <Skeleton className="w-14 h-14 rounded-2xl" />
+                  </div>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            ) : (
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-slate-50/50 border-b border-black/5">
+                    <th className="px-12 py-8 text-[10px] font-black uppercase tracking-[0.3em] text-spot-charcoal/40">Inbound Data</th>
+                    <th className="px-12 py-8 text-[10px] font-black uppercase tracking-[0.3em] text-spot-charcoal/40">Category</th>
+                    <th className="px-12 py-8 text-[10px] font-black uppercase tracking-[0.3em] text-spot-charcoal/40">Intelligence</th>
+                    <th className="px-12 py-8 text-[10px] font-black uppercase tracking-[0.3em] text-spot-charcoal/40">Contact Method</th>
+                    <th className="px-12 py-8"></th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-black/5">
+                  {filteredLeads.map((lead) => (
+                    <tr key={lead.id} className="hover:bg-slate-50/50 transition-all group">
+                      <td className="px-12 py-8">
+                        <div className="flex items-center gap-6">
+                          <div className="w-16 h-16 bg-spot-pastel-pink/30 rounded-[1.5rem] flex items-center justify-center font-display font-black text-spot-red text-xl shadow-inner group-hover:rotate-6 transition-transform">
+                            {lead.name?.[0]}
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-xl font-black text-spot-charcoal uppercase tracking-tighter leading-none mb-2">{lead.name}</span>
+                            <span className="text-[10px] font-black text-spot-charcoal/40 uppercase tracking-widest flex items-center gap-2 tabular-nums">
+                              <Clock size={12} className="text-spot-red" />
+                              {new Date(lead.created_at).toLocaleDateString()} @ {new Date(lead.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-12 py-8">
+                         <span className={`px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest inline-flex items-center gap-2 shadow-sm ${
+                          lead.type === 'studio_enrollment' ? 'bg-orange-100 text-orange-700' : 
+                          (lead.type === 'event_booking' || lead.type === 'booking') ? 'bg-blue-100 text-blue-700' :
+                          lead.type === 'newsletter' ? 'bg-spot-red/10 text-spot-red' :
+                          'bg-slate-100 text-slate-700'
+                        }`}>
+                          <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${
+                             lead.type === 'studio_enrollment' ? 'bg-orange-500' : 
+                             (lead.type === 'event_booking' || lead.type === 'booking') ? 'bg-blue-500' :
+                             'bg-slate-500'
+                          }`} />
+                          {getLabelForType(lead.type)}
+                        </span>
+                      </td>
+                      <td className="px-12 py-8">
+                        <div className="max-w-xs space-y-1">
+                          <div className="text-sm font-bold text-spot-charcoal/80 line-clamp-2 italic leading-snug text-pretty">
+                            {lead.metadata?.message || lead.metadata?.studio_interest || lead.metadata?.program || "No additional context."}
+                          </div>
+                          {lead.metadata?.child_name && (
+                             <div className="text-[10px] font-black uppercase tracking-widest text-spot-red">
+                               Prospective: {lead.metadata.child_name}
+                             </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-12 py-8">
+                        <div className="flex flex-col gap-3">
+                          <a href={`mailto:${lead.email}`} className="flex items-center gap-3 text-sm font-bold text-spot-charcoal hover:text-spot-red transition-colors group/link">
+                            <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/link:bg-spot-red/10 transition-colors">
+                              <Mail size={14} className="text-spot-red" />
+                            </div>
+                            {lead.email}
+                          </a>
+                          {lead.phone && (
+                            <a href={`tel:${lead.phone}`} className="flex items-center gap-3 text-sm font-bold text-spot-charcoal hover:text-spot-red transition-colors group/link">
+                              <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/link:bg-spot-red/10 transition-colors">
+                                <Phone size={14} className="text-spot-red" />
+                              </div>
+                              {lead.phone}
+                            </a>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-12 py-8 text-right">
+                         <button 
+                          onClick={() => setSelectedLead(lead)}
+                          aria-label="View Details"
+                          className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-spot-charcoal/20 hover:text-white hover:bg-spot-red transition-all active:scale-95 shadow-sm"
+                         >
+                           <ChevronRight size={24} />
+                         </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
 
           {filteredLeads.length === 0 && !loading && (

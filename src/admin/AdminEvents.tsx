@@ -7,6 +7,7 @@ import { AdminLayout } from './AdminLayout';
 import { motion, AnimatePresence } from 'motion/react';
 import * as XLSX from 'xlsx';
 import { ImageUpload, TagInput, SectionHeader } from './components/AdminInputs';
+import { Skeleton } from '../components/ui/Skeleton';
 
 export const AdminEvents = () => {
   const [events, setEvents] = useState<any[]>([]);
@@ -210,115 +211,133 @@ export const AdminEvents = () => {
   return (
     <AdminLayout>
       <div className="flex flex-col gap-8">
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 p-4 md:p-0">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-2xl bg-spot-red/10 flex items-center justify-center text-spot-red shadow-inner">
-                <Ticket size={24} />
+              <div className="w-12 h-12 rounded-2xl bg-spot-red/10 flex items-center justify-center text-spot-red shadow-inner backdrop-blur-md border border-spot-red/5">
+                <Ticket size={26} />
               </div>
-              <h1 className="font-display font-black text-4xl text-spot-charcoal tracking-tighter uppercase leading-none">Event Pulse</h1>
+              <h1 className="font-display font-black text-4xl md:text-5xl text-spot-charcoal tracking-tighter uppercase leading-none text-wrap-balance">Event Pulse</h1>
             </div>
-            <p className="text-spot-charcoal/60 font-medium text-sm">Orchestrate workshops, parent labs, and community gatherings.</p>
+            <p className="text-spot-charcoal/60 font-medium text-sm md:text-base text-pretty max-w-lg">Orchestrate workshops, parent labs, and community gatherings.</p>
           </div>
           <button 
             onClick={() => openForm()}
-            className="group flex items-center gap-3 px-8 py-5 bg-spot-charcoal text-white font-black uppercase tracking-widest text-xs rounded-[2rem] hover:bg-spot-red transition-all shadow-2xl hover:scale-[1.02] active:scale-95"
+            aria-label="Orchestrate New Event"
+            className="group flex items-center gap-4 px-10 py-6 bg-spot-charcoal text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-[2.5rem] hover:bg-spot-red transition-all shadow-2xl hover:scale-[1.02] active:scale-95 outline-none focus-visible:ring-4 focus-visible:ring-spot-red/20"
           >
-            <Plus size={20} className="group-hover:rotate-90 transition-transform" /> 
+            <Plus size={22} className="group-hover:rotate-90 transition-transform duration-500" /> 
             Orchestrate New Event
           </button>
         </header>
 
-        <div className="bg-white rounded-[3.5rem] border border-black/5 shadow-2xl overflow-hidden">
+        <div className="bg-white rounded-[3.5rem] border border-black/5 shadow-2xl overflow-hidden min-h-[400px]">
           <div className="overflow-x-auto custom-scrollbar">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-slate-50/50 border-b border-black/5">
-                  <th className="px-10 py-8 text-[10px] font-black uppercase tracking-[0.2em] text-spot-charcoal/30">Atmosphere</th>
-                  <th className="px-10 py-8 text-[10px] font-black uppercase tracking-[0.2em] text-spot-charcoal/30">Timeline</th>
-                  <th className="px-10 py-8 text-[10px] font-black uppercase tracking-[0.2em] text-spot-charcoal/30">Market & Sales</th>
-                  <th className="px-10 py-8 text-[10px] font-black uppercase tracking-[0.2em] text-spot-charcoal/30">Presence</th>
-                  <th className="px-10 py-8 text-right text-[10px] font-black uppercase tracking-[0.2em] text-spot-charcoal/30">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {events.map((event) => {
-                  const completed = isCompleted(event.expiry_date);
-                  const registered = registrations[event.id] || 0;
-                  const seatText = event.total_seats ? `${registered} / ${event.total_seats}` : `${registered}`;
+            {loading ? (
+              <div className="p-10 space-y-6">
+                <div className="flex justify-between gap-4">
+                  {[1, 2, 3, 4, 5].map(i => <Skeleton key={i} className="h-8 flex-1 rounded-full" />)}
+                </div>
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="flex gap-4 items-center border-t border-black/5 pt-6">
+                    <Skeleton className="w-20 h-14 rounded-2xl" />
+                    <Skeleton className="h-10 flex-1 rounded-2xl" />
+                    <Skeleton className="h-10 w-32 rounded-2xl" />
+                    <Skeleton className="h-10 w-32 rounded-2xl" />
+                    <Skeleton className="w-24 h-10 rounded-xl" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-slate-50/50 border-b border-black/5">
+                    <th className="px-10 py-8 text-[10px] font-black uppercase tracking-[0.2em] text-spot-charcoal/30">Atmosphere</th>
+                    <th className="px-10 py-8 text-[10px] font-black uppercase tracking-[0.2em] text-spot-charcoal/30">Timeline</th>
+                    <th className="px-10 py-8 text-[10px] font-black uppercase tracking-[0.2em] text-spot-charcoal/30">Market & Sales</th>
+                    <th className="px-10 py-8 text-[10px] font-black uppercase tracking-[0.2em] text-spot-charcoal/30">Presence</th>
+                    <th className="px-10 py-8 text-right text-[10px] font-black uppercase tracking-[0.2em] text-spot-charcoal/30">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {events.map((event) => {
+                    const completed = isCompleted(event.expiry_date);
+                    const registered = registrations[event.id] || 0;
+                    const seatText = event.total_seats ? `${registered} / ${event.total_seats}` : `${registered}`;
 
-                  return (
-                    <motion.tr 
-                      layout
-                      key={event.id} 
-                      className={`border-b border-black/5 hover:bg-slate-50/50 transition-all group ${completed ? 'opacity-40 grayscale pointer-events-none' : ''}`}
-                    >
-                      <td className="px-10 py-8">
-                        <div className="flex items-center gap-5">
-                          <div className="w-20 h-14 rounded-2xl overflow-hidden shrink-0 border border-black/5 shadow-sm group-hover:scale-105 transition-transform duration-500">
-                            <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" />
-                          </div>
-                          <div className="flex flex-col">
-                            <span className="text-sm font-black text-spot-charcoal uppercase tracking-tighter leading-none mb-2 group-hover:text-spot-red transition-colors">{event.title}</span>
-                            <div className="flex flex-wrap gap-2">
-                               <span className="text-[9px] font-black text-spot-charcoal/30 uppercase tracking-widest">{event.audience}</span>
-                               <span className="text-[9px] font-black text-spot-red/40 uppercase tracking-widest">• {event.category}</span>
+                    return (
+                      <motion.tr 
+                        layout
+                        key={event.id} 
+                        className={`border-b border-black/5 hover:bg-slate-50/50 transition-all group ${completed ? 'opacity-40 grayscale pointer-events-none' : ''}`}
+                      >
+                        <td className="px-10 py-8">
+                          <div className="flex items-center gap-5">
+                            <div className="w-20 h-14 rounded-2xl overflow-hidden shrink-0 border border-black/5 shadow-sm group-hover:scale-105 transition-transform duration-500">
+                              <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" />
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="text-sm font-black text-spot-charcoal uppercase tracking-tighter leading-none mb-2 group-hover:text-spot-red transition-colors">{event.title}</span>
+                              <div className="flex flex-wrap gap-2">
+                                <span className="text-[9px] font-black text-spot-charcoal/30 uppercase tracking-widest">{event.audience}</span>
+                                <span className="text-[9px] font-black text-spot-red/40 uppercase tracking-widest">• {event.category}</span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-10 py-8">
-                        <div className="flex flex-col gap-1.5">
-                          <span className="text-xs font-black text-spot-charcoal flex items-center gap-2 tracking-tighter uppercase"><Calendar size={14} className="text-spot-red" /> {event.event_date}</span>
-                          <span className="text-[10px] font-bold text-spot-charcoal/40 flex items-center gap-2 uppercase tracking-widest"><Clock size={12} /> {event.event_time}</span>
-                        </div>
-                      </td>
-                      <td className="px-10 py-8">
-                        <div className="flex flex-col gap-2">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-spot-charcoal/20">
-                              <Ticket size={14} />
+                        </td>
+                        <td className="px-10 py-8">
+                          <div className="flex flex-col gap-1.5">
+                            <span className="text-xs font-black text-spot-charcoal flex items-center gap-2 tracking-tighter uppercase font-mono tracking-tight"><Calendar size={14} className="text-spot-red" /> {event.event_date}</span>
+                            <span className="text-[10px] font-bold text-spot-charcoal/40 flex items-center gap-2 uppercase tracking-widest tabular-nums"><Clock size={12} /> {event.event_time}</span>
+                          </div>
+                        </td>
+                        <td className="px-10 py-8">
+                          <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-spot-charcoal/20">
+                                <Ticket size={14} />
+                              </div>
+                              <span className="text-xs font-black text-spot-charcoal tracking-tighter uppercase tabular-nums">{seatText}</span>
                             </div>
-                            <span className="text-xs font-black text-spot-charcoal tracking-tighter uppercase">{seatText}</span>
+                            <span className={`inline-block self-start px-3 py-1 rounded-xl text-[9px] font-black uppercase tracking-widest border ${
+                              event.is_free || event.price === 'Free' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-slate-50 text-spot-charcoal border-black/5'
+                            }`}>
+                              {event.is_free || event.price === 'Free' ? 'Complimentary' : event.price}
+                            </span>
                           </div>
-                          <span className={`inline-block self-start px-3 py-1 rounded-xl text-[9px] font-black uppercase tracking-widest border ${
-                            event.is_free || event.price === 'Free' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-slate-50 text-spot-charcoal border-black/5'
-                          }`}>
-                            {event.is_free || event.price === 'Free' ? 'Complimentary' : event.price}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-10 py-8">
-                        {completed ? (
-                          <div className="flex items-center gap-2 text-spot-charcoal/40">
-                             <div className="w-2 h-2 rounded-full bg-slate-300" />
-                             <span className="text-[10px] font-black uppercase tracking-widest">Archived</span>
+                        </td>
+                        <td className="px-10 py-8">
+                          {completed ? (
+                            <div className="flex items-center gap-2 text-spot-charcoal/40">
+                              <div className="w-2 h-2 rounded-full bg-slate-300" />
+                              <span className="text-[10px] font-black uppercase tracking-widest">Archived</span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-2 text-emerald-500">
+                              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                              <span className="text-[10px] font-black uppercase tracking-widest">In Stream</span>
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-10 py-8">
+                          <div className="flex gap-3 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onClick={() => openAttendees(event.id)} className="w-12 h-12 bg-sky-50 text-sky-600 hover:bg-sky-600 hover:text-white rounded-xl transition-all flex items-center justify-center shadow-sm active:scale-95" title="Registry">
+                              <Users size={18} />
+                            </button>
+                            <button onClick={() => openForm(event)} className="w-12 h-12 bg-slate-50 text-spot-charcoal hover:bg-spot-charcoal hover:text-white rounded-xl transition-all flex items-center justify-center shadow-sm active:scale-95" title="Redesign">
+                              <Edit2 size={18} />
+                            </button>
+                            <button onClick={() => handleDelete(event.id)} className="w-12 h-12 bg-slate-50 text-spot-charcoal hover:bg-spot-red hover:text-white rounded-xl transition-all flex items-center justify-center shadow-sm active:scale-95" title="Deconstruct">
+                              <Trash2 size={18} />
+                            </button>
                           </div>
-                        ) : (
-                          <div className="flex items-center gap-2 text-emerald-500">
-                             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                             <span className="text-[10px] font-black uppercase tracking-widest">In Stream</span>
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-10 py-8">
-                        <div className="flex gap-3 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button onClick={() => openAttendees(event.id)} className="w-10 h-10 bg-sky-50 text-sky-600 hover:bg-sky-600 hover:text-white rounded-xl transition-all flex items-center justify-center shadow-sm" title="Registry">
-                            <Users size={16} />
-                          </button>
-                          <button onClick={() => openForm(event)} className="w-10 h-10 bg-slate-50 text-spot-charcoal hover:bg-spot-charcoal hover:text-white rounded-xl transition-all flex items-center justify-center shadow-sm" title="Redesign">
-                            <Edit2 size={16} />
-                          </button>
-                          <button onClick={() => handleDelete(event.id)} className="w-10 h-10 bg-slate-50 text-spot-charcoal hover:bg-spot-red hover:text-white rounded-xl transition-all flex items-center justify-center shadow-sm" title="Deconstruct">
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </motion.tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                        </td>
+                      </motion.tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
 

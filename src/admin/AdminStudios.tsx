@@ -6,6 +6,7 @@ import { supabase } from '../lib/supabase';
 import { AdminLayout } from './AdminLayout';
 import { motion, AnimatePresence } from 'motion/react';
 import { ImageUpload, TagInput, SectionHeader } from './components/AdminInputs';
+import { Skeleton } from '../components/ui/Skeleton';
 
 export const AdminStudios = () => {
   const [studios, setStudios] = useState<any[]>([]);
@@ -146,29 +147,39 @@ export const AdminStudios = () => {
   return (
     <AdminLayout>
       <div className="flex flex-col gap-8">
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 p-4 md:p-0">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-2xl bg-spot-red/10 flex items-center justify-center text-spot-red shadow-inner">
-                <LayoutGrid size={24} />
+              <div className="w-12 h-12 rounded-2xl bg-spot-red/10 flex items-center justify-center text-spot-red shadow-inner backdrop-blur-md border border-spot-red/5">
+                <LayoutGrid size={26} />
               </div>
-              <h1 className="font-display font-black text-4xl text-spot-charcoal tracking-tighter uppercase leading-none">Studio Forge</h1>
+              <h1 className="font-display font-black text-4xl md:text-5xl text-spot-charcoal tracking-tighter uppercase leading-none text-wrap-balance">Studio Forge</h1>
             </div>
-            <p className="text-spot-charcoal/60 font-medium text-sm">Design and deploy high-intensity immersive learning pods.</p>
+            <p className="text-spot-charcoal/60 font-medium text-sm md:text-base text-pretty max-w-lg">Design and deploy high-intensity immersive learning pods.</p>
           </div>
           <button 
             onClick={() => openForm()}
-            className="group flex items-center gap-3 px-8 py-5 bg-spot-charcoal text-white font-black uppercase tracking-widest text-xs rounded-[2rem] hover:bg-spot-red transition-all shadow-2xl hover:scale-[1.02] active:scale-95"
+            aria-label="Launch New Studio"
+            className="group flex items-center gap-4 px-10 py-6 bg-spot-charcoal text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-[2.5rem] hover:bg-spot-red transition-all shadow-2xl hover:scale-[1.02] active:scale-95 outline-none focus-visible:ring-4 focus-visible:ring-spot-red/20"
           >
-            <Plus size={20} className="group-hover:rotate-90 transition-transform" /> 
-            Launch New Studio
+            <Plus size={22} className="group-hover:rotate-90 transition-transform duration-500" /> 
+            Initialize New Studio
           </button>
         </header>
 
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-32 gap-4">
-            <div className="w-12 h-12 border-4 border-black/5 border-t-spot-red rounded-full animate-spin" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-spot-charcoal/20">Syncing with Cloud...</span>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {[1, 2, 3, 4].map(i => (
+              <div key={i} className="bg-white rounded-[3rem] border border-black/5 p-6 space-y-4">
+                <Skeleton className="h-44 w-full rounded-[2rem]" />
+                <Skeleton className="h-6 w-3/4 rounded-full" />
+                <Skeleton className="h-20 w-full rounded-2xl" />
+                <div className="flex justify-between items-center pt-4">
+                  <Skeleton className="h-10 w-24 rounded-full" />
+                  <Skeleton className="h-12 w-12 rounded-xl" />
+                </div>
+              </div>
+            ))}
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
