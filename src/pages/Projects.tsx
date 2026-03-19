@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 import { ArrowRight, Lightbulb, Compass, Hammer, Presentation, PlayCircle, Star, Quote } from 'lucide-react';
 
 const PROJECTS_DATA = [
@@ -105,6 +106,10 @@ export default function Projects() {
 
   return (
     <main className="pt-20 pb-20">
+      <SEO 
+        title="Artifacts of Growth | Student Projects" 
+        description="A gallery of self-directed projects built by SPOT students. From 3D printed sets to eco-terrariums."
+      />
       {/* Hero Section */}
       <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden px-6 py-20">
         <div className="absolute inset-0 z-0">

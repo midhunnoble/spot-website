@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Search, Filter, Calendar, MapPin, Clock, Users, ArrowRight, ChevronDown, ChevronUp, Star, PlayCircle, Loader2 } from 'lucide-react';
 import { BookingModal } from '../components/BookingModal';
 import { supabase } from '../lib/supabase';
+import SEO from '../components/SEO';
 
 const FORMATS = [
   { title: 'Workshops', desc: 'Hands-on, 2-3 hour sessions focused on a specific skill or project.' },
@@ -48,20 +49,26 @@ export default function Events() {
 
   const fetchEvents = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('events')
-      .select('*')
-      .eq('status', 'active')
-      .order('created_at', { ascending: false });
+    // Optimization: Select only needed fields for list view
+    const [eventsResult, regResult] = await Promise.all([
+      supabase
+        .from('events')
+        .select('id, title, slug, image_url, category, event_date, date_text, expiry_date, total_seats, price, description, audience, location, event_time, status')
+        .eq('status', 'active')
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('event_registrations')
+        .select('event_id')
+    ]);
 
-    if (!error && data) {
-      setEvents(data);
-      const { data: regData } = await supabase.from('event_registrations').select('event_id');
-      if (regData) {
-        const counts: Record<string, number> = {};
-        regData.forEach(reg => { counts[reg.event_id] = (counts[reg.event_id] || 0) + 1; });
-        setRegistrations(counts);
-      }
+    if (eventsResult.data) {
+      setEvents(eventsResult.data);
+    }
+    
+    if (regResult.data) {
+      const counts: Record<string, number> = {};
+      regResult.data.forEach(reg => { counts[reg.event_id] = (counts[reg.event_id] || 0) + 1; });
+      setRegistrations(counts);
     }
     setLoading(false);
   };
@@ -293,7 +300,7 @@ export default function Events() {
               return (
                 <motion.div key={event.id} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: index * 0.05 }} className="bg-white rounded-3xl overflow-hidden shadow-lg shadow-black/5 border border-black/5 flex flex-col group hover:-translate-y-1 transition-transform duration-300">
                   <div className="h-48 relative overflow-hidden">
-                    <img src={event.image_url} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <img src={event.image_url} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                     <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-spot-charcoal uppercase tracking-wider">
                       {event.category}
                     </div>

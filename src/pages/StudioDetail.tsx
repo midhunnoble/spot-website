@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Skeleton } from '../components/ui/Skeleton';
+import SEO from '../components/SEO';
 
 export default function StudioDetail() {
   const { id } = useParams();
@@ -141,6 +142,10 @@ export default function StudioDetail() {
 
   return (
     <div className="bg-spot-cream min-h-screen text-spot-charcoal selection:bg-spot-red selection:text-white pb-32">
+      <SEO 
+        title={`${studio.name} | SPOT Studios`} 
+        description={studio.description || `Explore ${studio.name} at SPOT Microschool. A special deep-dive studio for curious minds.`}
+      />
       {/* Navigation Header */}
       <nav className="fixed top-0 left-0 right-0 z-[100] p-6 pointer-events-none pt-safe">
         <Link 

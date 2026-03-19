@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { Search, ArrowRight, Clock, Calendar, ChevronRight, Sparkles, Loader2, CheckCircle2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import SEO from '../components/SEO';
 
 interface BlogPost {
   id: string;
@@ -36,7 +37,7 @@ export default function Blog() {
       try {
         const { data, error } = await supabase
           .from('posts')
-          .select('*')
+          .select('id, title, slug, excerpt, author, author_role, category, published_at, reading_time, image_url, tags, featured')
           .eq('status', 'published')
           .order('published_at', { ascending: false });
         
@@ -66,6 +67,10 @@ export default function Blog() {
 
   return (
     <main className="bg-spot-cream min-h-screen pt-20">
+      <SEO 
+        title="Journal of Growth | SPOT Blog" 
+        description="Divergent thoughts on education, community stories, and microschool insights from the SPOT collective."
+      />
       {/* Dynamic Header section */}
       <section className="px-6 py-24 max-w-7xl mx-auto overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 relative">

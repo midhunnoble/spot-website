@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import { 
-  ArrowRight, Lightbulb, Compass, Hammer, Rocket, Users, Target, Briefcase, ChevronLeft, ChevronRight, Star, Sparkles, Loader2, Globe, MapPin, Award, Clock
+  ArrowRight, Lightbulb, Compass, Hammer, Rocket, Users, Target, Briefcase, ChevronLeft, ChevronRight, Star, Sparkles, Loader2, Globe, MapPin, Award, Clock, Search, Filter, ArrowUpRight
 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import SEO from '../components/SEO';
 
 const HeroSection = () => {
   const { scrollY } = useScroll();
@@ -83,7 +84,7 @@ const ExploreStudios = ({ onEnroll }: { onEnroll: (name: string) => void }) => {
       setLoading(true);
       const { data, error } = await supabase
         .from('studios')
-        .select('*')
+        .select('id, slug, name, description, age_group, category, image_url, featured, skills, status, is_online, has_certificate')
         .eq('status', 'active')
         .order('created_at', { ascending: false });
       
@@ -133,7 +134,7 @@ const ExploreStudios = ({ onEnroll }: { onEnroll: (name: string) => void }) => {
               className={`group rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-black/5 flex flex-col h-full bg-white`}
             >
               <div className="h-48 overflow-hidden relative">
-                <img src={studio.image_url} alt={studio.name} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+                <img src={studio.image_url} alt={studio.name} loading="lazy" className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-spot-charcoal px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
                   {studio.age_group}
                 </div>
@@ -387,6 +388,10 @@ export default function Studios() {
 
   return (
     <div className="relative bg-spot-cream">
+      <SEO 
+        title="Divergent Studios | SPOT After School" 
+        description="Explore our ecosystem of deep-dive studios: from Machine Marvels to Storytelling. Project-based exploration for children ages 6-16."
+      />
       <HeroSection />
       <ExploreStudios onEnroll={handleEnroll} />
       <WhatAreStudios />

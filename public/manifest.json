@@ -1,0 +1,21 @@
+{
+  "name": "SPOT Microschool",
+  "short_name": "SPOT",
+  "description": "Where Every Child Learns Their Way. Project-based learning for neuro-divergent minds.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FCF9F1",
+  "theme_color": "#E53E3E",
+  "icons": [
+    {
+      "src": "/assets/logo/spot-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/logo/spot-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

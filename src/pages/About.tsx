@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence, useInView, animate } from 'motion/react';
 import { ArrowRight, Brain, Compass, Users, Hammer, Sparkles, Heart, Target, Leaf, BookOpen, Globe, ArrowUpRight, X, CheckCircle2, Briefcase } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 // Simple Counter Component for Impact Section
 const Counter = ({ from, to, duration = 2, suffix = "" }: { from: number, to: number, duration?: number, suffix?: string }) => {
@@ -546,6 +547,10 @@ const JoinJourney = () => {
 export default function About() {
   return (
     <div className="relative bg-spot-cream">
+      <SEO 
+        title="Our Story | POT Microschool" 
+        description="Founded on the doctrine of connection before correction. Learn about the humans and the philosophy behind SPOT Microschool."
+      />
       <HeroSection />
       <TraditionalVsSpot />
       <Philosophy />

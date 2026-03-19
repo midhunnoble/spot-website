@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import { ArrowDown, ArrowRight, Brain, Heart, Users, Sparkles, Rocket, Microscope, Palette, MessageCircle, Briefcase, ChevronRight, PlayCircle, Star, Globe, Compass, Zap, Target } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 // --- Components ---
 
@@ -489,7 +490,7 @@ const StudentProjects = () => {
             transition={{ duration: 0.5, delay: i * 0.1 }}
           >
             <div className="aspect-square overflow-hidden bg-gray-200 mb-4">
-              <img src={project.img} alt={project.title} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+              <img src={project.img} alt={project.title} loading="lazy" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
             </div>
             <div className="polaroid-caption">{project.title}</div>
           </motion.div>
@@ -531,7 +532,7 @@ const WhoIsSpotFor = () => {
         </div>
         <div className="relative">
           <div className="aspect-square rounded-3xl overflow-hidden border-8 border-white shadow-2xl rotate-3">
-             <img src="/assets/real-photos/IMG_4201.jpg" alt="Child learning" className="w-full h-full object-cover" />
+             <img src="/assets/real-photos/IMG_4201.jpg" alt="Child learning" loading="lazy" className="w-full h-full object-cover" />
           </div>
           <div className="absolute -bottom-10 -left-10 bg-spot-pastel-blue p-6 rounded-3xl shadow-lg transform -rotate-6 border border-black/5">
             <p className="font-handwriting text-3xl">"I love it here!"</p>
@@ -564,7 +565,7 @@ const Programs = () => {
             whileHover={{ y: -10 }}
           >
             <div className="h-48 overflow-hidden">
-              <img src={prog.img} alt={prog.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+              <img src={prog.img} alt={prog.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
             </div>
             <div className="p-8 flex-grow flex flex-col justify-between">
               <div>
@@ -692,6 +693,10 @@ const CTA = () => {
 export default function Home() {
   return (
     <div className="relative">
+      <SEO 
+        title="SPOT Microschool | Where Every Child Learns Their Way" 
+        description="A self-directed, studio-based learning ecosystem where children explore, build, and discover their spark through project-based learning."
+      />
       <HeroSection />
       <WhatIsSpot />
       <LearningModel />

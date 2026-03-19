@@ -1,0 +1,9 @@
+# SPOT Microschool Robots.txt
+User-agent: *
+Allow: /
+
+# Admin pages - don't index for security and UX
+Disallow: /admin/
+Disallow: /admin/*
+
+Sitemap: https://spotmicroschool.in/sitemap.xml

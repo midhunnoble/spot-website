@@ -5,6 +5,7 @@ import { Clock, Calendar, ChevronLeft, Share2, Link as LinkIcon, Sparkles, User,
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { supabase } from '../lib/supabase';
+import SEO from '../components/SEO';
 
 interface BlogPost {
   id: string;
@@ -48,13 +49,6 @@ export default function BlogPost() {
         if (postData) {
           setPost(postData);
           
-          // SEO Optimization
-          document.title = postData.meta_title || `${postData.title} | SPOT Journal`;
-          const metaDesc = document.querySelector('meta[name="description"]');
-          if (metaDesc) {
-            metaDesc.setAttribute('content', postData.meta_description || postData.excerpt || '');
-          }
-
           // Fetch recommendations
           const { data: recData } = await supabase
             .from('posts')
@@ -101,6 +95,22 @@ export default function BlogPost() {
 
   return (
     <main className="bg-spot-cream min-h-screen">
+      <SEO 
+        title={post.meta_title || `${post.title} | SPOT Journal`}
+        description={post.meta_description || post.excerpt}
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          "headline": post.title,
+          "image": [post.image_url],
+          "datePublished": post.published_at,
+          "author": [{
+            "@type": "Person",
+            "name": post.author,
+            "jobTitle": post.author_role
+          }]
+        }}
+      />
       {/* Scroll Progress Bar */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-2 bg-spot-red z-[100] origin-left"

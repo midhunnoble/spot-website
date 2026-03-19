@@ -11,6 +11,17 @@ const SEO: React.FC<SEOProps> = ({ title, description, schema }) => {
     // Update Title
     document.title = title;
 
+    // Update Canonical URL
+    const baseUrl = 'https://spotmicroschool.in';
+    const path = window.location.pathname;
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute('href', `${baseUrl}${path}`);
+
     // Update Meta Description
     let metaDescription = document.querySelector('meta[name="description"]');
     if (!metaDescription) {
