@@ -6,11 +6,13 @@ import { supabase } from '../lib/supabase';
 interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
+  eventId?: string;
   eventTitle?: string;
   eventPrice?: string;
+  isWaitlist?: boolean;
 }
 
-export const BookingModal = ({ isOpen, onClose, eventTitle = 'SPOT Event', eventPrice = '' }: BookingModalProps) => {
+export const BookingModal = ({ isOpen, onClose, eventId, eventTitle = 'SPOT Event', eventPrice = '', isWaitlist = false }: BookingModalProps) => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -32,6 +34,26 @@ export const BookingModal = ({ isOpen, onClose, eventTitle = 'SPOT Event', event
     setIsSubmitting(true);
 
     try {
+      if (eventId) {
+        const { error: regError } = await supabase
+          .from('event_registrations')
+          .insert([{
+            event_id: eventId,
+            user_name: formData.fullName,
+            user_email: formData.email,
+            user_phone: formData.phone,
+            child_name: formData.childName,
+            child_age: formData.childAge,
+            seats: parseInt(formData.seats) || 1,
+            status: isWaitlist ? 'waitlist' : 'pending',
+            notes: formData.notes
+          }]);
+        if (regError) {
+          console.warn('Event registration insert failed, fallback to leads tracking', regError);
+        }
+      }
+
+      // Keep leads tracking for overall CRM purposes
       const { error } = await supabase
         .from('leads')
         .insert([{
@@ -44,6 +66,8 @@ export const BookingModal = ({ isOpen, onClose, eventTitle = 'SPOT Event', event
             child_age: formData.childAge,
             seats: formData.seats,
             event_title: eventTitle,
+            event_id: eventId,
+            is_waitlist: isWaitlist,
             event_price: eventPrice,
             notes: formData.notes
           }
@@ -56,18 +80,12 @@ export const BookingModal = ({ isOpen, onClose, eventTitle = 'SPOT Event', event
         setIsSubmitted(false);
         onClose();
         setFormData({
-          fullName: '',
-          email: '',
-          phone: '',
-          childName: '',
-          childAge: '',
-          seats: '1',
-          notes: ''
+          fullName: '', email: '', phone: '', childName: '', childAge: '', seats: '1', notes: ''
         });
       }, 3000);
     } catch (err) {
       console.error('Error submitting booking:', err);
-      alert('Failed to book. Please try again.');
+      alert('Failed to process request. Please check DB Schema via Supabase Dashboard if columns are missing.');
     } finally {
       setIsSubmitting(false);
     }
@@ -77,111 +95,78 @@ export const BookingModal = ({ isOpen, onClose, eventTitle = 'SPOT Event', event
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="absolute inset-0 bg-spot-charcoal/60 backdrop-blur-sm"
-          />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-lg bg-spot-cream rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
-          >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="absolute inset-0 bg-spot-charcoal/60 backdrop-blur-sm" />
+          <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} className="relative w-full max-w-lg bg-spot-cream rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div className="p-6 sm:p-8 border-b border-black/5 flex justify-between items-center shrink-0">
               <div>
-                <h2 className="font-display font-black text-2xl text-spot-charcoal">Book Your Spot</h2>
+                <h2 className="font-display font-black text-2xl text-spot-charcoal">
+                  {isWaitlist ? 'Join Waitlist' : 'Book Your Spot'}
+                </h2>
                 <p className="text-spot-charcoal/60 text-sm mt-1">{eventTitle}</p>
               </div>
-              <button
-                onClick={onClose}
-                className="p-2 hover:bg-black/5 rounded-full transition-colors"
-                aria-label="Close modal"
-              >
-                <X size={24} className="text-spot-charcoal" />
-              </button>
+              <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full transition-colors"><X size={24} className="text-spot-charcoal" /></button>
             </div>
 
             <div className="p-6 sm:p-8 overflow-y-auto hide-scrollbar">
               {isSubmitted ? (
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="flex flex-col items-center justify-center py-12 text-center"
-                >
+                <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center py-12 text-center">
                   <div className="w-20 h-20 bg-spot-pastel-green rounded-full flex items-center justify-center text-spot-charcoal mb-6">
-                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                    <CheckCircle size={40} className="text-spot-charcoal" />
                   </div>
                   <h3 className="font-display font-black text-3xl text-spot-charcoal mb-4">Request Received!</h3>
                   <p className="text-spot-charcoal/70 text-lg">
-                    Thank you for your interest. We'll be in touch shortly to confirm your booking for {eventTitle}.
+                    {isWaitlist ? `You've been added to the waitlist for ${eventTitle}. We'll notify you if a spot opens up.` : `Thank you for your interest. We'll be in touch shortly to confirm your booking for ${eventTitle}.`}
                   </p>
                 </motion.div>
               ) : (
                 <form id="booking-form" onSubmit={handleSubmit} className="space-y-5">
-                <div>
-                  <label htmlFor="fullName" className="block text-sm font-bold text-spot-charcoal mb-1">Full Name *</label>
-                  <input required type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all" placeholder="Jane Doe" />
-                </div>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
-                    <label htmlFor="email" className="block text-sm font-bold text-spot-charcoal mb-1">Email *</label>
-                    <input required type="email" id="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all" placeholder="jane@example.com" />
+                    <label className="block text-sm font-bold text-spot-charcoal mb-1">Full Name *</label>
+                    <input required type="text" name="fullName" value={formData.fullName} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all" placeholder="Jane Doe" />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-sm font-bold text-spot-charcoal mb-1">Email *</label>
+                      <input required type="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all" placeholder="jane@example.com" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-spot-charcoal mb-1">Phone *</label>
+                      <input required type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all" placeholder="+91 98765 43210" />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-sm font-bold text-spot-charcoal mb-1">Child's Name (Optional)</label>
+                      <input type="text" name="childName" value={formData.childName} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all" placeholder="Alex" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-spot-charcoal mb-1">Child's Age (Optional)</label>
+                      <input type="text" name="childAge" value={formData.childAge} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all" placeholder="10" />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-sm font-bold text-spot-charcoal mb-1">Event Selected *</label>
+                      <input required type="text" value={eventTitle} readOnly className="w-full px-4 py-3 rounded-xl border border-black/10 bg-black/5 focus:outline-none cursor-not-allowed text-spot-charcoal/60" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-spot-charcoal mb-1">Seats *</label>
+                      <select name="seats" value={formData.seats} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all">
+                        <option value="1">1 Person</option><option value="2">2 People</option><option value="3">3 People</option><option value="4">4 People</option><option value="5">5+ People</option>
+                      </select>
+                    </div>
                   </div>
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-bold text-spot-charcoal mb-1">Phone *</label>
-                    <input required type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all" placeholder="+91 98765 43210" />
+                    <label className="block text-sm font-bold text-spot-charcoal mb-1">Notes / Questions</label>
+                    <textarea name="notes" value={formData.notes} onChange={handleChange} rows={3} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all resize-none" placeholder="Any special requirements?"></textarea>
                   </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div>
-                    <label htmlFor="childName" className="block text-sm font-bold text-spot-charcoal mb-1">Child's Name (Optional)</label>
-                    <input type="text" id="childName" name="childName" value={formData.childName} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all" placeholder="Alex" />
-                  </div>
-                  <div>
-                    <label htmlFor="childAge" className="block text-sm font-bold text-spot-charcoal mb-1">Child's Age (Optional)</label>
-                    <input type="text" id="childAge" name="childAge" value={formData.childAge} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all" placeholder="10" />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div>
-                    <label htmlFor="eventSelected" className="block text-sm font-bold text-spot-charcoal mb-1">Event Selected *</label>
-                    <input required type="text" id="eventSelected" name="eventSelected" value={eventTitle} readOnly className="w-full px-4 py-3 rounded-xl border border-black/10 bg-black/5 focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all cursor-not-allowed text-spot-charcoal/60" />
-                  </div>
-                  <div>
-                    <label htmlFor="seats" className="block text-sm font-bold text-spot-charcoal mb-1">Seats *</label>
-                    <select id="seats" name="seats" value={formData.seats} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all">
-                      <option value="1">1 Person</option>
-                      <option value="2">2 People</option>
-                      <option value="3">3 People</option>
-                      <option value="4">4 People</option>
-                      <option value="5">5+ People</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="notes" className="block text-sm font-bold text-spot-charcoal mb-1">Notes / Questions</label>
-                  <textarea id="notes" name="notes" value={formData.notes} onChange={handleChange} rows={3} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all resize-none" placeholder="Any special requirements or questions?"></textarea>
-                </div>
-              </form>
+                </form>
               )}
             </div>
-
             {!isSubmitted && (
               <div className="p-6 sm:p-8 border-t border-black/5 bg-white shrink-0">
-                <button 
-                  type="submit" 
-                  form="booking-form"
-                  disabled={isSubmitting}
-                  className="w-full py-4 bg-spot-red text-white font-bold rounded-xl hover:bg-red-700 transition-colors text-lg shadow-lg shadow-spot-red/20 disabled:opacity-50 flex items-center justify-center gap-2"
-                >
-                  {isSubmitting ? <><Loader2 className="animate-spin" size={20} /> Booking...</> : "Reserve My Spot"}
+                <button type="submit" form="booking-form" disabled={isSubmitting} className={`w-full py-4 text-white font-bold rounded-xl transition-colors text-lg shadow-lg flex items-center justify-center gap-2 ${isWaitlist ? 'bg-spot-charcoal hover:bg-black shadow-black/20' : 'bg-spot-red hover:bg-red-700 shadow-spot-red/20'} disabled:opacity-50`}>
+                  {isSubmitting ? <><Loader2 className="animate-spin" size={20} /> Processing...</> : (isWaitlist ? 'Join Waitlist' : 'Reserve My Spot')}
                 </button>
               </div>
             )}
@@ -191,3 +176,8 @@ export const BookingModal = ({ isOpen, onClose, eventTitle = 'SPOT Event', event
     </AnimatePresence>
   );
 };
+
+// added generic CheckCircle icon helper here since it's not imported above
+function CheckCircle(props: any) {
+  return <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>;
+}
