@@ -52,7 +52,7 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden bg-spot-cream flex items-center justify-center pt-20 pb-32 perspective-1000">
+    <section className="relative min-h-dvh w-full overflow-hidden bg-spot-cream flex items-center justify-center pt-20 pb-32 perspective-1000">
       {/* Background Mesh Gradients */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <motion.div 
@@ -82,6 +82,8 @@ const HeroSection = () => {
           <img 
             src="/assets/real-photos/teen_laptop.jpg" 
             alt="Student Work" 
+            loading="eager"
+            fetchpriority="high"
             className="w-40 h-48 object-cover rounded-xl grayscale hover:grayscale-0 transition-all duration-500" 
           />
         </div>
@@ -93,6 +95,7 @@ const HeroSection = () => {
           <img 
             src="/assets/real-photos/teen_ai.png" 
             alt="AI Learning" 
+            loading="eager"
             className="w-48 h-40 object-cover rounded-xl grayscale hover:grayscale-0 transition-all duration-500" 
           />
         </div>
@@ -132,12 +135,12 @@ const HeroSection = () => {
             </span>
           </motion.div>
 
-          <h1 className="font-display text-[10vw] md:text-[8vw] lg:text-[7.5vw] font-black tracking-tighter uppercase leading-[0.8] text-spot-charcoal mb-8 relative pointer-events-none drop-shadow-sm">
-            Personalized <br /> 
-            <span className="text-transparent stroke-charcoal" style={{ WebkitTextStroke: '1.5px var(--color-spot-charcoal)' }}>Learning</span> <br />
-            For Minds <br />
+          <h1 className="font-display text-[10vw] md:text-[8vw] lg:text-[7.5vw] font-black tracking-tighter uppercase leading-[0.8] text-spot-charcoal mb-8 relative pointer-events-none drop-shadow-sm text-wrap-balance">
+            Agency For <br /> 
+            <span className="text-transparent stroke-charcoal" style={{ WebkitTextStroke: '1.5px var(--color-spot-charcoal)' }}>Different</span> <br />
+            Minds To <br />
             <span className="relative inline-block text-spot-red">
-              That Think
+               Find Their Spark
               <motion.div 
                 className="absolute -bottom-2 -left-2 w-[110%] h-4 bg-spot-pastel-yellow/60 -z-10 rounded-full"
                 initial={{ scaleX: 0 }}
@@ -145,8 +148,7 @@ const HeroSection = () => {
                 transition={{ duration: 1, delay: 1.2, ease: "circOut" }}
                 style={{ originX: 0 }}
               />
-            </span><br className="md:hidden" />
-            Different.
+            </span>
           </h1>
         </motion.div>
 
@@ -156,25 +158,30 @@ const HeroSection = () => {
            transition={{ duration: 1, delay: 0.8, ease: [0.23, 1, 0.32, 1] }}
            className="max-w-3xl mx-auto"
         >
-          <p className="font-sans text-xl md:text-2xl lg:text-3xl text-spot-charcoal/80 mb-12 leading-tight font-bold tracking-tight">
-            A Studio based Microschool Where <span className="text-spot-red">curious minds</span> learn by building, not memorising.
+          <p className="font-sans text-xl md:text-2xl lg:text-3xl text-spot-charcoal/80 mb-12 leading-tight font-bold tracking-tight text-pretty">
+             Protecting the natural curiosity of <span className="text-spot-red">neuro-divergent minds</span> through self-directed, studio-based learning.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-30">
             <Link to="/microschool" className="group relative">
-              <div className="absolute inset-0 bg-spot-red/30 blur-2xl group-hover:bg-spot-red/50 transition-all rounded-full" />
-              <div className="relative haptic-feedback px-10 py-5 bg-spot-red rounded-full flex items-center gap-3 text-white font-black text-xl tracking-tight hover:scale-105 transition-all duration-300 shadow-[0_15px_40px_rgba(217,45,32,0.4)] border border-white/10">
-                Explore Microschool <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-              </div>
+              <motion.div whileTap={{ scale: 0.98 }} className="relative">
+                <div className="absolute inset-0 bg-spot-red/30 blur-2xl group-hover:bg-spot-red/50 transition-all rounded-full" />
+                <div className="relative haptic-feedback px-10 py-5 bg-spot-red rounded-full flex items-center gap-3 text-white font-black text-xl tracking-tight hover:scale-105 transition-all duration-300 shadow-[0_15px_40px_rgba(217,45,32,0.4)] border border-white/10">
+                  The Microschool <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </motion.div>
             </Link>
             
             <Link to="/studios" className="group relative">
-              <div className="relative haptic-feedback px-10 py-5 bg-white border-2 border-spot-charcoal rounded-full flex items-center gap-3 text-spot-charcoal font-black text-xl tracking-tight hover:scale-105 transition-all duration-300 shadow-[0_10px_25px_rgba(0,0,0,0.08)]">
-                Explore Studios
-              </div>
+              <motion.div whileTap={{ scale: 0.98 }} className="relative">
+                <div className="relative haptic-feedback px-10 py-5 bg-white border-2 border-spot-charcoal rounded-full flex items-center gap-3 text-spot-charcoal font-black text-xl tracking-tight hover:scale-105 transition-all duration-300 shadow-[0_10px_25px_rgba(0,0,0,0.08)]">
+                  The Studios
+                </div>
+              </motion.div>
             </Link>
           </div>
         </motion.div>
+
       </div>
 
       {/* Interactive Scroll Indicator */}
@@ -394,8 +401,8 @@ const StudioEcosystem = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.4, delay: 0.5 }}
         >
-          <h3 className="font-display text-2xl font-bold mb-4">And many more...</h3>
-          <Link to="/studios" className="px-6 py-3 bg-spot-red text-white font-bold rounded-full hover:bg-red-700 transition-colors">
+          <h3 className="font-display text-2xl font-bold mb-4">And many more…</h3>
+          <Link to="/studios" className="px-6 py-3 bg-spot-red text-white font-bold rounded-full hover:bg-hover transition-colors shadow-lg active:scale-95">
             View All Studios
           </Link>
         </motion.div>
@@ -656,7 +663,7 @@ const CTA = () => {
     <section className="py-16 md:py-32 px-6 text-center relative overflow-hidden">
       <div className="absolute inset-0 bg-spot-red opacity-10" />
       <div className="relative z-10 max-w-3xl mx-auto">
-        <h2 className="font-display text-3xl md:text-4xl lg:text-5xl lg:text-7xl font-black uppercase tracking-tighter mb-10">
+        <h2 className="font-display text-3xl md:text-4xl lg:text-[5vw] font-black uppercase tracking-tighter mb-10 text-wrap-balance">
           Come experience <span className="text-spot-red">SPOT</span>.
         </h2>
         

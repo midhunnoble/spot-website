@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'motion/react';
-import { ArrowLeft, Clock, Calendar, User, Share2, Facebook, Twitter, Link2, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { motion, useScroll, useSpring } from 'motion/react';
+import { Clock, Calendar, ChevronLeft, Share2, Link as LinkIcon, Sparkles, User, Twitter, Linkedin, Facebook, Loader2 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { supabase } from '../lib/supabase';
 
 interface BlogPost {
@@ -17,7 +19,8 @@ interface BlogPost {
   reading_time: string;
   image_url: string;
   tags: string[];
-  featured?: boolean;
+  meta_title?: string;
+  meta_description?: string;
 }
 
 export default function BlogPost() {
@@ -25,6 +28,12 @@ export default function BlogPost() {
   const [post, setPost] = useState<BlogPost | null>(null);
   const [recommendations, setRecommendations] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   useEffect(() => {
     async function fetchPostData() {
@@ -39,6 +48,13 @@ export default function BlogPost() {
         if (postData) {
           setPost(postData);
           
+          // SEO Optimization
+          document.title = postData.meta_title || `${postData.title} | SPOT Journal`;
+          const metaDesc = document.querySelector('meta[name="description"]');
+          if (metaDesc) {
+            metaDesc.setAttribute('content', postData.meta_description || postData.excerpt || '');
+          }
+
           // Fetch recommendations
           const { data: recData } = await supabase
             .from('posts')
@@ -58,30 +74,9 @@ export default function BlogPost() {
     window.scrollTo(0, 0);
   }, [slug]);
 
-  const shareOnWhatsApp = () => {
-    const url = window.location.href;
-    const text = `Check out this insight from SPOT: ${post?.title}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
-  };
-
-  const shareOnGmail = () => {
-    const url = window.location.href;
-    const subject = `Insight from SPOT: ${post?.title}`;
-    const body = `I thought you might find this interesting: ${url}`;
-    window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
-  };
-
-  const shareOther = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: post?.title,
-        text: post?.excerpt,
-        url: window.location.href,
-      }).catch(console.error);
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link copied to clipboard!');
-    }
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href);
+    alert('Link copied to clipboard!');
   };
 
   if (isLoading) {
@@ -95,158 +90,172 @@ export default function BlogPost() {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-spot-cream flex items-center justify-center p-6">
-        <div className="text-center">
+      <div className="min-h-screen bg-spot-cream flex items-center justify-center p-6 text-center">
+        <div>
           <h2 className="text-4xl font-display font-black mb-8 uppercase tracking-tighter">Writing not found</h2>
-          <Link to="/blog" className="px-8 py-4 bg-spot-red text-white font-black uppercase tracking-widest rounded-2xl text-xs hover:bg-red-700 transition-colors shadow-xl">
-             Back to Journal
-          </Link>
+          <Link to="/blog" className="px-8 py-4 bg-spot-charcoal text-white font-black uppercase tracking-widest rounded-2xl">Return to Journal</Link>
         </div>
       </div>
     );
   }
 
   return (
-    <main className="bg-white min-h-screen selection:bg-spot-red selection:text-white">
-      {/* Article Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-[100] px-6 py-6 pointer-events-none">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <Link to="/blog" className="pointer-events-auto flex items-center gap-3 px-6 py-3 bg-white shadow-xl rounded-full border border-black/5 font-black uppercase text-[10px] tracking-widest hover:bg-spot-red hover:text-white transition-all group">
-            <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Journal
-          </Link>
-          <div className="flex gap-2 pointer-events-auto">
-             <button 
-               onClick={shareOnWhatsApp}
-               className="p-3 bg-white shadow-xl rounded-full border border-black/5 hover:bg-green-500 hover:text-white transition-all"
-               title="Share on WhatsApp"
-             >
-               <Share2 size={16} />
-             </button>
-             <button 
-               onClick={shareOnGmail}
-               className="p-3 bg-white shadow-xl rounded-full border border-black/5 hover:bg-red-500 hover:text-white transition-all"
-               title="Share via Email"
-             >
-               <User size={16} />
-             </button>
-             <button 
-               onClick={shareOther}
-               className="p-3 bg-white shadow-xl rounded-full border border-black/5 hover:bg-spot-charcoal hover:text-white transition-all"
-               title="Other Share Options"
-             >
-               <Link2 size={16} />
-             </button>
-          </div>
-        </div>
-      </nav>
+    <main className="bg-spot-cream min-h-screen">
+      {/* Scroll Progress Bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-2 bg-spot-red z-[100] origin-left"
+        style={{ scaleX }}
+      />
 
-      <article className="pt-32 pb-48">
-        {/* Hero Section */}
-        <header className="px-6 mb-20">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <div className="flex items-center justify-center gap-4 mb-8">
-                <span className="px-4 py-1 bg-spot-red/10 text-spot-red text-[10px] font-black uppercase tracking-widest rounded-full">{post.category}</span>
-                <span className="text-spot-charcoal/30 text-[10px] font-black uppercase tracking-widest">{post.reading_time}</span>
-              </div>
-              <h1 className="font-display font-black text-5xl md:text-7xl lg:text-8xl text-spot-charcoal leading-[0.85] uppercase tracking-tighter mb-12">
-                {post.title}
-              </h1>
-              
-              <div className="flex items-center justify-center gap-12 py-10 border-y border-black/5">
-                <div className="flex items-center gap-4 text-left">
-                  <div className="w-14 h-14 rounded-full bg-spot-pastel-pink flex items-center justify-center text-spot-charcoal font-black text-2xl border border-black/5 shadow-inner">
+      {/* Floating Action Bar */}
+      <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 px-6 py-4 glass-morphism rounded-full border border-black/10 shadow-2xl flex items-center gap-6 hidden md:flex">
+         <Link to="/blog" className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-spot-charcoal/40 hover:text-spot-red transition-colors">
+            <ChevronLeft size={16} /> Journal
+         </Link>
+         <div className="w-px h-4 bg-black/10" />
+         <button onClick={copyToClipboard} className="text-xs font-black uppercase tracking-widest text-spot-charcoal/40 hover:text-spot-red transition-colors flex items-center gap-2">
+            <LinkIcon size={16} /> Copy Link
+         </button>
+         <div className="w-px h-4 bg-black/10" />
+         <span className="text-xs font-black uppercase tracking-widest text-spot-red">{post.category}</span>
+      </div>
+
+      <article>
+        {/* Cinematic Header */}
+        <header className="relative pt-40 pb-20 px-6 max-w-7xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="flex items-center justify-center gap-4 mb-10">
+              <span className="px-6 py-2 bg-spot-red text-white text-[10px] font-black uppercase tracking-[0.3em] rounded-full shadow-lg">New Insight</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-spot-charcoal/30">{post.published_at}</span>
+            </div>
+
+            <h1 className="font-display font-black text-6xl md:text-8xl lg:text-[120px] text-spot-charcoal mb-10 leading-[0.8] uppercase tracking-tighter">
+              {post.title}
+            </h1>
+
+            <p className="text-2xl md:text-3xl text-spot-charcoal/60 font-medium leading-tight max-w-3xl mx-auto mb-16">
+              {post.excerpt}
+            </p>
+
+            <div className="flex items-center justify-center gap-8 py-8 border-y border-black/5 max-w-2xl mx-auto">
+               <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-full bg-spot-pastel-pink border-2 border-white shadow-xl flex items-center justify-center text-2xl font-black text-spot-charcoal">
                     {post.author[0]}
                   </div>
-                  <div>
-                    <div className="text-spot-charcoal font-black text-sm tracking-tight">{post.author}</div>
-                    <div className="text-spot-charcoal/40 text-[10px] font-black uppercase tracking-widest">{post.author_role}</div>
+                  <div className="text-left">
+                    <div className="text-sm font-black uppercase tracking-tight text-spot-charcoal">{post.author}</div>
+                    <div className="text-[10px] text-spot-charcoal/40 font-bold uppercase">{post.author_role || 'Creative Lead'}</div>
                   </div>
-                </div>
-                <div className="text-left">
-                   <div className="text-spot-charcoal/40 text-[10px] font-black uppercase tracking-widest mb-1">Published On</div>
-                   <div className="text-spot-charcoal font-bold text-sm tracking-tight">{post.published_at}</div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+               </div>
+               <div className="w-px h-12 bg-black/5" />
+               <div className="flex flex-col items-center">
+                  <div className="text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-1">Time to Absorve</div>
+                  <div className="text-sm font-black text-spot-red flex items-center gap-2">
+                    <Clock size={16} /> {post.reading_time}
+                  </div>
+               </div>
+            </div>
+          </motion.div>
         </header>
 
-        {/* Featured Image */}
-        <section className="px-6 mb-24 max-w-7xl mx-auto">
+        {/* Hero Image */}
+        <div className="px-6 max-w-7xl mx-auto mb-32">
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="aspect-video md:aspect-[21/9] rounded-[4rem] overflow-hidden shadow-2xl bg-spot-cream"
+            transition={{ duration: 1 }}
+            className="aspect-[21/9] rounded-[4rem] overflow-hidden shadow-2xl border-4 border-white relative"
           >
-            <img src={post.image_url} alt={post.title} className="w-full h-full object-cover grayscale-[0.5] contrast-125" />
+            <img 
+              src={post.image_url} 
+              alt={post.title} 
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
           </motion.div>
-        </section>
+        </div>
 
         {/* Content Body */}
-        <section className="px-6 max-w-4xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="prose prose-2xl prose-spot max-w-none text-spot-charcoal/80 font-medium leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: post.content }}
-          />
-
-          {/* Tags */}
-          <div className="mt-20 pt-12 border-t border-black/5 flex flex-wrap gap-3">
-             {post.tags.map((tag: string) => (
-                <span key={tag} className="px-5 py-2 bg-spot-cream rounded-full text-[10px] font-black uppercase tracking-widest text-spot-charcoal/50 hover:text-spot-red transition-colors cursor-pointer">
-                   #{tag}
-                </span>
-             ))}
-          </div>
-        </section>
-      </article>
-
-      {/* Recommended Posts */}
-      <section className="bg-spot-cream py-32 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-16">
-             <h2 className="font-display font-black text-4xl md:text-5xl uppercase tracking-tighter leading-none">Continue <br/><span className="text-spot-red">Reading</span></h2>
-             <Link to="/blog" className="font-handwriting text-3xl text-spot-charcoal/40 hover:text-spot-red transition-colors">View all entries</Link>
+        <div className="px-6 max-w-7xl mx-auto grid lg:grid-cols-[1fr,850px,1fr] gap-12 mb-32">
+          {/* Left Gutter */}
+          <div className="hidden lg:block pt-20">
+             <div className="sticky top-40 space-y-12">
+                <div>
+                   <h5 className="text-[10px] font-black uppercase tracking-widest text-spot-charcoal/30 mb-6">Topic</h5>
+                   <div className="flex flex-wrap gap-2 text-spot-charcoal/60 font-bold uppercase text-[11px] leading-tight">
+                      {post.category}
+                   </div>
+                </div>
+                <div>
+                   <h5 className="text-[10px] font-black uppercase tracking-widest text-spot-charcoal/30 mb-6">Tags</h5>
+                   <div className="flex flex-wrap gap-2">
+                      {post.tags.map(tag => (
+                        <span key={tag} className="text-[10px] font-black uppercase text-spot-red hover:underline cursor-pointer">#{tag}</span>
+                      ))}
+                   </div>
+                </div>
+             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-12">
-             {recommendations.map((p) => (
-               <Link 
-                 key={p.id} 
-                 to={`/blog/${p.slug}`}
-                 className="group flex flex-col md:flex-row gap-8 bg-white p-6 rounded-[3rem] shadow-xl border border-black/5 hover:scale-[1.02] transition-all duration-500"
-               >
-                 <div className="w-full md:w-1/3 aspect-square rounded-[2rem] overflow-hidden shrink-0">
-                    <img src={p.image_url} alt={p.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
-                 </div>
-                 <div className="flex flex-col justify-center">
-                    <div className="text-spot-red text-[10px] font-black uppercase tracking-widest mb-3">{p.category}</div>
-                    <h3 className="font-display font-black text-3xl uppercase tracking-tighter leading-none mb-4 group-hover:text-spot-red transition-colors">{p.title}</h3>
-                    <p className="text-spot-charcoal/60 text-sm font-medium line-clamp-2">{p.excerpt}</p>
-                 </div>
-               </Link>
-             ))}
+          {/* Main Markdown Content */}
+          <div className="bg-white rounded-[5rem] p-12 md:p-24 shadow-2xl border border-black/5 relative overflow-hidden">
+             {/* Decorative Elements */}
+             <div className="absolute -top-10 -right-10 w-40 h-40 bg-spot-pastel-pink/20 rounded-full blur-3xl" />
+             <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-spot-pastel-blue/20 rounded-full blur-3xl" />
+
+             <div className="markdown-content font-medium text-2xl leading-[1.6] text-spot-charcoal/80 space-y-10 prose prose-xl prose-spot max-w-none prose-headings:uppercase prose-headings:font-display prose-headings:font-black prose-headings:tracking-tighter prose-img:rounded-[3rem] prose-img:shadow-2xl">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                   {post.content}
+                </ReactMarkdown>
+             </div>
+          </div>
+
+          {/* Right Gutter - Share/Interaction */}
+          <div className="hidden lg:block pt-20">
+             <div className="sticky top-40 space-y-6">
+                <h5 className="text-[10px] font-black uppercase tracking-widest text-spot-charcoal/30 mb-6">Share Culture</h5>
+                <button onClick={copyToClipboard} className="w-14 h-14 rounded-2xl bg-white border border-black/5 flex items-center justify-center hover:bg-spot-charcoal hover:text-white transition-all shadow-sm">
+                   <LinkIcon size={20} />
+                </button>
+                <button className="w-14 h-14 rounded-2xl bg-white border border-black/5 flex items-center justify-center hover:bg-spot-red hover:text-white transition-all shadow-sm">
+                   <Twitter size={20} />
+                </button>
+                <button className="w-14 h-14 rounded-2xl bg-white border border-black/5 flex items-center justify-center hover:bg-[#1877F2] hover:text-white transition-all shadow-sm">
+                   <Facebook size={20} />
+                </button>
+             </div>
           </div>
         </div>
-      </section>
 
-      {/* Footer CTA */}
-      <section className="py-24 px-6 text-center bg-white">
-         <div className="max-w-2xl mx-auto">
-            <h2 className="font-display font-black text-4xl mb-8 uppercase tracking-tighter">Stay Connected</h2>
-            <Link to="/contact" className="px-10 py-5 bg-spot-charcoal text-white font-black uppercase tracking-widest rounded-2xl text-xs hover:bg-spot-red transition-all shadow-xl">
-               Contact the Team
-            </Link>
-         </div>
-      </section>
+        {/* Bottom Navigation / Recommendations */}
+        <section className="px-6 py-32 bg-spot-charcoal text-white rounded-[6rem] mx-6 mb-12 shadow-2xl relative overflow-hidden">
+           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-spot-red/10 blur-[150px] rounded-full" />
+           <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-spot-pastel-blue/10 blur-[150px] rounded-full" />
+
+           <div className="max-w-5xl mx-auto relative z-10 text-center">
+              <Sparkles className="text-spot-red mx-auto mb-8" size={60} />
+              <h3 className="font-display font-black text-5xl md:text-7xl mb-12 uppercase tracking-tighter">The Journey <span className="text-spot-red">Continues.</span></h3>
+              
+              <div className="grid md:grid-cols-2 gap-8">
+                 {recommendations.map(rec => (
+                   <Link 
+                    key={rec.id} 
+                    to={`/blog/${rec.slug}`} 
+                    className="group bg-white/5 border border-white/10 hover:border-white/20 p-8 rounded-[3rem] text-left transition-all hover:-translate-y-2 haptic-feedback"
+                   >
+                     <div className="text-spot-red text-[10px] font-black uppercase tracking-[0.2em] mb-4">{rec.category}</div>
+                     <h4 className="text-2xl font-display font-black uppercase mb-4 leading-none group-hover:text-spot-red transition-colors">{rec.title}</h4>
+                     <p className="text-white/40 text-sm font-medium line-clamp-2">Continue reading about {rec.excerpt}</p>
+                   </Link>
+                 ))}
+              </div>
+           </div>
+        </section>
+      </article>
     </main>
   );
 }

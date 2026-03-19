@@ -15,7 +15,7 @@ export const Navbar = () => {
         { name: 'About', path: '/about' },
         { name: 'Philosophy', path: '/philosophy' },
         { name: 'Blog', path: '/blog' },
-        { name: 'Careers', path: '/careers' }
+        { name: 'Events', path: '/events' }
       ]
     },
     { name: 'Microschool', path: '/microschool' },
@@ -35,7 +35,7 @@ export const Navbar = () => {
   const isDropdownActive = (dropdown: { path: string }[]) => dropdown.some(item => isActive(item.path));
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 glass-morphism border-b border-black/5">
+    <nav className="fixed top-0 left-0 w-full z-50 glass-morphism border-b border-black/5 pt-safe">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <Link to="/" className="hover:scale-105 transition-transform duration-300">
           <img src="/assets/logo/spot-logo.png" alt="SPOT Logo" className="h-8 md:h-10 w-auto" />
@@ -100,8 +100,8 @@ export const Navbar = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Link to="/contact" className="px-6 py-2.5 bg-spot-charcoal text-spot-cream font-bold rounded-full text-sm hover:bg-spot-red transition-all duration-300 shadow-lg shadow-black/5">
-              Book a Visit
+            <Link to="/studios" className="px-6 py-2.5 bg-spot-charcoal text-spot-cream font-bold rounded-full text-sm hover:bg-spot-red transition-all duration-300 shadow-lg shadow-black/5">
+              Launch Studios
             </Link>
           </motion.div>
           <Link 
@@ -111,7 +111,7 @@ export const Navbar = () => {
             Spot Admin
           </Link>
         </div>
-        <button className="md:hidden text-spot-charcoal p-2 hover:bg-black/5 rounded-xl transition-colors" onClick={() => setIsOpen(!isOpen)}>
+        <button className="md:hidden text-spot-charcoal p-2 hover:bg-black/5 rounded-xl transition-colors h-12 w-12 flex items-center justify-center" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </div>
@@ -124,7 +124,7 @@ export const Navbar = () => {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="md:hidden absolute top-20 left-0 w-full bg-spot-cream/98 backdrop-blur-xl border-b border-black/5 shadow-2xl flex flex-col p-6 gap-2 max-h-[calc(100vh-80px)] overflow-y-auto"
+            className="md:hidden absolute top-20 left-0 w-full bg-spot-cream/98 backdrop-blur-xl border-b border-black/5 shadow-2xl flex flex-col p-6 gap-2 max-h-[calc(100dvh-80px-env(safe-area-inset-top))] overflow-y-auto pt-4 pb-safe"
           >
             {links.map((link, idx) => (
               <motion.div 
@@ -136,7 +136,7 @@ export const Navbar = () => {
               >
                 {link.dropdown ? (
                   <>
-                    <div className="font-bold text-xs uppercase tracking-widest text-spot-charcoal/40 pt-4 pb-1">
+                    <div className="font-bold text-[10px] uppercase tracking-[0.2em] text-spot-charcoal/30 pt-6 pb-2">
                       {link.name}
                     </div>
                     <div className="flex flex-col gap-1 pl-4">
@@ -145,7 +145,7 @@ export const Navbar = () => {
                           key={item.path} 
                           to={item.path} 
                           onClick={() => setIsOpen(false)} 
-                          className={`py-2 font-bold text-xl tracking-tight transition-colors ${isActive(item.path) ? 'text-spot-red' : 'text-spot-charcoal'}`}
+                          className={`py-4 font-bold text-xl tracking-tight transition-colors active:text-spot-red active:scale-95 origin-left ${isActive(item.path) ? 'text-spot-red' : 'text-spot-charcoal'}`}
                         >
                           {item.name}
                         </Link>
@@ -156,20 +156,22 @@ export const Navbar = () => {
                   <Link 
                     to={link.path!} 
                     onClick={() => setIsOpen(false)} 
-                    className={`py-4 font-bold text-2xl tracking-tight border-b border-black/5 ${isActive(link.path!) ? 'text-spot-red' : 'text-spot-charcoal'}`}
+                    className={`py-5 font-bold text-2xl tracking-tight border-b border-black/5 active:text-spot-red active:scale-95 origin-left ${isActive(link.path!) ? 'text-spot-red' : 'text-spot-charcoal'}`}
                   >
                     {link.name}
                   </Link>
                 )}
               </motion.div>
             ))}
-            <Link to="/contact" onClick={() => setIsOpen(false)} className="px-6 py-5 bg-spot-red text-white font-bold rounded-2xl text-xl mt-6 text-center shadow-xl shadow-spot-red/20 active:scale-95 transition-transform">
-              Book a Visit
-            </Link>
+            <motion.div whileTap={{ scale: 0.98 }}>
+              <Link to="/studios" onClick={() => setIsOpen(false)} className="block w-full px-6 py-5 bg-spot-red text-white font-bold rounded-2xl text-xl mt-8 text-center shadow-xl shadow-spot-red/20 transition-all active:bg-spot-charcoal">
+                The Studios
+              </Link>
+            </motion.div>
             <Link 
               to="/admin/login" 
               onClick={() => setIsOpen(false)}
-              className="mt-4 text-center text-[10px] font-black uppercase tracking-widest text-spot-charcoal/20 hover:text-spot-red transition-all"
+              className="mt-6 text-center text-[10px] font-black uppercase tracking-widest text-spot-charcoal/20 hover:text-spot-red transition-all py-4"
             >
               Spot Admin Portal
             </Link>
@@ -177,5 +179,6 @@ export const Navbar = () => {
         )}
       </AnimatePresence>
     </nav>
+
   );
 };

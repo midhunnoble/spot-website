@@ -151,3 +151,29 @@ body {
 .magnetic-content {
   transition: transform 0.2s cubic-bezier(0.33, 1, 0.68, 1);
 }
+
+@layer utilities {
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .pl-safe {
+    padding-left: env(safe-area-inset-left, 0px);
+  }
+  .pr-safe {
+    padding-right: env(safe-area-inset-right, 0px);
+  }
+  .min-h-dvh {
+    min-height: 100dvh;
+  }
+  .h-dvh {
+    height: 100dvh;
+  }
+}
+
+.haptic-feedback:active {
+  transform: scale(0.96);
+  transition: transform 0.1s cubic-bezier(0.34, 1.56, 0.64, 1);
+}

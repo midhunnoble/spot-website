@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Plus, 
-  Edit2, 
-  Trash2, 
-  Save,
-  X,
-  Loader2,
-  Image as ImageIcon,
-  User,
-  Hash,
-  Star
+  Plus, Edit2, Trash2, Save, X, Loader2, Star, LayoutGrid, Award, BookOpen, UserCircle, AlertCircle
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { AdminLayout } from './AdminLayout';
 import { motion, AnimatePresence } from 'motion/react';
+import { ImageUpload, TagInput, SectionHeader } from './components/AdminInputs';
 
 export const AdminProjects = () => {
   const [projects, setProjects] = useState<any[]>([]);
@@ -21,6 +13,12 @@ export const AdminProjects = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<any>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [errorStatus, setErrorStatus] = useState<string | null>(null);
+
+  // Form States
+  const [imageUrl, setImageUrl] = useState('');
+  const [concepts, setConcepts] = useState<string[]>([]);
+  const [skills, setSkills] = useState<string[]>([]);
 
   useEffect(() => {
     fetchProjects();
@@ -28,31 +26,37 @@ export const AdminProjects = () => {
 
   const fetchProjects = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('projects')
-      .select('*')
-      .order('created_at', { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Error fetching projects:', error);
-    } else {
+      if (error) throw error;
       setProjects(data || []);
+    } catch (err) {
+      console.error('Fetch error:', err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
+  };
+
+  const openForm = (project: any = null) => {
+    setEditingProject(project);
+    setImageUrl(project?.image_url || '');
+    setConcepts(project?.concepts_explored || []);
+    setSkills(project?.skills_developed || []);
+    setErrorStatus(null);
+    setIsModalOpen(true);
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this project?')) return;
-    
-    const { error } = await supabase
-      .from('projects')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      console.error('Error deleting project:', error);
-    } else {
-      fetchProjects();
+    if (!confirm('Permanently remove this showcase?')) return;
+    try {
+      const { error } = await supabase.from('projects').delete().eq('id', id);
+      if (!error) fetchProjects();
+    } catch (err) {
+      console.error('Delete error:', err);
     }
   };
 
@@ -62,227 +66,278 @@ export const AdminProjects = () => {
     const formData = new FormData(e.currentTarget);
     
     const projectData = {
-      title: formData.get('title'),
-      student_name: formData.get('student_name'),
-      age_group: formData.get('age_group'),
-      category: formData.get('category'),
-      description: formData.get('description'),
-      image_url: formData.get('image_url'),
+      title: formData.get('title') || '',
+      student_name: formData.get('student_name') || '',
+      age_group: formData.get('age_group') || '',
+      category: formData.get('category') || '',
+      description: formData.get('description') || '',
+      image_url: imageUrl,
       featured: formData.get('featured') === 'on',
       status: formData.get('status') === 'on' ? 'published' : 'draft',
-      summary: formData.get('summary'),
-      big_question: formData.get('big_question'),
-      what_children_did: formData.get('what_children_did'),
-      concepts_explored: formData.get('concepts_explored')?.toString().split(',').map(s => s.trim()) || [],
-      skills_developed: formData.get('skills_developed')?.toString().split(',').map(s => s.trim()) || [],
-      reflection: formData.get('reflection'),
-      studio_link: formData.get('studio_link'),
+      summary: formData.get('summary') || '',
+      big_question: formData.get('big_question') || '',
+      what_children_did: formData.get('what_children_did') || '',
+      concepts_explored: concepts,
+      skills_developed: skills,
+      reflection: formData.get('reflection') || '',
+      studio_link: formData.get('studio_link') || '',
     };
 
-    let error;
-    if (editingProject) {
-      const { error: updateError } = await supabase
-        .from('projects')
-        .update(projectData)
-        .eq('id', editingProject.id);
-      error = updateError;
-    } else {
-      const { error: insertError } = await supabase
-        .from('projects')
-        .insert([projectData]);
-      error = insertError;
-    }
+    try {
+      let result;
+      if (editingProject) {
+        result = await supabase.from('projects').update(projectData).eq('id', editingProject.id);
+      } else {
+        result = await supabase.from('projects').insert([projectData]);
+      }
 
-    if (error) {
-      console.error('Error saving project:', error);
-      alert('Error saving project.');
-    } else {
+      const { error: saveError } = result;
+
+      if (saveError) {
+        console.error('Supabase Error:', saveError);
+        setErrorStatus(saveError.code === '23505' ? 'URL ID (Slug) must be unique.' : saveError.message);
+        setIsSaving(false);
+        return;
+      }
+
       setIsModalOpen(false);
-      setEditingProject(null);
       fetchProjects();
+    } catch (err: any) {
+      console.error('Save error:', err);
+      setErrorStatus(err.message || 'An unexpected error occurred.');
+    } finally {
+      setIsSaving(false);
     }
-    setIsSaving(false);
   };
 
   return (
     <AdminLayout>
       <div className="flex flex-col gap-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
-            <h1 className="font-display font-black text-4xl text-spot-charcoal tracking-tighter uppercase leading-none mb-2">Projects Portfolio</h1>
-            <p className="text-spot-charcoal/60 font-medium">Manage student success stories and creative works.</p>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 rounded-2xl bg-spot-pastel-yellow/20 flex items-center justify-center text-spot-charcoal">
+                <Award size={24} />
+              </div>
+              <h1 className="font-display font-black text-4xl text-spot-charcoal tracking-tighter uppercase leading-none">Portfolio Hub</h1>
+            </div>
+            <p className="text-spot-charcoal/60 font-medium text-sm italic">Curating student innovation and creative triumphs.</p>
           </div>
           <button 
-            onClick={() => { setEditingProject(null); setIsModalOpen(true); }}
-            className="flex items-center gap-2 px-6 py-4 bg-spot-red text-white font-black uppercase tracking-widest text-xs rounded-2xl hover:bg-red-700 transition-all shadow-xl shadow-spot-red/20"
+            onClick={() => openForm()}
+            className="group flex items-center gap-3 px-8 py-5 bg-spot-charcoal text-white font-black uppercase tracking-widest text-xs rounded-[2rem] hover:bg-spot-red transition-all shadow-2xl hover:scale-[1.02] active:scale-95"
           >
-            <Plus size={20} />
-            Showcase New Project
+            <Plus size={20} className="group-hover:rotate-90 transition-transform" /> 
+            Showcase New Success
           </button>
-        </div>
+        </header>
 
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="animate-spin text-spot-red" size={40} />
+          <div className="flex flex-col items-center justify-center py-32 gap-4">
+            <div className="w-12 h-12 border-4 border-black/5 border-t-spot-pastel-yellow rounded-full animate-spin" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-spot-charcoal/20">Syncing Showcase...</span>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {projects.map((project) => (
-              <div key={project.id} className="bg-white rounded-[2.5rem] border border-black/5 shadow-xl overflow-hidden flex flex-col group hover:scale-[1.02] transition-all">
-                <div className="h-48 relative overflow-hidden bg-spot-cream">
-                  <img src={project.image_url} alt={project.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
-                  <div className="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-[9px] font-black text-spot-charcoal uppercase tracking-widest shadow-lg">
-                    {project.category}
+              <motion.div 
+                layout
+                key={project.id} 
+                className={`bg-white rounded-[3rem] border border-black/5 shadow-xl shadow-black/5 overflow-hidden flex flex-col group transition-all hover:shadow-2xl hover:border-black/10 ${project.status === 'draft' ? 'opacity-60 bg-slate-50' : ''}`}
+              >
+                <div className="h-44 relative overflow-hidden bg-slate-100">
+                  <img src={project.image_url} alt={project.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" />
+                  <div className="absolute top-6 left-6 flex flex-col gap-2">
+                    <div className="px-4 py-1.5 rounded-full text-[9px] font-black bg-white text-spot-charcoal uppercase tracking-[0.2em] shadow-lg border border-black/5">
+                      {project.category}
+                    </div>
                   </div>
                   {project.featured && (
-                    <div className="absolute top-4 right-4 p-2 bg-spot-pastel-yellow rounded-full text-spot-charcoal shadow-lg">
-                      <Star size={12} fill="currentColor" />
+                    <div className="absolute top-6 right-6 w-8 h-8 rounded-full bg-spot-pastel-yellow text-spot-charcoal flex items-center justify-center shadow-lg animate-pulse">
+                      <Star size={14} fill="currentColor" />
                     </div>
                   )}
                 </div>
                 
                 <div className="p-8 flex-1 flex flex-col">
-                  <span className="text-[10px] font-black text-spot-charcoal/40 uppercase tracking-widest mb-2 block italic">{project.student_name} • {project.age_group}</span>
-                  <h3 className="font-display font-black text-xl text-spot-charcoal mb-4 uppercase tracking-tighter leading-none line-clamp-2">{project.title}</h3>
-                  <p className="text-xs text-spot-charcoal/60 font-medium line-clamp-3 mb-6 flex-1 italic leading-relaxed">{project.description}</p>
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-spot-charcoal/30 flex items-center gap-2">
+                       <UserCircle size={10} /> {project.student_name}
+                    </span>
+                    <div className="h-px bg-black/5 flex-1" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-spot-charcoal/30">{project.age_group}</span>
+                  </div>
                   
-                  <div className="flex items-center justify-between pt-6 border-t border-black/5">
-                    <span className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest ${
-                      project.status === 'published' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'
+                  <h3 className="font-display font-black text-2xl text-spot-charcoal mb-4 uppercase tracking-tighter leading-[0.9] group-hover:text-spot-red transition-colors">{project.title}</h3>
+                  <p className="text-xs text-spot-charcoal/60 font-medium line-clamp-2 italic leading-relaxed mb-6">{project.description}</p>
+                  
+                  <div className="mt-auto pt-6 border-t border-black/5 flex items-center justify-between">
+                    <span className={`px-3 py-1 rounded-xl text-[8px] font-black uppercase tracking-widest ${
+                      project.status === 'published' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-slate-50 text-slate-400 border border-black/5'
                     }`}>
                       {project.status || 'Draft'}
                     </span>
                     <div className="flex gap-2">
                       <button 
-                        onClick={() => { setEditingProject(project); setIsModalOpen(true); }}
-                        className="p-3 bg-slate-50 text-spot-charcoal hover:text-white hover:bg-spot-charcoal rounded-xl transition-all"
+                        onClick={() => openForm(project)} 
+                        className="w-10 h-10 bg-slate-50 text-spot-charcoal hover:text-white hover:bg-spot-charcoal rounded-xl transition-all flex items-center justify-center shadow-sm"
                       >
                         <Edit2 size={16} />
                       </button>
                       <button 
-                        onClick={() => handleDelete(project.id)}
-                        className="p-3 bg-slate-50 text-spot-charcoal hover:bg-spot-red hover:text-white rounded-xl transition-all"
+                        onClick={() => handleDelete(project.id)} 
+                        className="w-10 h-10 bg-slate-50 text-spot-charcoal hover:bg-spot-red hover:text-white rounded-xl transition-all flex items-center justify-center shadow-sm"
                       >
                         <Trash2 size={16} />
                       </button>
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         )}
 
         <AnimatePresence>
           {isModalOpen && (
-            <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 sm:p-12">
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 sm:p-12 overflow-hidden">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-spot-charcoal/90 backdrop-blur-xl" onClick={() => setIsModalOpen(false)} />
               <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-spot-charcoal/80 backdrop-blur-md" 
-                onClick={() => setIsModalOpen(false)} 
-              />
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                className="bg-white w-full max-w-5xl rounded-[3.5rem] shadow-2xl relative z-10 overflow-hidden flex flex-col max-h-[95vh]"
+                initial={{ opacity: 0, scale: 0.95, y: 30 }} 
+                animate={{ opacity: 1, scale: 1, y: 0 }} 
+                exit={{ opacity: 0, scale: 0.95, y: 30 }} 
+                className="bg-white w-full max-w-6xl rounded-[4rem] shadow-2xl relative z-10 overflow-hidden flex flex-col max-h-[90vh] border border-white/20"
               >
-                <div className="p-8 border-b border-black/5 flex justify-between items-center bg-slate-50">
-                  <h2 className="font-display font-black text-2xl text-spot-charcoal uppercase tracking-tighter">
-                    {editingProject ? 'Refine Project' : 'Curate Showcase'}
-                  </h2>
-                  <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-black/5 rounded-full transition-all">
+                <div className="p-10 border-b border-black/5 flex justify-between items-center bg-slate-50/50">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-spot-red mb-1">Portfolio Curator</span>
+                    <h2 className="font-display font-black text-3xl text-spot-charcoal uppercase tracking-tighter leading-none">
+                      {editingProject ? 'Refine Showcase' : 'Architect New Story'}
+                    </h2>
+                  </div>
+                  <button onClick={() => setIsModalOpen(false)} className="w-12 h-12 rounded-2xl bg-white shadow-xl flex items-center justify-center hover:bg-spot-red hover:text-white transition-all active:scale-90">
                     <X size={24} />
                   </button>
                 </div>
 
-                <form onSubmit={handleSave} className="p-10 space-y-10 overflow-y-auto">
-                  <div className="grid lg:grid-cols-2 gap-12">
-                    <div className="space-y-8">
-                       <div>
-                         <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-2">Project Title</label>
-                         <input name="title" required placeholder="The Scrabble Storyteller" defaultValue={editingProject?.title} className="w-full px-8 py-5 rounded-2xl bg-slate-50 border border-black/5 focus:outline-none focus:border-spot-red transition-all font-display font-black text-xl tracking-tighter uppercase" />
-                       </div>
-
-                       <div className="grid grid-cols-2 gap-4">
-                         <div>
-                           <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-2">Student Name</label>
-                           <input name="student_name" required placeholder="Alex Noble" defaultValue={editingProject?.student_name} className="w-full px-6 py-4 rounded-xl bg-white border border-black/5 focus:outline-none focus:border-spot-red font-bold text-xs" />
-                         </div>
-                         <div>
-                           <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-2">Age / Team</label>
-                           <input name="age_group" required placeholder="Age 12" defaultValue={editingProject?.age_group} className="w-full px-6 py-4 rounded-xl bg-white border border-black/5 focus:outline-none focus:border-spot-red font-bold text-xs" />
-                         </div>
-                       </div>
-
-                       <div>
-                         <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-2">Core Catchphrase (Card View)</label>
-                         <textarea name="description" required rows={2} placeholder="Building machines to solve daily puzzles..." defaultValue={editingProject?.description} className="w-full px-6 py-4 rounded-xl bg-slate-50 border border-black/5 focus:outline-none focus:border-spot-red transition-all font-medium text-sm italic" />
-                       </div>
-
-                       <div>
-                         <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-2">Detailed Summary (Showcase Page)</label>
-                         <textarea name="summary" required rows={4} placeholder="Full narrative of the project context..." defaultValue={editingProject?.summary} className="w-full px-6 py-4 rounded-xl bg-slate-50 border border-black/5 focus:outline-none focus:border-spot-red transition-all font-medium text-sm leading-relaxed" />
-                       </div>
+                <form onSubmit={handleSave} className="flex-1 overflow-y-auto p-12 space-y-16 hide-scrollbar custom-scrollbar">
+                  {/* Phase 1: Core Context */}
+                  <div className="space-y-10">
+                    <SectionHeader num={1} label="Ownership & Resonance" />
+                    <div className="grid lg:grid-cols-2 gap-12">
+                      <div className="space-y-8">
+                        <div>
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-3">Project Title</label>
+                          <input name="title" required placeholder="The Eco-Kinetic Sculpture" defaultValue={editingProject?.title} className="w-full px-8 py-6 rounded-[2rem] bg-slate-50 border border-black/5 focus:outline-none focus:border-spot-red transition-all font-display font-black text-2xl tracking-tighter uppercase" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-6">
+                           <div>
+                              <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-3">Inventor Name</label>
+                              <input name="student_name" required placeholder="Alex Noble" defaultValue={editingProject?.student_name} className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-black/5 font-bold text-xs" />
+                           </div>
+                           <div>
+                              <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-3">Age Group</label>
+                              <input name="age_group" required placeholder="9-12 Years" defaultValue={editingProject?.age_group} className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-black/5 font-bold text-xs" />
+                           </div>
+                        </div>
+                      </div>
+                      <div className="space-y-8">
+                        <div>
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-3">The Big Question</label>
+                          <input name="big_question" placeholder="Can we build tools that grow themselves?" defaultValue={editingProject?.big_question} className="w-full px-8 py-6 rounded-[2.5rem] bg-spot-pastel-yellow border border-black/5 focus:outline-none font-medium italic text-sm" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-6">
+                           <div>
+                              <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-3">Domain</label>
+                              <select name="category" required defaultValue={editingProject?.category} className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-black/5 font-bold text-[10px] uppercase tracking-widest">
+                                <option value="Art & Design">Art & Design</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Science">Science</option>
+                                <option value="Media">Media</option>
+                              </select>
+                           </div>
+                           <div>
+                              <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-3">Studio Source</label>
+                              <input name="studio_link" placeholder="/studios/..." defaultValue={editingProject?.studio_link} className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-black/5 font-mono text-[10px] text-spot-red" />
+                           </div>
+                        </div>
+                      </div>
                     </div>
+                  </div>
 
-                    <div className="space-y-8">
-                       <div>
-                         <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-2">The 'Big Question'</label>
-                         <input name="big_question" placeholder="Can we build a city that generates its own water?" defaultValue={editingProject?.big_question} className="w-full px-6 py-4 rounded-xl bg-spot-pastel-yellow overflow-hidden border border-black/5 focus:outline-none focus:border-spot-red font-medium text-sm italic" />
+                  {/* Phase 2: Narrative Deep Dive */}
+                  <div className="space-y-10">
+                    <SectionHeader num={2} label="Process & Insight" />
+                    <div className="grid lg:grid-cols-2 gap-12">
+                       <div className="space-y-8">
+                          <div>
+                             <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-3">The Narrative (Summary)</label>
+                             <textarea name="summary" required rows={6} placeholder="How it started, what happened, and why..." defaultValue={editingProject?.summary} className="w-full px-8 py-6 rounded-[2.5rem] bg-slate-50 border border-black/5 text-sm font-medium leading-relaxed" />
+                          </div>
+                          <div>
+                             <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-3">Technical Highlights</label>
+                             <textarea name="what_children_did" rows={4} placeholder="Specific builds, code snippets, or sketches..." defaultValue={editingProject?.what_children_did} className="w-full px-8 py-6 rounded-[2.5rem] bg-slate-50 border border-black/5 text-sm font-medium leading-relaxed" />
+                          </div>
                        </div>
-
-                       <div>
-                         <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-2">Classification</label>
-                         <select name="category" required defaultValue={editingProject?.category || ''} className="w-full px-6 py-4 rounded-xl border border-black/5 font-black text-[10px] uppercase tracking-widest">
-                            <option value="">Select Category</option>
-                            <option value="Art & Creative">Art & Creative</option>
-                            <option value="Engineering & Maker">Engineering & Maker</option>
-                            <option value="Science & Nature">Science & Nature</option>
-                            <option value="Storytelling & Media">Storytelling & Media</option>
-                            <option value="Entrepreneurship">Entrepreneurship</option>
-                         </select>
-                       </div>
-
-                       <div className="grid grid-cols-2 gap-4">
-                         <div>
-                            <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-2">Core Concepts</label>
-                            <input name="concepts_explored" placeholder="Physics, Ecology" defaultValue={editingProject?.concepts_explored?.join(', ')} className="w-full px-6 py-4 rounded-xl border border-black/5 focus:outline-none focus:border-spot-red font-bold text-xs" />
-                         </div>
-                         <div>
-                            <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-2">Skills Forged</label>
-                            <input name="skills_developed" placeholder="Prototyping, Empathy" defaultValue={editingProject?.skills_developed?.join(', ')} className="w-full px-6 py-4 rounded-xl border border-black/5 focus:outline-none focus:border-spot-red font-bold text-xs" />
-                         </div>
-                       </div>
-
-                       <div>
-                         <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-2">Main Cover Image URL</label>
-                         <input name="image_url" required placeholder="https://..." defaultValue={editingProject?.image_url} className="w-full px-6 py-4 rounded-xl border border-black/5 font-medium text-xs" />
+                       <div className="space-y-8">
+                          <div>
+                             <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-3">Student Reflection</label>
+                             <textarea name="reflection" rows={6} placeholder="In the words of the student..." defaultValue={editingProject?.reflection} className="w-full px-8 py-6 rounded-[2.5rem] bg-spot-cream/50 border border-black/5 text-sm font-medium italic leading-relaxed" />
+                          </div>
+                          <div>
+                             <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-3">Short Elevator Pitch</label>
+                             <textarea name="description" required rows={3} placeholder="Condensed resonance..." defaultValue={editingProject?.description} className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-black/5 text-sm font-medium" />
+                          </div>
                        </div>
                     </div>
                   </div>
 
-                  <div className="pt-8 border-t border-black/5 flex items-center justify-between">
-                    <div className="flex gap-8">
-                       <label className="flex items-center gap-3 cursor-pointer group">
-                         <input type="checkbox" name="featured" defaultChecked={editingProject?.featured} className="w-6 h-6 rounded-lg border-2 border-black/10 text-spot-red focus:ring-spot-red transition-all" />
-                         <span className="text-sm font-black text-spot-charcoal uppercase tracking-tighter group-hover:text-spot-red">Featured in Portfolio</span>
-                       </label>
-                       <label className="flex items-center gap-3 cursor-pointer group">
-                         <input type="checkbox" name="status" defaultChecked={editingProject?.status !== 'draft'} className="w-6 h-6 rounded-lg border-2 border-black/10 text-spot-pastel-green focus:ring-spot-pastel-green transition-all" />
-                         <span className="text-sm font-black text-spot-charcoal uppercase tracking-tighter group-hover:text-spot-pastel-green">Live (Published)</span>
-                       </label>
+                  {/* Phase 3: Assets & Growth */}
+                  <div className="space-y-10">
+                    <SectionHeader num={3} label="Visual Archive" />
+                    <div className="grid lg:grid-cols-2 gap-12">
+                       <ImageUpload label="Hero Outcome Visual" value={imageUrl} onChange={setImageUrl} maxSizeKB={500} />
+                       <div className="space-y-8">
+                          <TagInput label="Concepts Mastered" tags={concepts} onChange={setConcepts} maxTags={5} placeholder="e.g. Iteration" />
+                          <TagInput label="Skills Forged" tags={skills} onChange={setSkills} maxTags={5} placeholder="e.g. Python" />
+                       </div>
                     </div>
-                    
-                    <div className="flex gap-4">
-                      <button type="button" onClick={() => setIsModalOpen(false)} className="px-8 py-4 text-spot-charcoal font-black uppercase tracking-widest text-xs hover:bg-slate-100 rounded-2xl transition-all">Cancel</button>
-                      <button type="submit" disabled={isSaving} className="px-10 py-4 bg-spot-charcoal text-white font-black uppercase tracking-widest text-xs rounded-2xl hover:bg-spot-red transition-all shadow-xl haptic-feedback flex items-center gap-2">
-                        {isSaving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
-                        {editingProject ? 'Update Portfolio' : 'Publish Story'}
-                      </button>
-                    </div>
+                  </div>
+
+                  {/* Phase 4: Broadcast Status */}
+                  <div className="flex flex-wrap gap-12 items-center justify-center p-10 bg-spot-charcoal rounded-[3rem] shadow-2xl">
+                        <label className="flex items-center gap-4 cursor-pointer group">
+                          <input type="checkbox" name="featured" defaultChecked={editingProject?.featured} className="w-8 h-8 rounded-xl text-spot-pastel-yellow border-2 border-white/20 focus:ring-0 bg-transparent transition-all" />
+                          <span className="text-xs font-black uppercase tracking-[0.2em] text-white/40 group-hover:text-spot-pastel-yellow">Star Showcase</span>
+                        </label>
+                        <div className="w-px h-8 bg-white/10" />
+                        <label className="flex items-center gap-4 cursor-pointer group">
+                          <input type="checkbox" name="status" defaultChecked={editingProject?.status !== 'draft'} className="w-8 h-8 rounded-xl text-emerald-500 border-2 border-white/20 focus:ring-0 bg-transparent transition-all" />
+                          <span className="text-xs font-black uppercase tracking-[0.2em] text-white/40 group-hover:text-emerald-500">Public Archive</span>
+                        </label>
+                  </div>
+
+                  <AnimatePresence>
+                    {errorStatus && (
+                      <motion.div 
+                        initial={{ opacity: 0, height: 0 }} 
+                        animate={{ opacity: 1, height: 'auto' }} 
+                        className="my-6 p-6 bg-red-50 border border-red-100 rounded-[2rem] flex items-center gap-4 text-red-600 text-sm font-bold"
+                      >
+                        <AlertCircle className="shrink-0" size={20} />
+                        {errorStatus}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <div className="flex justify-end gap-6 pt-12 border-t border-black/5">
+                    <button type="button" onClick={() => setIsModalOpen(false)} className="px-12 py-5 font-black uppercase tracking-[0.2em] text-[10px] hover:bg-slate-50 rounded-[2rem] transition-all flex items-center gap-2">
+                       Dismiss
+                    </button>
+                    <button type="submit" disabled={isSaving} className="px-16 py-5 bg-spot-charcoal text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-[2rem] hover:bg-spot-red transition-all shadow-2xl flex items-center gap-3 relative overflow-hidden group">
+                       {isSaving ? <Loader2 className="animate-spin" size={18}/> : <Save size={18} />}
+                       <span className="relative">{editingProject ? 'Refine Artifact' : 'Commit to Portfolio'}</span>
+                    </button>
                   </div>
                 </form>
               </motion.div>

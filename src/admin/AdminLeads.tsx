@@ -9,10 +9,19 @@ import {
   Clock,
   CheckCircle2,
   AlertCircle,
-  Users
+  Users,
+  Calendar,
+  X,
+  FileSpreadsheet,
+  ArrowRight,
+  Filter,
+  MessageSquare,
+  Activity,
+  Layout
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { AdminLayout } from './AdminLayout';
+import { motion, AnimatePresence } from 'motion/react';
 import * as XLSX from 'xlsx';
 
 export const AdminLeads = () => {
@@ -20,6 +29,11 @@ export const AdminLeads = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
+  const [dateRange, setDateRange] = useState({
+    start: '',
+    end: ''
+  });
+  const [selectedLead, setSelectedLead] = useState<any | null>(null);
 
   useEffect(() => {
     fetchLeads();
@@ -40,168 +54,409 @@ export const AdminLeads = () => {
     setLoading(false);
   };
 
+  const getLabelForType = (type: string) => {
+    switch (type) {
+      case 'studio_enrollment':
+      case 'studio_interest': return 'Studios';
+      case 'event_booking': 
+      case 'booking': return 'Events';
+      case 'general':
+      case 'contact': return 'General Inquiry';
+      case 'newsletter': return 'Newsletter Spot';
+      case 'career':
+      case 'careers': return 'Career Pulse';
+      case 'tour': return 'Experience Tour';
+      default: return type.replace(/_/g, ' ').toUpperCase();
+    }
+  };
+
   const exportToExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(leads);
+    const dataToExport = filteredLeads.map(lead => {
+      const exportRow: any = {
+        'Category': getLabelForType(lead.type),
+        'Submission Date': new Date(lead.created_at).toLocaleDateString('en-IN'),
+        'Submission Time': new Date(lead.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+        'Full Name': lead.name,
+        'Email Address': lead.email,
+        'Contact Number': lead.phone || 'N/A',
+        'Lead Status': lead.status?.toUpperCase() || 'NEW',
+        'Notes': lead.notes || 'N/A'
+      };
+
+      // Add metadata fields with pretty keys
+      if (lead.metadata && typeof lead.metadata === 'object') {
+        Object.entries(lead.metadata).forEach(([key, value]) => {
+          const prettyKey = key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+          exportRow[prettyKey] = value === true ? 'Yes' : 
+                                value === false ? 'No' : 
+                                value === null || value === undefined ? 'N/A' :
+                                typeof value === 'object' ? JSON.stringify(value) : 
+                                value;
+        });
+      }
+
+      return exportRow;
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Leads");
-    XLSX.writeFile(workbook, `SPOT_Leads_${new Date().toISOString().split('T')[0]}.xlsx`);
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Website Registry");
+    
+    // Set column widths for better readability
+    worksheet["!cols"] = [
+      { wch: 15 }, // Date
+      { wch: 15 }, // Time
+      { wch: 20 }, // Category
+      { wch: 25 }, // Name
+      { wch: 30 }, // Email
+      { wch: 15 }, // Phone
+      { wch: 15 }, // Type
+      { wch: 10 }, // Status
+      ...Object.keys(dataToExport[0] || {}).slice(8).map(() => ({ wch: 20 }))
+    ];
+
+    const fileName = `SPOT_Registry_${dateRange.start || 'all'}_to_${dateRange.end || 'today'}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
   };
 
   const filteredLeads = leads.filter(lead => {
     const matchesSearch = 
-      lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lead.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterType === 'all' || lead.type === filterType;
-    return matchesSearch && matchesFilter;
+      lead.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.email?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    // Normalize filter type comparison
+    let matchesFilter = filterType === 'all';
+    if (!matchesFilter) {
+      if (filterType === 'events') {
+        matchesFilter = lead.type === 'event_booking' || lead.type === 'booking';
+      } else if (filterType === 'studios') {
+        matchesFilter = lead.type === 'studio_enrollment' || lead.type === 'studio_interest';
+      } else if (filterType === 'other') {
+        matchesFilter = !['event_booking', 'booking', 'studio_enrollment', 'studio_interest'].includes(lead.type);
+      }
+    }
+    
+    let matchesDate = true;
+    if (dateRange.start || dateRange.end) {
+      const leadDate = new Date(lead.created_at);
+      if (dateRange.start) {
+        const start = new Date(dateRange.start);
+        start.setHours(0, 0, 0, 0);
+        matchesDate = matchesDate && leadDate >= start;
+      }
+      if (dateRange.end) {
+        const end = new Date(dateRange.end);
+        end.setHours(23, 59, 59, 999);
+        matchesDate = matchesDate && leadDate <= end;
+      }
+    }
+
+    return matchesSearch && matchesFilter && matchesDate;
   });
 
   return (
     <AdminLayout>
-      <div className="flex flex-col gap-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <h1 className="font-display font-black text-4xl text-spot-charcoal tracking-tighter uppercase leading-none mb-2">Form Leads</h1>
-            <p className="text-spot-charcoal/60 font-medium">Manage and track all incoming requests from the website.</p>
+      <div className="space-y-10 pb-20">
+        {/* Header Section */}
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 bg-white p-12 rounded-[4rem] border border-black/5 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-spot-pastel-blue/10 blur-[100px] rounded-full -mr-20 -mt-20" />
+          
+          <div className="relative z-10 flex-1">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-spot-charcoal rounded-2xl flex items-center justify-center shadow-xl">
+                <Users className="text-white" size={24} />
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-spot-charcoal/30">Growth Logistics</span>
+            </div>
+            <h1 className="font-display font-black text-6xl text-spot-charcoal tracking-tighter uppercase leading-[0.85] mb-6">
+              Inbound <span className="text-spot-red italic">Registry.</span>
+            </h1>
+            <p className="text-xl text-spot-charcoal/50 font-medium leading-tight max-w-xl">
+              Track and transform interest into impact. High-density lead intelligence for the SPOT ecosystem.
+            </p>
           </div>
-          <button 
-            onClick={exportToExcel}
-            className="flex items-center gap-2 px-6 py-3 bg-spot-charcoal text-white font-black uppercase tracking-widest text-[10px] rounded-xl hover:bg-spot-red transition-all shadow-xl haptic-feedback"
-          >
-            <Download size={16} />
-            Export to Excel
-          </button>
+
+          <div className="relative z-10 flex flex-wrap gap-4">
+            <button 
+              onClick={exportToExcel}
+              className="px-8 py-4 bg-spot-charcoal text-white font-black uppercase tracking-widest text-[11px] rounded-2xl hover:bg-spot-red transition-all shadow-xl flex items-center gap-3 group"
+            >
+              <FileSpreadsheet size={18} className="group-hover:rotate-12 transition-transform" />
+              Download Full Report
+            </button>
+          </div>
         </div>
 
-        {/* Stats Summary */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { label: 'Total Enquiries', value: leads.length, icon: <Users className="text-blue-500" />, color: 'bg-blue-50' },
-            { label: 'New Today', value: leads.filter(l => new Date(l.created_at).toDateString() === new Date().toDateString()).length, icon: <Clock className="text-orange-500" />, color: 'bg-orange-50' },
-            { label: 'Waitlist/Enrollment', value: leads.filter(l => l.type === 'studio_enrollment').length, icon: <Tag className="text-green-500" />, color: 'bg-green-50' },
-          ].map((stat, idx) => (
-            <div key={idx} className={`${stat.color} p-6 rounded-[2.5rem] border border-black/5 flex items-center justify-between`}>
-              <div>
-                <span className="text-[10px] font-black uppercase tracking-widest opacity-40 block mb-1">{stat.label}</span>
-                <span className="text-3xl font-display font-black text-spot-charcoal">{stat.value}</span>
+            { label: 'Total Volume', value: leads.length, color: 'bg-white', icon: <Activity size={20} className="text-spot-charcoal" /> },
+            { label: 'New This Week', value: leads.filter(l => {
+              const d = new Date(l.created_at);
+              const now = new Date();
+              return d > new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            }).length, color: 'bg-spot-red', icon: <Clock size={20} className="text-white" />, textColor: 'text-white' },
+            { label: 'Studio Interests', value: leads.filter(l => l.type === 'studio_enrollment').length, color: 'bg-spot-pastel-pink', icon: <Layout size={20} className="text-spot-charcoal" /> },
+            { label: 'Event Bookings', value: leads.filter(l => l.type === 'event_booking' || l.type === 'booking').length, color: 'bg-spot-pastel-blue', icon: <Calendar size={20} className="text-spot-charcoal" /> },
+          ].map((stat, i) => (
+            <div key={i} className={`${stat.color} p-8 rounded-[3rem] border border-black/5 shadow-xl group hover:scale-[1.02] transition-all`}>
+              <div className="flex justify-between items-start mb-6">
+                <div className={`p-4 rounded-2xl ${stat.textColor === 'text-white' ? 'bg-white/20' : 'bg-slate-50'} shadow-sm group-hover:rotate-6 transition-transform`}>
+                  {stat.icon}
+                </div>
               </div>
-              <div className="p-4 bg-white rounded-2xl shadow-sm">
-                {stat.icon}
-              </div>
+              <span className={`text-[10px] font-black uppercase tracking-widest block mb-1 ${stat.textColor || 'text-spot-charcoal/40'}`}>{stat.label}</span>
+              <span className={`text-4xl font-display font-black tracking-tighter ${stat.textColor || 'text-spot-charcoal'}`}>{stat.value}</span>
             </div>
           ))}
         </div>
 
-        {/* Filter Bar */}
-        <div className="bg-white p-4 rounded-3xl border border-black/5 shadow-sm flex flex-col md:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-spot-charcoal/30" size={18} />
-            <input 
-              type="text" 
-              placeholder="Search by name or email..." 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-black/5 rounded-2xl focus:outline-none focus:border-spot-red transition-all font-medium text-sm"
-            />
+        {/* Controls Section */}
+        <div className="bg-white p-10 rounded-[4rem] border border-black/5 shadow-2xl space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            {/* Search */}
+            <div className="relative group">
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-spot-charcoal/20 group-focus-within:text-spot-red transition-all" size={24} />
+              <input 
+                type="text" 
+                placeholder="Search name, email, or content..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-16 pr-8 py-5 bg-slate-50 border border-black/5 rounded-[2rem] focus:outline-none focus:border-spot-red focus:bg-white transition-all font-bold text-lg"
+              />
+            </div>
+
+            {/* Date Range */}
+            <div className="flex items-center gap-4 bg-slate-50 p-3 rounded-[2rem] border border-black/5">
+              <div className="flex items-center gap-3 px-6 py-2 bg-white rounded-xl shadow-sm flex-1">
+                <Calendar size={18} className="text-spot-red" />
+                <input 
+                  type="date" 
+                  value={dateRange.start}
+                  onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
+                  className="w-full bg-transparent border-none text-[10px] font-black uppercase focus:ring-0 p-0"
+                />
+              </div>
+              <span className="text-spot-charcoal/20 font-black uppercase text-[10px]">to</span>
+              <div className="flex items-center gap-3 px-6 py-2 bg-white rounded-xl shadow-sm flex-1">
+                <Calendar size={18} className="text-spot-red" />
+                <input 
+                  type="date" 
+                  value={dateRange.end}
+                  onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
+                  className="w-full bg-transparent border-none text-[10px] font-black uppercase focus:ring-0 p-0"
+                />
+              </div>
+              {(dateRange.start || dateRange.end) && (
+                <button 
+                  onClick={() => setDateRange({ start: '', end: '' })}
+                  className="p-3 hover:bg-spot-red/10 group rounded-xl transition-all"
+                >
+                  <X size={18} className="text-spot-charcoal/40 group-hover:text-spot-red" />
+                </button>
+              )}
+            </div>
           </div>
-          <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0">
-            {['all', 'general', 'studio_enrollment', 'booking', 'career', 'newsletter'].map(type => (
+
+          {/* Filtering Tabs */}
+          <div className="flex gap-3 overflow-x-auto pb-4 scroll-hide border-t border-black/5 pt-8">
+            {[
+              { id: 'all', label: 'All Narratives' },
+              { id: 'studios', label: 'Studios' },
+              { id: 'events', label: 'Events' },
+              { id: 'other', label: 'Other Inquiries' }
+            ].map(type => (
               <button
-                key={type}
-                onClick={() => setFilterType(type)}
-                className={`px-6 py-3 rounded-xl font-bold uppercase tracking-widest text-[9px] transition-all whitespace-nowrap ${
-                  filterType === type 
-                    ? 'bg-spot-charcoal text-white shadow-lg' 
-                    : 'bg-slate-50 text-spot-charcoal/40 hover:bg-slate-100'
+                key={type.id}
+                onClick={() => setFilterType(type.id)}
+                className={`px-10 py-4 rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-[10px] transition-all whitespace-nowrap active:scale-95 ${
+                  filterType === type.id 
+                    ? 'bg-spot-red text-white shadow-xl translate-y-[-2px]' 
+                    : 'bg-slate-50 text-spot-charcoal/30 hover:text-spot-charcoal hover:bg-slate-100'
                 }`}
               >
-                {type.replace('_', ' ')}
+                {type.label}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Leads Table */}
-        <div className="bg-white rounded-[3rem] border border-black/5 shadow-2xl overflow-hidden">
+        {/* Lead Table / View */}
+        <div className="bg-white rounded-[4rem] border border-black/5 shadow-2xl overflow-hidden relative">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50 border-b border-black/5">
-                  <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40">Timestamp</th>
-                  <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40">Lead Name</th>
-                  <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40">Type</th>
-                  <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40">Contact</th>
-                  <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40">Details</th>
-                  <th className="px-8 py-6"></th>
+                <tr className="bg-slate-50/50 border-b border-black/5">
+                  <th className="px-12 py-8 text-[10px] font-black uppercase tracking-[0.3em] text-spot-charcoal/40">Inbound Data</th>
+                  <th className="px-12 py-8 text-[10px] font-black uppercase tracking-[0.3em] text-spot-charcoal/40">Category</th>
+                  <th className="px-12 py-8 text-[10px] font-black uppercase tracking-[0.3em] text-spot-charcoal/40">Intelligence</th>
+                  <th className="px-12 py-8 text-[10px] font-black uppercase tracking-[0.3em] text-spot-charcoal/40">Contact Method</th>
+                  <th className="px-12 py-8"></th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-black/5">
                 {filteredLeads.map((lead) => (
-                  <tr key={lead.id} className="border-b border-black/5 hover:bg-slate-50/50 transition-all group">
-                    <td className="px-8 py-6">
-                      <div className="flex flex-col">
-                        <span className="text-sm font-bold text-spot-charcoal">{new Date(lead.created_at).toLocaleDateString()}</span>
-                        <span className="text-[10px] font-bold text-spot-charcoal/40">{new Date(lead.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                      </div>
-                    </td>
-                    <td className="px-8 py-6">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-spot-pastel-pink rounded-xl flex items-center justify-center font-black text-spot-red text-xs">
+                  <tr key={lead.id} className="hover:bg-slate-50/50 transition-all group">
+                    <td className="px-12 py-8">
+                      <div className="flex items-center gap-6">
+                        <div className="w-16 h-16 bg-spot-pastel-pink/30 rounded-[1.5rem] flex items-center justify-center font-display font-black text-spot-red text-xl shadow-inner group-hover:rotate-6 transition-transform">
                           {lead.name?.[0]}
                         </div>
-                        <span className="text-sm font-black text-spot-charcoal uppercase tracking-tight">{lead.name}</span>
+                        <div className="flex flex-col">
+                          <span className="text-xl font-black text-spot-charcoal uppercase tracking-tighter leading-none mb-2">{lead.name}</span>
+                          <span className="text-[10px] font-black text-spot-charcoal/40 uppercase tracking-widest flex items-center gap-2">
+                            <Clock size={12} className="text-spot-red" />
+                            {new Date(lead.created_at).toLocaleDateString()} @ {new Date(lead.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        </div>
                       </div>
                     </td>
-                    <td className="px-8 py-6">
-                      <span className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest inline-flex items-center gap-2 ${
+                    <td className="px-12 py-8">
+                       <span className={`px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest inline-flex items-center gap-2 shadow-sm ${
                         lead.type === 'studio_enrollment' ? 'bg-orange-100 text-orange-700' : 
-                        lead.type === 'booking' ? 'bg-blue-100 text-blue-700' :
+                        (lead.type === 'event_booking' || lead.type === 'booking') ? 'bg-blue-100 text-blue-700' :
+                        lead.type === 'newsletter' ? 'bg-spot-red/10 text-spot-red' :
                         'bg-slate-100 text-slate-700'
                       }`}>
-                        <Tag size={12} />
-                        {lead.type.replace('_', ' ')}
+                        <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${
+                           lead.type === 'studio_enrollment' ? 'bg-orange-500' : 
+                           (lead.type === 'event_booking' || lead.type === 'booking') ? 'bg-blue-500' :
+                           'bg-slate-500'
+                        }`} />
+                        {getLabelForType(lead.type)}
                       </span>
                     </td>
-                    <td className="px-8 py-6">
-                      <div className="flex flex-col gap-1">
-                        <div className="flex items-center gap-2 text-xs font-bold text-spot-charcoal/70">
-                          <Mail size={14} className="text-spot-red" />
-                          {lead.email}
+                    <td className="px-12 py-8">
+                      <div className="max-w-xs space-y-1">
+                        <div className="text-sm font-bold text-spot-charcoal/80 line-clamp-2 italic leading-snug">
+                          {lead.metadata?.message || lead.metadata?.studio_interest || lead.metadata?.program || "No additional context."}
                         </div>
-                        {lead.phone && (
-                          <div className="flex items-center gap-2 text-xs font-bold text-spot-charcoal/70">
-                            <Phone size={14} className="text-spot-red" />
-                            {lead.phone}
-                          </div>
+                        {lead.metadata?.child_name && (
+                           <div className="text-[10px] font-black uppercase tracking-widest text-spot-red">
+                             Prospective: {lead.metadata.child_name}
+                           </div>
                         )}
                       </div>
                     </td>
-                    <td className="px-8 py-6">
-                      <div className="max-w-xs truncate text-[11px] font-medium text-spot-charcoal/60 leading-tight italic">
-                        {lead.metadata?.message || lead.metadata?.studio_interest || lead.metadata?.program || "N/A"}
+                    <td className="px-12 py-8">
+                      <div className="flex flex-col gap-3">
+                        <a href={`mailto:${lead.email}`} className="flex items-center gap-3 text-sm font-bold text-spot-charcoal hover:text-spot-red transition-colors group/link">
+                          <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/link:bg-spot-red/10 transition-colors">
+                            <Mail size={14} className="text-spot-red" />
+                          </div>
+                          {lead.email}
+                        </a>
+                        {lead.phone && (
+                          <a href={`tel:${lead.phone}`} className="flex items-center gap-3 text-sm font-bold text-spot-charcoal hover:text-spot-red transition-colors group/link">
+                            <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover/link:bg-spot-red/10 transition-colors">
+                              <Phone size={14} className="text-spot-red" />
+                            </div>
+                            {lead.phone}
+                          </a>
+                        )}
                       </div>
                     </td>
-                    <td className="px-8 py-6">
-                      <button className="p-2 text-spot-charcoal/20 hover:text-spot-red transition-all">
-                        <ChevronRight size={20} />
-                      </button>
+                    <td className="px-12 py-8 text-right">
+                       <button 
+                        onClick={() => setSelectedLead(lead)}
+                        className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-spot-charcoal/20 hover:text-spot-red hover:bg-spot-red/5 transition-all active:scale-95"
+                       >
+                         <ChevronRight size={24} />
+                       </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          
+
           {filteredLeads.length === 0 && !loading && (
-            <div className="p-20 text-center">
-              <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Search size={32} className="text-slate-200" />
+            <div className="py-40 text-center">
+              <div className="w-24 h-24 bg-slate-50 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-inner">
+                <Search size={40} className="text-slate-200" />
               </div>
-              <h3 className="text-lg font-black text-spot-charcoal uppercase tracking-tighter">No leads found</h3>
-              <p className="text-spot-charcoal/40 text-sm">Try adjusting your filters or search term.</p>
+              <h3 className="text-3xl font-display font-black text-spot-charcoal uppercase tracking-tighter mb-4">Void of Signal</h3>
+              <p className="text-spot-charcoal/40 text-lg font-medium max-w-sm mx-auto">No inbound narratives match your current coordinates. Try broad-spectrum filtering.</p>
             </div>
           )}
         </div>
+
+        {/* Lead Details Modal */}
+        <AnimatePresence>
+          {selectedLead && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setSelectedLead(null)}
+                className="absolute inset-0 bg-spot-charcoal/60 backdrop-blur-md"
+              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                className="relative w-full max-w-2xl bg-white rounded-[4rem] shadow-2xl overflow-hidden border border-black/5"
+              >
+                <div className="p-10 md:p-14 space-y-12">
+                  <div className="flex justify-between items-start">
+                    <div className="flex items-center gap-6">
+                      <div className="w-24 h-24 bg-spot-pastel-pink/50 rounded-[2.5rem] flex items-center justify-center font-display font-black text-spot-red text-4xl shadow-inner">
+                        {selectedLead.name?.[0]}
+                      </div>
+                      <div>
+                        <h2 className="font-display font-black text-5xl text-spot-charcoal uppercase tracking-tighter leading-none mb-4">{selectedLead.name}</h2>
+                        <span className="px-6 py-2 bg-spot-red/10 text-spot-red rounded-full text-[10px] font-black uppercase tracking-widest">{selectedLead.type.replace('_', ' ')}</span>
+                      </div>
+                    </div>
+                    <button onClick={() => setSelectedLead(null)} className="p-4 hover:bg-slate-50 rounded-2xl transition-all">
+                      <X size={24} className="text-spot-charcoal/40" />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-8 border-y border-black/5 py-10">
+                     <div className="space-y-2">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-spot-charcoal/30 block">Electronic Node</span>
+                        <div className="text-xl font-bold text-spot-charcoal break-all font-display tracking-tight hover:underline cursor-pointer">
+                          <a href={`mailto:${selectedLead.email}`}>{selectedLead.email}</a>
+                        </div>
+                     </div>
+                     <div className="space-y-2">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-spot-charcoal/30 block">Physical Frequency</span>
+                        <div className="text-xl font-bold text-spot-charcoal font-display tracking-tight">
+                          {selectedLead.phone ? <a href={`tel:${selectedLead.phone}`}>{selectedLead.phone}</a> : 'NO FREQUENCY'}
+                        </div>
+                     </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-spot-charcoal/30 block border-b border-black/5 pb-4">Metadata Payload</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                      {Object.entries(selectedLead.metadata || {}).map(([key, value]) => (
+                        <div key={key} className="space-y-1">
+                          <span className="text-[9px] font-black uppercase text-spot-red/50 tracking-widest">{key.replace(/_/g, ' ')}</span>
+                          <div className="text-sm font-bold text-spot-charcoal/80 leading-snug">
+                             {typeof value === 'boolean' ? (value ? 'YES' : 'NO') : String(value)}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-10 flex gap-4">
+                     <a 
+                      href={`mailto:${selectedLead.email}`}
+                      className="flex-1 py-6 bg-spot-charcoal text-white font-black uppercase tracking-widest text-xs rounded-3xl text-center hover:bg-spot-red transition-all shadow-xl hover:-translate-y-1 flex items-center justify-center gap-3"
+                     >
+                       <Mail size={18} />
+                       Establish Connection
+                     </a>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </div>
     </AdminLayout>
   );

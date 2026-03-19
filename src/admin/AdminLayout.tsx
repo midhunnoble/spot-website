@@ -7,6 +7,9 @@ import {
   Calendar, 
   Layout, 
   LogOut, 
+  Zap,
+  Activity,
+  Award,
   ChevronRight,
   Menu,
   X,
@@ -44,12 +47,12 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   };
 
   const navItems = [
-    { name: 'Dashboard', icon: <BarChart3 size={20} />, path: '/admin' },
-    { name: 'Leads', icon: <Users size={20} />, path: '/admin/leads' },
+    { name: 'Command Center', icon: <Zap size={20} />, path: '/admin' },
+    { name: 'Registry', icon: <Activity size={20} />, path: '/admin/leads' },
     { name: 'Studios', icon: <Layout size={20} />, path: '/admin/studios' },
     { name: 'Events', icon: <Calendar size={20} />, path: '/admin/events' },
-    { name: 'Projects', icon: <Sparkles size={20} />, path: '/admin/projects' },
-    { name: 'Journal', icon: <BookOpen size={20} />, path: '/admin/blog' },
+    { name: 'Projects', icon: <Award size={20} />, path: '/admin/projects' },
+    { name: 'Journal Lab', icon: <BookOpen size={20} />, path: '/admin/blog' },
   ];
 
   if (loading) {
