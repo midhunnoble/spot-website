@@ -131,8 +131,8 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
           >
-            <span className="inline-block px-4 py-1.5 rounded-full bg-spot-charcoal/5 border border-spot-charcoal/10 font-display font-bold text-sm tracking-[0.2em] uppercase text-spot-charcoal/60 mb-8 backdrop-blur-sm">
-              Weightless Education
+            <span className="inline-block px-4 py-1.5 rounded-full bg-spot-charcoal/5 border border-spot-charcoal/10 font-display font-bold text-xs tracking-[0.2em] uppercase text-spot-charcoal/60 mb-8 backdrop-blur-sm">
+              Agency for Different Minds to Find Their Spark
             </span>
           </motion.div>
 
@@ -160,7 +160,7 @@ const HeroSection = () => {
            className="max-w-3xl mx-auto"
         >
           <p className="font-sans text-xl md:text-2xl lg:text-3xl text-spot-charcoal/80 mb-12 leading-tight font-bold tracking-tight text-pretty">
-             Personalised, project-based learning that helps children <span className="text-spot-red">explore, build, and discover</span> their spark.
+             Personalised, project-based learning that helps <span className="text-spot-red">children explore, build, and discover</span> their spark.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-30">

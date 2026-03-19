@@ -60,10 +60,10 @@ const HeroSection = () => {
 
         <div className="relative h-[600px] hidden lg:block">
           <motion.div style={{ y: y1 }} className="absolute top-0 right-0 w-64 h-80 rounded-3xl overflow-hidden shadow-2xl border-4 border-spot-charcoal z-20">
-            <img src="/assets/real-photos/media__1773735470829.jpg" alt="Building projects" className="w-full h-full object-cover" />
+            <img src="/assets/real-photos/media__1773735492801.jpg" alt="Building projects" className="w-full h-full object-cover" />
           </motion.div>
           <motion.div style={{ y: y2 }} className="absolute bottom-20 left-0 w-72 h-64 rounded-3xl overflow-hidden shadow-2xl border-4 border-spot-charcoal z-30">
-            <img src="/assets/real-photos/media__1773735492801.jpg" alt="Creative studio" className="w-full h-full object-cover" />
+            <img src="/assets/real-photos/media__1773735501759.jpg" alt="Creative studio" className="w-full h-full object-cover" />
           </motion.div>
           <motion.div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-spot-pastel-yellow rounded-full mix-blend-multiply filter blur-xl opacity-50 z-10 animate-pulse" />
         </div>
@@ -135,8 +135,15 @@ const ExploreStudios = ({ onEnroll }: { onEnroll: (name: string) => void }) => {
             >
               <div className="h-56 overflow-hidden relative">
                 <img src={studio.image_url} alt={studio.name} loading="lazy" className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-spot-charcoal px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
-                  {studio.age_group}
+                <div className="absolute top-4 right-4 flex flex-col gap-2 items-end">
+                   <div className="bg-white/90 backdrop-blur-sm text-spot-charcoal px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ">
+                     {studio.age_group}
+                   </div>
+                   {studio.fee && (
+                     <div className="bg-spot-charcoal text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
+                       {studio.fee}
+                     </div>
+                   )}
                 </div>
                 {studio.status === 'inactive' && (
                   <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center">
