@@ -216,7 +216,7 @@ export default function Events() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1, duration: 0.8, ease: "easeOut" }}
-                    className="flex-shrink-0 w-[320px] md:w-[600px] group relative aspect-[16/9] rounded-[2.5rem] md:rounded-[4rem] overflow-hidden snap-center cursor-pointer"
+                    className="flex-shrink-0 w-[85vw] md:w-[600px] group relative aspect-[16/9] rounded-[2.5rem] md:rounded-[4rem] overflow-hidden snap-center cursor-pointer"
                   >
                     <img 
                       src={event.image_url} 
