@@ -136,11 +136,11 @@ const HeroSection = () => {
           </motion.div>
 
           <h1 className="font-display text-[10vw] md:text-[8vw] lg:text-[7.5vw] font-black tracking-tighter uppercase leading-[0.8] text-spot-charcoal mb-8 relative pointer-events-none drop-shadow-sm text-wrap-balance">
-            Agency For <br /> 
-            <span className="text-transparent stroke-charcoal" style={{ WebkitTextStroke: '1.5px var(--color-spot-charcoal)' }}>Different</span> <br />
-            Minds To <br />
+            Where Every <br /> 
+            <span className="text-transparent stroke-charcoal" style={{ WebkitTextStroke: '1.5px var(--color-spot-charcoal)' }}>Child learns</span> <br />
+            Their <br />
             <span className="relative inline-block text-spot-red">
-               Find Their Spark
+               Way
               <motion.div 
                 className="absolute -bottom-2 -left-2 w-[110%] h-4 bg-spot-pastel-yellow/60 -z-10 rounded-full"
                 initial={{ scaleX: 0 }}
@@ -159,7 +159,7 @@ const HeroSection = () => {
            className="max-w-3xl mx-auto"
         >
           <p className="font-sans text-xl md:text-2xl lg:text-3xl text-spot-charcoal/80 mb-12 leading-tight font-bold tracking-tight text-pretty">
-             Protecting the natural curiosity of <span className="text-spot-red">neuro-divergent minds</span> through self-directed, studio-based learning.
+             Personalised, project-based learning that helps children <span className="text-spot-red">explore, build, and discover</span> their spark.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-30">
