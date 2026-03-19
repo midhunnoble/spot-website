@@ -84,8 +84,8 @@ const ExploreStudios = ({ onEnroll }: { onEnroll: (name: string) => void }) => {
       setLoading(true);
       const { data, error } = await supabase
         .from('studios')
-        .select('id, slug, name, description, age_group, category, image_url, featured, skills, status, is_online, has_certificate')
-        .eq('status', 'active')
+        .select('*')
+        .order('status', { ascending: true }) // 'active' comes before 'inactive' (upcoming)
         .order('created_at', { ascending: false });
       
       if (!error) setStudios(data || []);
@@ -122,7 +122,7 @@ const ExploreStudios = ({ onEnroll }: { onEnroll: (name: string) => void }) => {
       </div>
 
       <motion.div layout className="flex overflow-x-auto snap-x snap-mandatory pb-8 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        <AnimatePresence>
+        <AnimatePresence mode="popLayout">
           {filteredStudios.map((studio, i) => (
             <motion.div
               layout
@@ -131,13 +131,20 @@ const ExploreStudios = ({ onEnroll }: { onEnroll: (name: string) => void }) => {
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3 }}
               key={studio.id}
-              className={`group rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-black/5 flex flex-col h-full bg-white`}
+              className={`group rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-black/5 flex flex-col h-full bg-white relative ${studio.status === 'inactive' ? 'opacity-80' : ''}`}
             >
-              <div className="h-48 overflow-hidden relative">
+              <div className="h-56 overflow-hidden relative">
                 <img src={studio.image_url} alt={studio.name} loading="lazy" className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-spot-charcoal px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
                   {studio.age_group}
                 </div>
+                {studio.status === 'inactive' && (
+                  <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center">
+                    <div className="bg-spot-red text-white px-6 py-2 rounded-full font-black uppercase text-[10px] tracking-widest shadow-xl">
+                      Upcoming
+                    </div>
+                  </div>
+                )}
                 {studio.has_certificate && (
                   <div className="absolute top-4 left-4 bg-spot-pastel-yellow text-spot-charcoal p-1.5 rounded-full shadow-lg" title="Certificate Provided">
                     <Award size={14} fill="currentColor" />
@@ -153,14 +160,19 @@ const ExploreStudios = ({ onEnroll }: { onEnroll: (name: string) => void }) => {
                 <p className="font-medium text-spot-charcoal/60 text-sm mb-8 flex-grow leading-relaxed line-clamp-3">{studio.description}</p>
                 <div className="flex gap-2 mt-auto">
                   <button 
-                    onClick={() => onEnroll(studio.name)}
-                    className="flex-1 py-3.5 bg-spot-charcoal text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-spot-red transition-all"
+                    onClick={() => studio.status === 'active' && onEnroll(studio.name)}
+                    disabled={studio.status === 'inactive'}
+                    className={`flex-1 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all ${
+                      studio.status === 'active' 
+                        ? 'bg-spot-charcoal text-white hover:bg-spot-red' 
+                        : 'bg-black/10 text-spot-charcoal/40 cursor-not-allowed'
+                    }`}
                   >
-                    Enroll
+                    {studio.status === 'active' ? 'Enroll' : 'Waitlist'}
                   </button>
                   <Link 
                     to={`/studios/${studio.slug || studio.id}`}
-                    className="px-4 py-3.5 bg-slate-50 text-spot-charcoal rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-slate-100 transition-all border border-black/5"
+                    className="px-6 py-4 bg-slate-50 text-spot-charcoal rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-slate-100 transition-all border border-black/5"
                   >
                     Details
                   </Link>
@@ -350,7 +362,12 @@ const EnrollmentForm = ({ selectedStudio, setSelectedStudio }: { selectedStudio:
                    <input name="age" required placeholder="Age" className="w-full p-5 rounded-2xl bg-slate-50 border border-black/5 font-bold" />
                    <select value={selectedStudio} onChange={(e) => setSelectedStudio(e.target.value)} required className="w-full p-5 rounded-2xl bg-slate-50 border border-black/5 font-black uppercase text-[10px]">
                       <option value="">Select Studio</option>
-                      <option value="Artlore">Artlore</option><option value="Machine Marvels">Machine Marvels</option><option value="WildJar">WildJar</option>
+                      <option value="AI Studio">AI Studio</option>
+                      <option value="AAC Studio">AAC Studio</option>
+                      <option value="2E & Gifted Studio">2E & Gifted Studio</option>
+                      <option value="Artlore">Artlore</option>
+                      <option value="InSchool Summer">InSchool Summer</option>
+                      <option value="Other">Other</option>
                    </select>
                 </div>
                 <input name="email" type="email" required placeholder="Parent Email" className="w-full p-5 rounded-2xl bg-slate-50 border border-black/5 font-bold" />

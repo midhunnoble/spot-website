@@ -445,13 +445,58 @@ export default function StudioDetail() {
       </section>
 
       {/* Recommended Section - Fetching other active studios */}
-      <section className="mt-48 max-w-7xl mx-auto px-6">
-         <div className="flex items-center justify-between mb-16">
-            <h2 className="font-display text-4xl font-black uppercase tracking-tighter">Explore Other Studios</h2>
-            <Link to="/studios" className="font-black uppercase text-xs tracking-[0.2em] text-spot-red underline hover:text-red-700 transition-colors">View All</Link>
-         </div>
-         <p className="text-spot-charcoal/40 font-medium">Explore more creative spaces in our Studios collection.</p>
-      </section>
+      <RecommendedStudios currentId={studio.id} />
     </div>
+  );
+}
+
+const RecommendedStudios = ({ currentId }: { currentId: string }) => {
+  const [others, setOthers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchOthers() {
+      const { data } = await supabase
+        .from('studios')
+        .select('id, slug, name, description, image_url, age_group, category, status')
+        .eq('status', 'active')
+        .neq('id', currentId)
+        .limit(3);
+      
+      if (data) setOthers(data);
+      setLoading(false);
+    }
+    fetchOthers();
+  }, [currentId]);
+
+  if (loading) return null;
+  if (others.length === 0) return null;
+
+  return (
+    <section className="mt-48 max-w-7xl mx-auto px-6">
+      <div className="flex items-center justify-between mb-16">
+        <h2 className="font-display text-4xl font-black uppercase tracking-tighter">Explore Other Studios</h2>
+        <Link to="/studios" className="font-black uppercase text-xs tracking-[0.2em] text-spot-red underline hover:text-red-700 transition-colors">View All</Link>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-8">
+        {others.map((s) => (
+          <Link 
+            key={s.id} 
+            to={`/studios/${s.slug || s.id}`}
+            className="group block"
+          >
+            <div className="aspect-video rounded-[2.5rem] overflow-hidden border border-black/5 shadow-sm mb-6 relative">
+              <img src={s.image_url} alt={s.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+              <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest text-spot-charcoal">
+                {s.age_group}
+              </div>
+            </div>
+            <div className="text-[9px] font-black uppercase tracking-[0.2em] text-spot-red mb-2 opacity-60">{s.category}</div>
+            <h3 className="font-display text-2xl font-black uppercase tracking-tighter group-hover:text-spot-red transition-colors">{s.name}</h3>
+          </Link>
+        ))}
+      </div>
+    </section>
   );
 }
