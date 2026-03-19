@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { Search, Filter, Calendar, MapPin, Clock, Users, ArrowRight, ChevronDown, ChevronUp, Star, PlayCircle, Loader2 } from 'lucide-react';
+import { Search, Filter, Calendar, MapPin, Clock, Users, ArrowRight, ChevronDown, ChevronUp, Star, PlayCircle, Loader2, Rocket } from 'lucide-react';
 import { BookingModal } from '../components/BookingModal';
 import { supabase } from '../lib/supabase';
 import SEO from '../components/SEO';
@@ -85,19 +85,14 @@ export default function Events() {
 
   const isCompletedEvent = (expiryDate: string) => {
     if (!expiryDate) return false;
+    // Set expiry to midnight of the following day for better UX
     return new Date(expiryDate) < new Date();
   };
 
-  const filteredEvents = events.filter(event => {
-    const isCompleted = isCompletedEvent(event.expiry_date);
-    
-    // If we're looking at "Completed Events", only show completed ones
-    if (activeTab === 'Completed Events') {
-      return isCompleted && matchesSearch(event);
-    }
-    // Otherwise, completely hide completed events from other tabs
-    if (isCompleted) return false;
+  const upcomingEvents = events.filter(e => !isCompletedEvent(e.expiry_date));
+  const pastEvents = events.filter(e => isCompletedEvent(e.expiry_date));
 
+  const filteredUpcoming = upcomingEvents.filter(event => {
     const matchesTab = activeTab === 'All Events' || 
                        event.category === activeTab || 
                        (activeTab === 'Online' && event.location?.includes('Online')) ||
@@ -106,16 +101,41 @@ export default function Events() {
     return matchesTab && matchesSearch(event);
   });
 
+  const filteredPast = pastEvents.filter(event => {
+    // If explicitly on 'Completed Events' tab, we show all past ones
+    // Otherwise, we show them at the bottom if we're on 'All Events'
+    if (activeTab === 'Completed Events') return matchesSearch(event);
+    
+    // For other tabs, only show past events if the tab matches
+    const matchesTab = activeTab === 'All Events' || 
+                       event.category === activeTab;
+    
+    return matchesTab && matchesSearch(event);
+  });
+
   function matchesSearch(event: any) {
-    return event.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-           event.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-           event.tags?.join(' ').toLowerCase().includes(searchQuery.toLowerCase());
+    const searchableText = `${event.title} ${event.description} ${event.category} ${event.tags?.join(' ') || ''}`.toLowerCase();
+    return searchableText.includes(searchQuery.toLowerCase());
   }
 
   const featuredEvents = events.filter(e => e.featured && !isCompletedEvent(e.expiry_date));
 
+  // Helper to format price with "₹"
+  const formatPrice = (price: string) => {
+    if (!price || price === '0' || price === 'Free') return 'Free';
+    if (price.includes('Rs.') || price.includes('₹')) return price;
+    // If it's a number, add the symbol
+    if (!isNaN(Number(price))) return `₹${price}`;
+    return price;
+  };
+
   return (
     <main className="pt-20 pb-20">
+      <SEO 
+        title="SPOT Events | Workshops, Camps and Parent Sessions"
+        description="Join SPOT for immersive workshops, parent training, and community events. Explore our upcoming programs in Bangalore and online."
+      />
+      
       {/* Hero Section */}
       <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden px-6 py-20">
         <div className="absolute inset-0 z-0">
@@ -139,7 +159,7 @@ export default function Events() {
               Workshops, trainings and experiences for curious children, parents, educators and schools.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a href="#discover" className="w-full sm:w-auto px-8 py-4 bg-spot-red text-white font-bold rounded-full hover:bg-red-700 transition-colors text-lg shadow-lg shadow-spot-red/20">
+              <a href="#featured" className="w-full sm:w-auto px-8 py-4 bg-spot-red text-white font-bold rounded-full hover:bg-red-700 transition-colors text-lg shadow-lg shadow-spot-red/20 shadow-xl">
                 Explore Upcoming Events
               </a>
               <a href="#host" className="w-full sm:w-auto px-8 py-4 bg-white text-spot-charcoal font-bold rounded-full hover:bg-spot-pastel-yellow transition-colors text-lg border-2 border-spot-charcoal/10">
@@ -150,7 +170,7 @@ export default function Events() {
         </div>
       </section>
 
-      {/* Event Discovery */}
+      {/* Discover and Tabs */}
       <section id="discover" className="py-12 px-6 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
           <div className="relative w-full md:w-96">
@@ -165,11 +185,14 @@ export default function Events() {
           </div>
           <div className="flex items-center gap-3 w-full md:w-auto">
             <Filter size={20} className="text-spot-charcoal/60" />
-            <select className="w-full md:w-auto py-3 px-4 rounded-full border-2 border-black/10 bg-white focus:outline-none focus:border-spot-red font-medium appearance-none cursor-pointer">
-              <option>Upcoming</option>
-              <option>Newest</option>
-              <option>Price: Low to High</option>
-            </select>
+            <div className="relative group">
+              <select className="w-full md:w-auto py-3 px-8 rounded-full border-2 border-black/10 bg-white focus:outline-none focus:border-spot-red font-medium appearance-none cursor-pointer">
+                <option>Upcoming</option>
+                <option>Newest</option>
+                <option>Price: Low to High</option>
+              </select>
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-spot-charcoal/40" size={16} />
+            </div>
           </div>
         </div>
 
@@ -191,8 +214,8 @@ export default function Events() {
       </section>
 
       {/* Featured Events (Netflix Style) */}
-      {!loading && activeTab === 'All Events' && searchQuery === '' && featuredEvents.length > 0 && (
-        <section className="relative py-24 overflow-hidden bg-spot-charcoal">
+      {!loading && (activeTab === 'All Events' || activeTab === 'Community Events') && searchQuery === '' && featuredEvents.length > 0 && (
+        <section id="featured" className="relative py-24 md:py-32 overflow-hidden bg-spot-charcoal">
           {/* Background Text Overlay */}
           <div className="absolute top-1/2 left-0 w-full -translate-y-1/2 pointer-events-none select-none overflow-hidden whitespace-nowrap opacity-[0.03] z-0">
             <span className="font-display font-black text-[25vw] leading-none uppercase tracking-tighter text-white inline-block">
@@ -203,10 +226,10 @@ export default function Events() {
           <div className="relative z-10 px-6 max-w-7xl mx-auto mb-12 flex items-end justify-between">
             <div className="space-y-2">
               <span className="text-spot-red font-black text-[10px] uppercase tracking-[0.5em] block">Must Attend</span>
-              <h2 className="font-display font-black text-4xl md:text-5xl lg:text-6xl text-white uppercase tracking-tighter">Featured <span className="italic">Experiences.</span></h2>
+              <h2 className="font-display font-black text-4xl md:text-5xl lg:text-7xl text-white uppercase tracking-tighter">Featured <span className="italic">Experiences.</span></h2>
             </div>
             <div className="hidden md:flex gap-4">
-               {/* Custom scroll indicators could go here */}
+               {/* Controls could potentially go here if implementing manual scroll */}
             </div>
           </div>
 
@@ -246,7 +269,7 @@ export default function Events() {
                     <div className="absolute bottom-6 left-6 right-6 md:bottom-12 md:left-12 md:right-12">
                       <div className="flex items-center gap-4 text-white/50 text-[10px] font-black uppercase tracking-[0.3em] mb-4">
                          <span className="flex items-center gap-2"><Calendar size={14} className="text-spot-red" /> {event.event_date || event.date_text}</span>
-                         <span className="flex items-center gap-2"><Users size={14} className="text-spot-pastel-blue" /> {event.audience}</span>
+                         {event.audience && <span className="flex items-center gap-2"><Users size={14} className="text-spot-pastel-blue" /> {event.audience}</span>}
                       </div>
                       <h3 className="font-display font-black text-2xl md:text-5xl text-white uppercase tracking-tighter leading-[0.85] mb-6">
                         <Link to={`/events/${event.slug || event.id}`}>{event.title}</Link>
@@ -257,7 +280,7 @@ export default function Events() {
                           onClick={(e) => { e.preventDefault(); handleBookNow(event); }}
                           className="px-8 py-4 bg-white text-spot-charcoal font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-spot-red hover:text-white transition-all transform active:scale-95"
                         >
-                          {isWaitlist ? 'Join Waitlist' : 'Book Your Spot'}
+                          {isWaitlist ? 'Join Waitlist' : 'Book Now'}
                         </button>
                         <Link 
                           to={`/events/${event.slug || event.id}`}
@@ -270,8 +293,6 @@ export default function Events() {
                   </motion.div>
                 );
               })}
-              
-              {/* Extra spacing at the end for mobile scroll */}
               <div className="w-1 flex-shrink-0" />
             </div>
           </div>
@@ -284,83 +305,119 @@ export default function Events() {
       )}
 
       {/* Upcoming Events Grid */}
-      <section className="py-12 px-6 max-w-7xl mx-auto">
-        <h2 className="font-display font-black text-3xl md:text-4xl text-spot-charcoal mb-10">
-          {activeTab === 'All Events' ? 'Upcoming Events' : `${activeTab}`}
-        </h2>
+      <section className="py-24 px-6 max-w-7xl mx-auto">
+        <div className="flex items-center gap-4 mb-12">
+           <h2 className="font-display font-black text-4xl md:text-5xl text-spot-charcoal uppercase tracking-tighter leading-none">
+             {activeTab === 'All Events' ? 'Upcoming Programs' : `${activeTab}`}
+           </h2>
+           <div className="h-1 bg-spot-red flex-grow opacity-10 rounded-full" />
+        </div>
         
         {loading ? (
            <div className="flex justify-center py-20"><Loader2 className="animate-spin text-spot-red" size={40} /></div>
-        ) : filteredEvents.length > 0 ? (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredEvents.map((event, index) => {
+        ) : filteredUpcoming.length > 0 ? (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            {filteredUpcoming.map((event, index) => {
               const soldSeats = registrations[event.id] || 0;
               const isWaitlist = event.total_seats > 0 && soldSeats >= event.total_seats;
 
               return (
-                <motion.div key={event.id} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: index * 0.05 }} className="bg-white rounded-3xl overflow-hidden shadow-lg shadow-black/5 border border-black/5 flex flex-col group hover:-translate-y-1 transition-transform duration-300">
-                  <div className="h-48 relative overflow-hidden">
-                    <img src={event.image_url} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-spot-charcoal uppercase tracking-wider">
+                <motion.div key={event.id} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.05 }} className="bg-white rounded-[2.5rem] overflow-hidden shadow-2xl shadow-black/5 border border-black/5 flex flex-col group hover:-translate-y-2 transition-all duration-500 hover:shadow-xl">
+                  <div className="h-56 relative overflow-hidden">
+                    <img src={event.image_url} alt={event.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                    <div className="absolute top-6 left-6 bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-xl text-[10px] font-black text-spot-charcoal uppercase tracking-[0.2em] border border-black/5">
                       {event.category}
                     </div>
                   </div>
-                  <div className="p-6 flex-1 flex flex-col">
-                    <h3 className="font-display font-black text-xl text-spot-charcoal mb-4 leading-tight">
+                  <div className="p-8 flex-1 flex flex-col">
+                    <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-spot-red mb-4">
+                       <Calendar size={14} /> {event.event_date || event.date_text}
+                    </div>
+                    <h3 className="font-display font-black text-2xl text-spot-charcoal mb-4 leading-[0.9] uppercase tracking-tighter">
                       {event.title}
                     </h3>
                     
-                    <div className="space-y-2 mb-6 flex-1">
-                      <div className="flex items-center gap-2 text-sm text-spot-charcoal/70">
-                        <Calendar size={16} /> {event.event_date || event.date_text}
+                    <div className="space-y-3 mb-8 flex-1">
+                      <div className="flex items-start gap-3 text-sm font-medium text-spot-charcoal/60 leading-tight">
+                        <Clock size={16} className="shrink-0 mt-0.5" /> {event.event_time}
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-spot-charcoal/70">
-                        <Clock size={16} /> {event.event_time}
-                      </div>
-                      {event.audience && <div className="flex items-center gap-2 text-sm text-spot-charcoal/70">
-                        <Users size={16} /> {event.audience}
+                      {event.audience && <div className="flex items-start gap-3 text-sm font-medium text-spot-charcoal/60 leading-tight">
+                        <Users size={16} className="shrink-0 mt-0.5" /> {event.audience}
                       </div>}
-                      <div className="flex items-center gap-2 text-sm text-spot-charcoal/70">
-                        <MapPin size={16} /> {event.location}
+                      <div className="flex items-start gap-3 text-sm font-medium text-spot-charcoal/60 leading-tight">
+                        <MapPin size={16} className="shrink-0 mt-0.5" /> {event.location}
                       </div>
                     </div>
                     
-                    <div className="flex items-center justify-between pt-4 border-t border-black/5 mb-4">
-                      <span className="font-black text-lg text-spot-charcoal">
-                        {event.is_free || event.price === '0' || event.price === 'Free' ? 'Free' : event.price}
+                    <div className="flex items-center justify-between pt-6 border-t border-black/5 mb-6">
+                      <span className="font-black text-2xl text-spot-charcoal tracking-tighter">
+                        {formatPrice(event.price)}
                       </span>
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-3">
-                      <Link to={`/events/${event.slug || event.id}`} className="text-center px-4 py-2.5 bg-spot-pastel-blue text-spot-charcoal font-bold rounded-xl hover:bg-blue-200 transition-colors text-sm">
+                    <div className="grid grid-cols-2 gap-4">
+                      <Link to={`/events/${event.slug || event.id}`} className="text-center px-4 py-4 bg-slate-50 text-spot-charcoal font-black uppercase text-[10px] tracking-widest rounded-2xl hover:bg-slate-100 transition-all border border-black/5">
                         Details
                       </Link>
-                      {activeTab === 'Completed Events' ? (
-                         <div className="text-center px-4 py-2.5 bg-black/5 text-spot-charcoal/60 font-bold rounded-xl text-sm">Completed</div>
-                      ) : (
-                        <button onClick={() => handleBookNow(event)} className={`px-4 py-2.5 text-white font-bold rounded-xl transition-colors text-sm ${isWaitlist ? 'bg-spot-charcoal hover:bg-black' : 'bg-spot-red hover:bg-red-700'}`}>
-                          {isWaitlist ? 'Waitlist' : 'Book Now'}
-                        </button>
-                      )}
+                      <button 
+                        onClick={() => handleBookNow(event)} 
+                        className={`px-4 py-4 text-white font-black uppercase text-[10px] tracking-widest rounded-2xl transition-all shadow-lg hover:shadow-xl translate-y-0 active:translate-y-0.5 ${isWaitlist ? 'bg-spot-charcoal hover:bg-black' : 'bg-spot-red hover:bg-red-700 shadow-spot-red/20'}`}
+                      >
+                        {isWaitlist ? 'Waitlist' : 'Book Now'}
+                      </button>
                     </div>
                   </div>
                 </motion.div>
               )
             })}
           </div>
-        ) : (
-          <div className="text-center py-20 bg-white rounded-3xl border border-black/5">
-            <p className="text-xl text-spot-charcoal/60 font-medium">No events found matching your criteria.</p>
-            <button onClick={() => { setActiveTab('All Events'); setSearchQuery(''); }} className="mt-4 text-spot-red font-bold hover:underline">
-              Clear filters
+        ) : activeTab !== 'Completed Events' ? (
+          <div className="text-center py-24 bg-white/50 rounded-[3rem] border border-black/5 backdrop-blur-xl">
+             <Rocket className="mx-auto text-spot-charcoal/10 mb-8" size={64} />
+            <p className="text-2xl text-spot-charcoal/40 font-bold uppercase tracking-tighter">No upcoming events right now.</p>
+            <button onClick={() => { setActiveTab('All Events'); setSearchQuery(''); }} className="mt-6 px-10 py-4 bg-spot-charcoal text-white font-black uppercase text-[10px] tracking-widest rounded-full hover:bg-spot-red transition-all">
+              See All Program Formats
             </button>
           </div>
-        )}
+        ) : null}
       </section>
 
-      {/* Event Formats (Remaining existing content) */}
+      {/* Past Events Section (Visible when on All Events or Completed Events) */}
+      {!loading && (activeTab === 'All Events' || activeTab === 'Completed Events') && filteredPast.length > 0 && (
+        <section className="py-24 px-6 max-w-7xl mx-auto bg-slate-50/50 rounded-[4rem] border border-black/5 mb-24">
+           <div className="flex items-center gap-4 mb-12">
+              <h2 className="font-display font-black text-4xl md:text-5xl text-spot-charcoal/30 uppercase tracking-tighter leading-none italic">
+                Past Experiences
+              </h2>
+           </div>
+
+           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 grayscale-[0.6] opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-700">
+             {filteredPast.slice(0, activeTab === 'All Events' ? 3 : undefined).map((event, index) => (
+                <div key={event.id} className="bg-white rounded-[2.5rem] overflow-hidden border border-black/5 flex flex-col filter blur-[0.5px] hover:blur-0 transition-all">
+                  <div className="h-40 relative overflow-hidden opacity-50">
+                    <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="p-8 pb-10">
+                    <div className="text-[10px] font-black uppercase tracking-[0.3em] text-spot-charcoal/40 mb-3">{event.date_text} • {event.category}</div>
+                    <h3 className="font-display font-black text-xl text-spot-charcoal/60 uppercase tracking-tighter leading-none mb-6">{event.title}</h3>
+                    <Link to={`/events/${event.slug || event.id}`} className="text-[10px] font-black uppercase tracking-widest text-spot-red underline underline-offset-4">View Outcomes</Link>
+                  </div>
+                </div>
+             ))}
+           </div>
+           
+           {activeTab === 'All Events' && filteredPast.length > 3 && (
+             <div className="mt-16 text-center">
+                <button onClick={() => setActiveTab('Completed Events')} className="px-10 py-4 border-2 border-black/10 text-spot-charcoal font-black uppercase text-[10px] tracking-widest rounded-full hover:bg-spot-charcoal hover:text-white transition-all">
+                  View All Past Events
+                </button>
+             </div>
+           )}
+        </section>
+      )}
+
+      {/* Event Formats */}
       <section className="py-20 px-6 bg-spot-charcoal text-spot-cream">
-        {/* ... (Format blocks, FAQs etc., stripped down slightly for brevity) ... */}
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="font-display font-black text-4xl md:text-5xl mb-6">Ways to Experience SPOT</h2>
@@ -377,23 +434,25 @@ export default function Events() {
         </div>
       </section>
 
-      <section className="py-20 px-6 max-w-3xl mx-auto">
-        <div className="text-center mb-12"><h2 className="font-display font-black text-4xl text-spot-charcoal mb-4">Frequently Asked Questions</h2></div>
-        <div className="space-y-4">
+      {/* FAQ Section */}
+      <section className="py-24 px-6 max-w-4xl mx-auto border-t border-black/5">
+        <div className="text-center mb-16">
+          <h2 className="font-display font-black text-4xl md:text-5xl text-spot-charcoal uppercase tracking-tighter">Frequently <span className="text-spot-red italic">Asked.</span></h2>
+        </div>
+        
+        <div className="space-y-6">
           {FAQS.map((faq, index) => (
-            <div key={index} className="bg-white rounded-2xl border border-black/5 overflow-hidden shadow-sm">
-              <button className="w-full px-6 py-5 text-left flex justify-between items-center font-bold text-lg text-spot-charcoal hover:bg-black/5 transition-colors" onClick={() => setOpenFaq(openFaq === index ? null : index)}>
-                {faq.q}
-                {openFaq === index ? <ChevronUp size={20} className="text-spot-red shrink-0" /> : <ChevronDown size={20} className="text-spot-charcoal/40 shrink-0" />}
-              </button>
-              <AnimatePresence>
-                {openFaq === index && (
-                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                    <div className="px-6 pb-5 text-spot-charcoal/70 leading-relaxed">{faq.a}</div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+            <motion.div 
+              key={index}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.05 }}
+              className="bg-white rounded-3xl p-8 border border-black/5 hover:border-spot-red/20 transition-all group"
+            >
+              <h3 className="font-display font-black text-xl text-spot-charcoal mb-4 uppercase tracking-tighter group-hover:text-spot-red transition-colors">{faq.q}</h3>
+              <p className="text-spot-charcoal/60 leading-relaxed font-medium">{faq.a}</p>
+            </motion.div>
           ))}
         </div>
       </section>

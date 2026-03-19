@@ -613,9 +613,9 @@ const Impact = () => {
 const ParentStories = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const stories = [
-    { text: "SPOT completely changed how my son sees learning. He wakes up excited to build and create every single day.", author: "Sarah M.", role: "Parent of a 9yo" },
-    { text: "The studio model allows my daughter to dive deep into her passions. She's not just memorizing, she's inventing.", author: "David T.", role: "Parent of a 12yo" },
-    { text: "Finally, a place that celebrates neurodiversity and adapts to how children actually learn best.", author: "Elena R.", role: "Parent of a 7yo" }
+    { text: "SPOT completely changed how my son sees learning. He wakes up excited to build and create every single day.", author: "Priya S.", role: "Parent of a 9yo" },
+    { text: "The studio model allows my daughter to dive deep into her passions. She's not just memorizing, she's inventing.", author: "Amit K.", role: "Parent of a 12yo" },
+    { text: "Finally, a place that celebrates neurodiversity and adapts to how children actually learn best.", author: "Kavita B.", role: "Parent of a 7yo" }
   ];
 
   useEffect(() => {

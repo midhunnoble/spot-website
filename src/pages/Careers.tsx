@@ -550,15 +550,15 @@ const MeetTheTeam = () => {
         >
           <div className="space-y-10">
             <p className="font-display text-4xl md:text-5xl leading-[1.1] font-bold italic tracking-tighter text-spot-pastel-yellow">
-              "At SPOT I feel like I am building something meaningful every day. It's the creative freedom I always wanted as an educator."
+              "SPOT is a community of people who think differently. We aren't just building a school; we're building a home for the next generation of innovators."
             </p>
             <div className="flex items-center gap-6">
-              <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-spot-pastel-yellow">
-                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format" alt="Pooja" className="w-full h-full object-cover" />
+              <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-spot-pastel-blue">
+                <img src="/assets/team/arvin.jpg" alt="Arvin Yasir" className="w-full h-full object-cover" />
               </div>
               <div>
-                <div className="font-black text-2xl uppercase">Pooja Latisha</div>
-                <div className="text-spot-cream/40 uppercase tracking-[0.2em] text-[10px] font-black mt-1">Lead Learning Designer</div>
+                <div className="font-black text-2xl uppercase">Arvin Yasir</div>
+                <div className="text-spot-cream/40 uppercase tracking-[0.2em] text-[10px] font-black mt-1">Partnerships and Marketing</div>
               </div>
             </div>
           </div>
