@@ -523,7 +523,7 @@ const Projects = () => {
     { title: "Brand Identity Design for Shop", img: "/assets/real-photos/teen_branding.png", rotate: 2 },
     { title: "Building a Living Terrarium", img: "/assets/real-photos/teen_terrarium.png", rotate: -3 },
     { title: "3D Printing & Rapid Prototyping", img: "/assets/real-photos/teen_3d_printing.png", rotate: 1 },
-    { title: "Baking Studio - Culinary Design", img: "/assets/real-photos/teen_baking_studio.png", rotate: -2 },
+    { title: "Baking Studio - Culinary Design", img: "/assets/real-photos/teen_baking.png", rotate: -2 },
     { title: "AI Studio - Human-Tech Collab", img: "/assets/real-photos/teen_ai.png", rotate: 2 },
   ];
   return (

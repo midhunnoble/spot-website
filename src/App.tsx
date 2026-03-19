@@ -2,6 +2,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
+import { ScrollToTop } from './components/ScrollToTop';
 import { supabase } from './lib/supabase';
 
 // Lazy load pages for better performance
@@ -65,6 +66,7 @@ export default function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <div className="relative">
         <div className="paper-texture" />
         <Navbar />

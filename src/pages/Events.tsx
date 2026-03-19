@@ -183,56 +183,96 @@ export default function Events() {
         </div>
       </section>
 
-      {/* Featured Events */}
+      {/* Featured Events (Netflix Style) */}
       {!loading && activeTab === 'All Events' && searchQuery === '' && featuredEvents.length > 0 && (
-        <section className="py-12 px-6 max-w-7xl mx-auto">
-          <h2 className="font-display font-black text-3xl md:text-4xl text-spot-charcoal mb-10">Featured Events</h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            {featuredEvents.map((event, index) => {
-               const soldSeats = registrations[event.id] || 0;
-               const isWaitlist = event.total_seats > 0 && soldSeats >= event.total_seats;
+        <section className="relative py-24 overflow-hidden bg-spot-charcoal">
+          {/* Background Text Overlay */}
+          <div className="absolute top-1/2 left-0 w-full -translate-y-1/2 pointer-events-none select-none overflow-hidden whitespace-nowrap opacity-[0.03] z-0">
+            <span className="font-display font-black text-[25vw] leading-none uppercase tracking-tighter text-white inline-block">
+              SPOT EVENTS SPOT EVENTS SPOT EVENTS
+            </span>
+          </div>
 
-               return (
-                <motion.div key={event.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }} className="group bg-white rounded-3xl overflow-hidden shadow-xl shadow-black/5 border border-black/5 flex flex-col sm:flex-row">
-                  <div className="sm:w-2/5 h-64 sm:h-auto relative overflow-hidden">
-                    <img src={event.image_url} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-spot-red uppercase tracking-wider">
-                      {event.category}
+          <div className="relative z-10 px-6 max-w-7xl mx-auto mb-12 flex items-end justify-between">
+            <div className="space-y-2">
+              <span className="text-spot-red font-black text-[10px] uppercase tracking-[0.5em] block">Must Attend</span>
+              <h2 className="font-display font-black text-4xl md:text-5xl lg:text-6xl text-white uppercase tracking-tighter">Featured <span className="italic">Experiences.</span></h2>
+            </div>
+            <div className="hidden md:flex gap-4">
+               {/* Custom scroll indicators could go here */}
+            </div>
+          </div>
+
+          <div className="relative z-10 px-6 max-w-7xl mx-auto">
+            <div className="flex gap-8 overflow-x-auto pb-12 hide-scrollbar snap-x snap-mandatory">
+              {featuredEvents.map((event, index) => {
+                const soldSeats = registrations[event.id] || 0;
+                const isWaitlist = event.total_seats > 0 && soldSeats >= event.total_seats;
+
+                return (
+                  <motion.div 
+                    key={event.id}
+                    initial={{ opacity: 0, x: 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1, duration: 0.8, ease: "easeOut" }}
+                    className="flex-shrink-0 w-[320px] md:w-[600px] group relative aspect-[16/9] rounded-[2.5rem] md:rounded-[4rem] overflow-hidden snap-center cursor-pointer"
+                  >
+                    <img 
+                      src={event.image_url} 
+                      alt={event.title} 
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-spot-charcoal/90 via-spot-charcoal/20 to-transparent" />
+                    
+                    <div className="absolute top-6 left-6 md:top-10 md:left-10 flex flex-wrap gap-2">
+                      <span className="px-4 py-2 bg-white/10 backdrop-blur-xl border border-white/20 text-white text-[10px] font-black uppercase tracking-widest rounded-full">
+                        {event.category}
+                      </span>
+                      {isWaitlist && (
+                        <span className="px-4 py-2 bg-spot-red text-white text-[10px] font-black uppercase tracking-widest rounded-full">
+                          Sold Out
+                        </span>
+                      )}
                     </div>
-                  </div>
-                  <div className="p-8 sm:w-3/5 flex flex-col justify-between">
-                    <div>
-                      <h3 className="font-display font-black text-2xl text-spot-charcoal mb-3 leading-tight group-hover:text-spot-red transition-colors">
+
+                    <div className="absolute bottom-6 left-6 right-6 md:bottom-12 md:left-12 md:right-12">
+                      <div className="flex items-center gap-4 text-white/50 text-[10px] font-black uppercase tracking-[0.3em] mb-4">
+                         <span className="flex items-center gap-2"><Calendar size={14} className="text-spot-red" /> {event.event_date || event.date_text}</span>
+                         <span className="flex items-center gap-2"><Users size={14} className="text-spot-pastel-blue" /> {event.audience}</span>
+                      </div>
+                      <h3 className="font-display font-black text-2xl md:text-5xl text-white uppercase tracking-tighter leading-[0.85] mb-6">
                         <Link to={`/events/${event.slug || event.id}`}>{event.title}</Link>
                       </h3>
-                      <p className="text-spot-charcoal/70 mb-6 line-clamp-2">{event.description}</p>
                       
-                      <div className="space-y-2 mb-6 flex flex-wrap gap-4">
-                        <div className="flex items-center gap-2 text-sm text-spot-charcoal/80 font-medium whitespace-nowrap">
-                          <Calendar size={16} className="text-spot-red" /> {event.event_date || event.date_text}
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-spot-charcoal/80 font-medium whitespace-nowrap">
-                          <Users size={16} className="text-spot-red" /> {event.audience}
-                        </div>
+                      <div className="flex items-center gap-4">
+                        <button 
+                          onClick={(e) => { e.preventDefault(); handleBookNow(event); }}
+                          className="px-8 py-4 bg-white text-spot-charcoal font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-spot-red hover:text-white transition-all transform active:scale-95"
+                        >
+                          {isWaitlist ? 'Join Waitlist' : 'Book Your Spot'}
+                        </button>
+                        <Link 
+                          to={`/events/${event.slug || event.id}`}
+                          className="w-14 h-14 bg-white/10 backdrop-blur-3xl border border-white/20 text-white flex items-center justify-center rounded-full hover:bg-white hover:text-spot-charcoal transition-all"
+                        >
+                          <ArrowRight size={24} />
+                        </Link>
                       </div>
                     </div>
-                    
-                    <div className="flex items-center justify-between pt-4 border-t border-black/5">
-                      <span className="font-black text-xl text-spot-charcoal">
-                        {event.is_free || event.price === '0' || event.price === 'Free' ? 'Free' : event.price}
-                      </span>
-                      <button 
-                        onClick={() => handleBookNow(event)}
-                        className={`px-6 py-2.5 font-bold rounded-full transition-colors text-sm text-white ${isWaitlist ? 'bg-spot-charcoal hover:bg-black' : 'bg-spot-red hover:bg-red-700'}`}
-                      >
-                        {isWaitlist ? 'Join Waitlist' : 'Book Now'}
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              )
-            })}
+                  </motion.div>
+                );
+              })}
+              
+              {/* Extra spacing at the end for mobile scroll */}
+              <div className="w-1 flex-shrink-0" />
+            </div>
           </div>
+
+          <style dangerouslySetInnerHTML={{ __html: `
+            .hide-scrollbar::-webkit-scrollbar { display: none; }
+            .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+          `}} />
         </section>
       )}
 

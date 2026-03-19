@@ -27,8 +27,7 @@ export const Navbar = () => {
         { name: 'SPOT inSchool', path: '/inschool' },
         { name: 'Projects', path: '/projects' }
       ]
-    },
-    { name: 'Events', path: '/events' }
+    }
   ];
 
   const isActive = (path: string) => location.pathname === path;
