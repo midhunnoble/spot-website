@@ -246,42 +246,50 @@ const WhatAreStudios = () => {
 };
 
 const WhyStudioLearning = () => {
-  const points = [
-    "Constructionist approach to deep focus",
-    "Cognitive load management via flow states",
-    "Real-world application of theoretical STEM",
-    "Vibrant community of creative peers"
-  ];
-
   return (
     <section className="py-24 md:py-48 bg-spot-cream px-6 relative">
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 md:gap-32 items-center">
-        <div className="space-y-6">
-          <h2 className="font-display text-4xl md:text-6xl font-black uppercase tracking-tighter mb-10 leading-none">Why Studios Work</h2>
-          {points.map((point, i) => (
-            <motion.div 
-              key={i}
-              className="flex items-center gap-6 bg-white/50 p-8 rounded-[2rem] border border-black/5 group cursor-default shadow-sm hover:shadow-xl transition-all"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <div className="w-10 h-10 rounded-full bg-spot-red text-white flex items-center justify-center shrink-0">
-                <CheckCircle2 size={18} />
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="text-spot-red font-black text-[10px] uppercase tracking-[0.4em] mb-8 flex items-center gap-4">
+             <span className="w-8 h-px bg-spot-red" /> The Pedagogical Engine
+          </div>
+          <h2 className="font-display text-5xl md:text-7xl font-black uppercase tracking-tighter mb-10 leading-[0.85]">
+            Why <br/><span className="text-spot-red italic underline decoration-spot-pastel-yellow underline-offset-[12px]">Studios</span> <br/>Work.
+          </h2>
+          <p className="text-xl md:text-2xl text-spot-charcoal/60 mb-12 font-medium leading-tight text-pretty lg:pr-12">
+            Traditional schools separate theory from action. At SPOT, we reverse the loop: <span className="text-spot-charcoal italic">Action creates the need for theory.</span> By building real things, children forge mastery that sticks.
+          </p>
+          <div className="space-y-8">
+            {[
+              { title: "Neuro-Affirmative Architecture", desc: "Space for divergent minds to build without 'standardized' constraints." },
+              { title: "Craft-to-Concept Flow", desc: "Soldering a circuit (Action) leads to understanding voltage (Theory)." },
+              { title: "Public Success", desc: "Presenting to real audiences builds student agency and pride." }
+            ].map((feature, i) => (
+              <div key={i} className="flex gap-4 group">
+                 <div className="w-1.5 h-16 bg-spot-red/10 group-hover:bg-spot-red transition-all rounded-full" />
+                 <div>
+                   <h4 className="font-display font-black text-xl uppercase tracking-tighter mb-1">{feature.title}</h4>
+                   <p className="text-spot-charcoal/50 text-sm font-medium">{feature.desc}</p>
+                 </div>
               </div>
-              <p className="text-xl font-black uppercase tracking-tighter text-spot-charcoal opacity-80">{point}</p>
-            </motion.div>
-          ))}
-        </div>
-        <div className="relative">
-          <div className="aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl rotate-2">
-            <img src="/assets/real-photos/students_collaboration.jpg" alt="Learners collaborating" className="w-full h-full object-cover" />
+            ))}
           </div>
-          <div className="absolute -bottom-10 -left-10 bg-spot-pastel-yellow p-10 rounded-[3rem] shadow-2xl transform -rotate-6 border-4 border-white font-display font-black uppercase tracking-tighter text-2xl">
-            Portfolio First
-          </div>
-        </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="relative flex items-center justify-center p-8 bg-white rounded-[4rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.1)] border border-black/5"
+        >
+           <SkillForge />
+        </motion.div>
       </div>
     </section>
   );
@@ -327,23 +335,53 @@ const HowItWorks = () => {
 const EnrollmentForm = ({ selectedStudio, setSelectedStudio }: { selectedStudio: string, setSelectedStudio: (val: string) => void }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    age: '',
+    email: '',
+    phone: ''
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    const formData = new FormData(e.currentTarget as HTMLFormElement);
     
-    // Logic for Supabase insertion
-    const { error } = await supabase.from('leads').insert([{
-      type: 'studio_general_enrollment',
-      name: formData.get('name'),
-      email: formData.get('email'),
-      phone: formData.get('phone'),
-      metadata: { studio: selectedStudio, age: formData.get('age') }
-    }]);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9\s+()-]{10,20}$/;
+    
+    if (!emailRegex.test(formData.email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+    if (!phoneRegex.test(formData.phone) || formData.phone.replace(/[^0-9]/g, '').length < 10) {
+      alert("Please enter a valid phone number.");
+      return;
+    }
 
-    if (!error) setIsSubmitted(true);
-    setLoading(false);
+    setLoading(true);
+    try {
+      const { error } = await supabase.from('leads').insert([{
+        type: 'studio_general_enrollment',
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        status: 'new',
+        metadata: { 
+          studio: selectedStudio, 
+          age: formData.age 
+        }
+      }]);
+
+      if (error) {
+        console.error('Supabase Error:', error);
+        throw error;
+      }
+      setIsSubmitted(true);
+    } catch (err) {
+      console.error('Submission Catch:', err);
+      alert('Connection error. Please check your internet and try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -364,31 +402,61 @@ const EnrollmentForm = ({ selectedStudio, setSelectedStudio }: { selectedStudio:
           <AnimatePresence mode="wait">
             {!isSubmitted ? (
               <motion.form key="form" exit={{ opacity: 0 }} onSubmit={handleSubmit} className="space-y-6">
-                <input name="name" required placeholder="Learner Name" className="w-full p-5 rounded-2xl bg-slate-50 border border-black/5 font-bold focus:border-spot-red focus:outline-none" />
+                <input 
+                  required placeholder="Learner Name" 
+                  value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}
+                  className="w-full p-5 rounded-2xl bg-slate-50 border border-black/5 font-bold focus:border-spot-red focus:outline-none" 
+                />
                 <div className="grid grid-cols-2 gap-4">
-                   <input name="age" required placeholder="Age" className="w-full p-5 rounded-2xl bg-slate-50 border border-black/5 font-bold" />
-                   <select value={selectedStudio} onChange={(e) => setSelectedStudio(e.target.value)} required className="w-full p-5 rounded-2xl bg-slate-50 border border-black/5 font-black uppercase text-[10px]">
+                   <input 
+                    required placeholder="Age" 
+                    value={formData.age} onChange={e => setFormData({...formData, age: e.target.value})}
+                    className="w-full p-5 rounded-2xl bg-slate-50 border border-black/5 font-bold focus:border-spot-red focus:outline-none" 
+                   />
+                   <select 
+                    value={selectedStudio} onChange={(e) => setSelectedStudio(e.target.value)} required 
+                    className="w-full p-5 rounded-2xl bg-slate-50 border border-black/5 font-black uppercase text-[10px] focus:border-spot-red focus:outline-none"
+                   >
                       <option value="">Select Studio</option>
                       <option value="AI Studio">AI Studio</option>
                       <option value="AAC Studio">AAC Studio</option>
                       <option value="2E & Gifted Studio">2E & Gifted Studio</option>
                       <option value="Artlore">Artlore</option>
+                      <option value="Makerverse Summer Camp">Makerverse Summer Camp</option>
                       <option value="InSchool Summer">InSchool Summer</option>
                       <option value="Other">Other</option>
                    </select>
                 </div>
-                <input name="email" type="email" required placeholder="Parent Email" className="w-full p-5 rounded-2xl bg-slate-50 border border-black/5 font-bold" />
-                <input name="phone" required placeholder="Phone Number" className="w-full p-5 rounded-2xl bg-slate-50 border border-black/5 font-bold" />
-                <button type="submit" disabled={loading} className="w-full py-6 bg-spot-red text-white font-black uppercase tracking-widest rounded-2xl hover:bg-black transition-all shadow-xl flex items-center justify-center gap-3">
-                   {loading ? <Loader2 className="animate-spin"/> : 'Request Consultation'}
+                <input 
+                  type="email" required placeholder="Parent Email" 
+                  value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})}
+                  className="w-full p-5 rounded-2xl bg-slate-50 border border-black/5 font-bold focus:border-spot-red focus:outline-none" 
+                />
+                <input 
+                  required placeholder="Phone Number" 
+                  value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})}
+                  className="w-full p-5 rounded-2xl bg-slate-50 border border-black/5 font-bold focus:border-spot-red focus:outline-none" 
+                />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="group w-full py-8 bg-spot-charcoal text-white font-black uppercase tracking-[0.2em] rounded-[2.5rem] text-[11px] shadow-2xl hover:bg-spot-red transition-all flex items-center justify-center gap-4 active:scale-95 disabled:opacity-50 haptic-feedback"
+                >
+                   {loading ? (
+                     <Loader2 className="animate-spin" size={20} />
+                   ) : (
+                     <>
+                        Enroll in Studio <ArrowRight className="group-hover:translate-x-2 transition-transform" />
+                     </>
+                   )}
                 </button>
               </motion.form>
             ) : (
               <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-10">
-                 <div className="w-20 h-20 bg-spot-pastel-green/20 text-spot-pastel-green rounded-full flex items-center justify-center mx-auto mb-8"><Zap size={40} fill="currentColor"/></div>
-                 <h3 className="font-display text-4xl font-black uppercase tracking-tighter mb-4 leading-none">Application Logged</h3>
-                 <p className="text-xl font-medium text-spot-charcoal/40 mb-10">Our Studio Coordinator will reach out within 24 hours.</p>
-                 <button onClick={() => setIsSubmitted(false)} className="px-10 py-4 bg-spot-charcoal text-white font-black uppercase tracking-widest text-[10px] rounded-full">Explore More</button>
+                 <div className="w-20 h-20 bg-spot-pastel-green/20 text-spot-pastel-green rounded-full flex items-center justify-center mx-auto mb-8"><Sparkles size={40} className="animate-pulse"/></div>
+                 <h3 className="font-display text-4xl font-black uppercase tracking-tighter mb-4 leading-none text-spot-charcoal">Enrollment Synchronized</h3>
+                 <p className="text-xl font-medium text-spot-charcoal/40 mb-10 leading-tight">Our Studio Coordinator will reach out for the final documentation and induction details.</p>
+                 <button onClick={() => setIsSubmitted(false)} className="px-10 py-4 bg-spot-charcoal text-white font-black uppercase tracking-widest text-[10px] rounded-full active:scale-95">Explore More</button>
               </motion.div>
             )}
           </AnimatePresence>
@@ -425,5 +493,116 @@ export default function Studios() {
     </div>
   );
 }
+
+const SkillForge = () => {
+  const [activeNode, setActiveNode] = useState<string | null>(null);
+
+  const skills = [
+    { id: 'mastery', title: 'Technical Mastery', icon: <Hammer />, pos: 'top-0 left-1/2 -translate-x-1/2', evidence: 'Precise circuit soldering' },
+    { id: 'agency', title: 'Student Agency', icon: <Compass />, pos: 'top-1/2 -translate-y-1/2 right-0', evidence: 'Choosing their own builds' },
+    { id: 'grounding', title: 'Cognitive Depth', icon: <Target />, pos: 'bottom-0 left-1/2 -translate-x-1/2', evidence: 'Understanding "Why" it failed' },
+    { id: 'community', title: 'Culture', icon: <Users />, pos: 'top-1/2 -translate-y-1/2 left-0', evidence: 'Reviewing each other\'s logs' }
+  ];
+
+  return (
+    <div className="relative w-full h-[550px] max-w-[550px] flex items-center justify-center">
+      {/* Central Hands-on Forge */}
+      <motion.div 
+        className="relative z-30"
+        onHoverStart={() => setActiveNode('core')}
+        onHoverEnd={() => setActiveNode(null)}
+      >
+        <div className="relative p-12 bg-spot-charcoal rounded-[3rem] text-white shadow-3xl border-8 border-white group haptic-feedback cursor-pointer overflow-hidden">
+          <motion.div
+            animate={{ scale: [1, 1.05, 1], rotate: [0, 2, -2, 0] }}
+            transition={{ duration: 6, repeat: Infinity }}
+          >
+             {/* Workshop Symbolism */}
+             <div className="relative">
+                <Rocket size={64} className="group-hover:text-spot-red transition-colors duration-500" />
+                <div className="absolute -top-4 -right-4">
+                  <motion.div animate={{ rotate: 360 }} transition={{ duration: 10, repeat: Infinity, ease: "linear" }}>
+                    <Settings2 size={24} className="text-spot-pastel-yellow opacity-40" />
+                  </motion.div>
+                </div>
+             </div>
+          </motion.div>
+
+          <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 whitespace-nowrap bg-spot-red px-6 py-2.5 rounded-full font-black uppercase text-[10px] tracking-widest shadow-2xl border-4 border-white transition-transform group-hover:scale-110">
+            The Hands-on Start
+          </div>
+
+          <div className="absolute inset-0 bg-spot-red/10 rounded-[3rem] -z-10 animate-pulse" />
+        </div>
+
+        {/* Energy Rings */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] border-2 border-dashed border-black/5 rounded-[4rem] animate-[spin_20s_linear_infinite] -z-10" />
+      </motion.div>
+
+      {/* Connectivity Layer */}
+      <svg className="absolute inset-0 w-full h-full -z-10 overflow-visible pointer-events-none">
+        <AnimatedPath d="M 275,275 L 275,60" active={activeNode === 'core' || activeNode === 'mastery'} />
+        <AnimatedPath d="M 275,275 L 490,275" active={activeNode === 'core' || activeNode === 'agency'} />
+        <AnimatedPath d="M 275,275 L 275,490" active={activeNode === 'core' || activeNode === 'grounding'} />
+        <AnimatedPath d="M 275,275 L 60,275" active={activeNode === 'core' || activeNode === 'community'} />
+      </svg>
+
+      {/* Skill Nodes */}
+      {skills.map((skill) => (
+        <motion.div
+          key={skill.id}
+          className={`absolute ${skill.pos} z-40 group cursor-pointer`}
+          onHoverStart={() => setActiveNode(skill.id)}
+          onHoverEnd={() => setActiveNode(null)}
+          whileHover={{ scale: 1.1, y: skill.id === 'mastery' ? -10 : skill.id === 'grounding' ? 10 : 0, x: skill.id === 'agency' ? 10 : skill.id === 'community' ? -10 : 0 }}
+        >
+          <div className={`relative p-8 bg-white rounded-[2.5rem] border border-black/5 shadow-2xl transition-all duration-500 overflow-hidden`}>
+            <div className={`text-spot-charcoal group-hover:text-spot-red transition-colors mb-2 flex justify-center`}>
+              {React.cloneElement(skill.icon as React.ReactElement, { size: 32 })}
+            </div>
+            
+            <AnimatePresence>
+              {(activeNode === skill.id || activeNode === 'core') && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, height: 'auto', scale: 1 }}
+                  exit={{ opacity: 0, height: 0, scale: 0.9 }}
+                  className="w-44 overflow-hidden pt-4 border-t border-black/5"
+                >
+                  <h4 className="font-display font-black uppercase tracking-tighter text-sm mb-1">{skill.title}</h4>
+                  <div className="text-[10px] font-black uppercase text-spot-red opacity-40 mb-2">Acquired via Action</div>
+                  <p className="text-[11px] font-medium text-spot-charcoal/60 leading-tight italic">"{skill.evidence}"</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            
+            {/* Holographic Accent */}
+            <div className="absolute top-0 right-0 w-12 h-12 bg-spot-pastel-blue opacity-5 rounded-bl-[2rem] group-hover:scale-150 group-hover:opacity-20 transition-all duration-700" />
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
+const AnimatedPath = ({ d, active }: { d: string, active: boolean }) => (
+  <>
+    <path d={d} stroke="rgba(0,0,0,0.05)" strokeWidth="1" fill="none" />
+    {active && (
+      <motion.path 
+        d={d}
+        stroke="var(--color-spot-red)" 
+        strokeWidth="3" 
+        fill="none"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: [0, 1, 0] }}
+        transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+        className="blur-[1px]"
+      />
+    )}
+  </>
+);
+
+const Settings2 = ({ size, className }: { size: number, className?: string }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>;
 
 const CheckCircle2 = ({ size }: { size: number }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>;

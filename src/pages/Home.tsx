@@ -132,7 +132,7 @@ const HeroSection = () => {
             transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
           >
             <span className="inline-block px-4 py-1.5 rounded-full bg-spot-charcoal/5 border border-spot-charcoal/10 font-display font-bold text-xs tracking-[0.2em] uppercase text-spot-charcoal/60 mb-8 backdrop-blur-sm">
-              Agency for Different Minds to Find Their Spark
+              The Personalized Space for Learners to Find Their Spark
             </span>
           </motion.div>
 
@@ -160,7 +160,7 @@ const HeroSection = () => {
            className="max-w-3xl mx-auto"
         >
           <p className="font-sans text-xl md:text-2xl lg:text-3xl text-spot-charcoal/80 mb-12 leading-tight font-bold tracking-tight text-pretty">
-             Personalised, project-based learning that helps <span className="text-spot-red">children explore, build, and discover</span> their spark.
+             SPOT is a studio-based microschool where students don't just study the world—they acquire the tools, agency, and cognitive grounding to actually shape it.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 relative z-30">
@@ -230,10 +230,10 @@ const WhatIsSpot = () => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="font-display text-4xl md:text-6xl font-bold mb-8 leading-tight">
-            Designed for curious learners, home schoolers, 2E & gifted.
+            Designed for personalized PBL, active learners, and those who outgrow traditional schools.
           </h2>
           <p className="text-xl text-spot-charcoal/80 mb-6 leading-relaxed">
-            SPOT is a microschool and studio ecosystem designed for curious learners, neurodivergent thinkers, home schoolers, 2E and gifted children.
+            SPOT is a microschool and studio ecosystem designed for students who find traditional classrooms limiting and seek personalized, project-based growth.
           </p>
           <p className="text-xl text-spot-charcoal/80 leading-relaxed">
             Children learn through <span className="font-bold text-spot-red bg-spot-pastel-yellow/50 px-2 py-1 rounded-md transform -rotate-1 inline-block">project based learning</span>, studio exploration and real world challenges.
@@ -298,7 +298,7 @@ const LearningModel = () => {
             { title: "Cognition", icon: <Brain />, pos: "top-10 left-1/2 -translate-x-1/2", color: "text-spot-pastel-blue" },
             { title: "Motivation", icon: <Zap />, pos: "bottom-10 left-1/2 -translate-x-1/2", color: "text-spot-pastel-yellow" },
             { title: "Belonging", icon: <Heart />, pos: "left-10 top-1/2 -translate-y-1/2", color: "text-spot-pastel-pink" },
-            { title: "Individual Adaptation", icon: <Target />, pos: "right-10 top-1/2 -translate-y-1/2", color: "text-spot-pastel-green" }
+            { title: "Personalized PBL", icon: <Target />, pos: "right-10 top-1/2 -translate-y-1/2", color: "text-spot-pastel-green" }
           ].map((pillar, i) => (
             <motion.div
               key={i}
@@ -459,14 +459,14 @@ const LearningJourney = () => {
 
 const StudentProjects = () => {
   const projects = [
-    { title: "3D Printed Lego Set - Machine Marvels", img: "/assets/real-photos/lego_3d_project.png", rotate: -2 },
-    { title: "Building a Terrarium - Nature Lab", img: "/assets/real-photos/terrarium_project.png", rotate: 3 },
-    { title: "Generating Story Books - AI Studio", img: "/assets/real-photos/storybook_project.png", rotate: -1 },
-    { title: "Halloween Costumes - Artlore", img: "/assets/real-photos/costumes_project.png", rotate: 2 },
-    { title: "Electric Village - Circuit Design", img: "/assets/real-photos/electric_village_project.png", rotate: -3 },
-    { title: "Robotics & Automation - Machine Marvels", img: "/assets/real-photos/mechanical_robot_arm_teen.png", rotate: 1 },
-    { title: "Baking Studio - Design cakes and cookies", img: "/assets/real-photos/teen_baking.png", rotate: -2 },
-    { title: "Digital Branding - Design Concepts", img: "/assets/real-photos/teen_branding.png", rotate: 2 },
+    { id: '3d-printed-lego', title: "3D Printed Lego Set - Machine Marvels", img: "/assets/real-photos/lego_3d_project.png", rotate: -2 },
+    { id: 'nature-lab-terrarium', title: "Building a Terrarium - Nature Lab", img: "/assets/real-photos/terrarium_project.png", rotate: 3 },
+    { id: 'ai-story-books', title: "Generating Story Books - AI Studio", img: "/assets/real-photos/storybook_project.png", rotate: -1 },
+    { id: 'artlore-costumes', title: "Halloween Costumes - Artlore", img: "/assets/real-photos/costumes_project.png", rotate: 2 },
+    { id: 'electric-village', title: "Electric Village - Circuit Design", img: "/assets/real-photos/electric_village_project.png", rotate: -3 },
+    { id: 'mechanical-robot-arm', title: "Robotics & Automation - Machine Marvels", img: "/assets/real-photos/mechanical_robot_arm_teen.png", rotate: 1 },
+    { id: 'baking-studio', title: "Baking Studio - Design cakes and cookies", img: "/assets/real-photos/teen_baking.png", rotate: -2 },
+    { id: 'branding-shop', title: "Digital Branding - Design Concepts", img: "/assets/real-photos/teen_branding.png", rotate: 2 },
   ];
 
   return (
@@ -480,20 +480,22 @@ const StudentProjects = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-8 md:gap-16">
         {projects.map((project, i) => (
-          <motion.div
-            key={i}
-            className="polaroid cursor-pointer"
-            style={{ '--rotate': project.rotate } as React.CSSProperties}
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-          >
-            <div className="aspect-square overflow-hidden bg-gray-200 mb-4">
-              <img src={project.img} alt={project.title} loading="lazy" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
-            </div>
-            <div className="polaroid-caption">{project.title}</div>
-          </motion.div>
+          <Link key={i} to={`/projects/${project.id}`}>
+            <motion.div
+              className="polaroid cursor-pointer"
+              style={{ '--rotate': project.rotate } as React.CSSProperties}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              whileHover={{ scale: 1.05, rotate: 0 }}
+            >
+              <div className="aspect-square overflow-hidden bg-gray-200 mb-4">
+                <img src={project.img} alt={project.title} loading="lazy" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+              </div>
+              <div className="polaroid-caption">{project.title}</div>
+            </motion.div>
+          </Link>
         ))}
       </div>
     </section>
@@ -502,9 +504,9 @@ const StudentProjects = () => {
 
 const WhoIsSpotFor = () => {
   const learners = [
-    "Curious learners",
+    "Active learners",
     "Creative thinkers",
-    "Neurodivergent children",
+    "Independent students",
     "Home Schoolers",
     "2E and Gifted"
   ];
@@ -615,7 +617,7 @@ const ParentStories = () => {
   const stories = [
     { text: "SPOT completely changed how my son sees learning. He wakes up excited to build and create every single day.", author: "Priya S.", role: "Parent of a 9yo" },
     { text: "The studio model allows my daughter to dive deep into her passions. She's not just memorizing, she's inventing.", author: "Amit K.", role: "Parent of a 12yo" },
-    { text: "Finally, a place that celebrates neurodiversity and adapts to how children actually learn best.", author: "Kavita B.", role: "Parent of a 7yo" }
+    { text: "Finally, a place that respects individual agency and adapts to how children actually learn best.", author: "Kavita B.", role: "Parent of a 7yo" }
   ];
 
   useEffect(() => {
@@ -695,7 +697,7 @@ export default function Home() {
     <div className="relative">
       <SEO 
         title="SPOT Microschool | Where Every Child Learns Their Way" 
-        description="A self-directed, studio-based learning ecosystem where children explore, build, and discover their spark through project-based learning."
+        description="A specialized, studio-based learning ecosystem where students who outgrow traditional schools explore, build, and discover their spark through personalized PBL."
       />
       <HeroSection />
       <WhatIsSpot />

@@ -148,7 +148,7 @@ const HeroSection = () => {
             transition={{ delay: 1 }}
             className="flex flex-wrap items-center justify-center gap-6"
           >
-            <Link to="/contact" className="px-12 py-6 bg-spot-red text-white font-black uppercase tracking-[0.2em] rounded-3xl hover:bg-black transition-all text-sm shadow-2xl shadow-spot-red/30 haptic-feedback">
+            <Link to="/studios?studio=Makerverse Summer Camp#enroll" className="px-12 py-6 bg-spot-red text-white font-black uppercase tracking-[0.2em] rounded-3xl hover:bg-black transition-all text-sm shadow-2xl shadow-spot-red/30 haptic-feedback">
               Register Now
             </Link>
           </motion.div>
@@ -351,7 +351,7 @@ const Pricing = () => {
                    </li>
                  ))}
                </ul>
-               <Link to="/contact?program=Makerverse Summer Camp&duration=Full Course" className="block w-full text-center py-5 bg-spot-pastel-pink text-spot-charcoal font-black uppercase tracking-widest rounded-2xl hover:bg-white transition-all shadow-xl shadow-spot-pastel-pink/10">
+               <Link to="/studios?studio=Makerverse Summer Camp#enroll" className="block w-full text-center py-5 bg-spot-pastel-pink text-spot-charcoal font-black uppercase tracking-widest rounded-2xl hover:bg-white transition-all shadow-xl shadow-spot-pastel-pink/10">
                  Enroll in Full Course
                </Link>
              </motion.div>
@@ -372,7 +372,7 @@ const Pricing = () => {
                    <div className="text-4xl md:text-5xl font-display font-black text-spot-pastel-yellow">₹4,000</div>
                  </div>
                </div>
-               <Link to="/contact?program=Makerverse Summer Camp&duration=Single Week" className="block w-full text-center py-5 border-2 border-white/20 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-white/10 transition-all">
+               <Link to="/studios?studio=Makerverse Summer Camp#enroll" className="block w-full text-center py-5 border-2 border-white/20 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-white/10 transition-all">
                  Join for 1 Week
                </Link>
              </motion.div>
@@ -487,7 +487,7 @@ export default function Makerverse() {
         <h2 className="font-display font-black text-6xl md:text-8xl lg:text-[100px] mb-12 tracking-tighter uppercase leading-none">
           READY TO <br/><span className="text-spot-red">CREATE?</span>
         </h2>
-        <Link to="/contact">
+        <Link to="/studios?studio=Makerverse Summer Camp#enroll">
           <motion.button 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

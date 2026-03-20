@@ -434,6 +434,48 @@ export default function Events() {
         </div>
       </section>
 
+      {/* Host an Event Section */}
+      <section id="host" className="py-24 px-6 bg-spot-pastel-yellow/30 overflow-hidden relative">
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/40 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-spot-pastel-pink/40 rounded-full blur-3xl pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            <div className="space-y-8">
+              <span className="inline-block py-1 px-4 rounded-full bg-spot-charcoal text-white font-black text-[10px] uppercase tracking-[0.4em]">Partner with Us</span>
+              <h2 className="font-display font-black text-5xl md:text-7xl text-spot-charcoal uppercase tracking-tighter leading-[0.85]">
+                Host Your <br />
+                <span className="text-spot-red">Event</span> at SPOT
+              </h2>
+              <p className="text-xl md:text-2xl text-spot-charcoal/70 font-medium leading-tight max-w-xl text-pretty">
+                From tech workshops to art intensives and community talks—our studios are designed for deep work and high-agency learning.
+              </p>
+              
+              <div className="grid sm:grid-cols-2 gap-6 pt-8">
+                <div className="glass-morphism-heavy p-6 rounded-3xl border border-white/40">
+                  <div className="w-12 h-12 bg-spot-red/10 text-spot-red rounded-2xl flex items-center justify-center mb-4">
+                    <Rocket size={24} />
+                  </div>
+                  <h4 className="font-black text-spot-charcoal mb-2 uppercase tracking-tighter">Turn-Key Space</h4>
+                  <p className="text-sm text-spot-charcoal/60 font-medium">Equipped studios with tools for AI, tech, art, and craft.</p>
+                </div>
+                <div className="glass-morphism-heavy p-6 rounded-3xl border border-white/40">
+                  <div className="w-12 h-12 bg-blue-500/10 text-blue-600 rounded-2xl flex items-center justify-center mb-4">
+                    <Users size={24} />
+                  </div>
+                  <h4 className="font-black text-spot-charcoal mb-2 uppercase tracking-tighter">Community Reach</h4>
+                  <p className="text-sm text-spot-charcoal/60 font-medium">Benefit from our network of 2,000+ local families.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="glass-morphism-heavy p-10 md:p-14 rounded-[3.5rem] shadow-2xl border border-white relative">
+              <HostEventForm />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <section className="py-24 px-6 max-w-4xl mx-auto border-t border-black/5">
         <div className="text-center mb-16">
@@ -468,3 +510,154 @@ export default function Events() {
     </main>
   );
 }
+
+const HostEventForm = () => {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    eventType: '',
+    attendees: '',
+    message: ''
+  });
+
+  const validate = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9\s+()-]{10,20}$/;
+    
+    if (!emailRegex.test(formData.email)) {
+      alert("Please enter a valid email address.");
+      return false;
+    }
+    if (!phoneRegex.test(formData.phone)) {
+      alert("Please enter a valid phone number.");
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase
+        .from('leads')
+        .insert([{
+          type: 'host_event_inquiry',
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          status: 'new',
+          metadata: {
+            event_type: formData.eventType,
+            estimated_attendees: formData.attendees,
+            message: formData.message
+          }
+        }]);
+
+      if (error) throw error;
+      setIsSubmitted(true);
+    } catch (err) {
+      console.error('Error:', err);
+      alert('Error connecting to admissions. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isSubmitted) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="text-center py-12"
+      >
+        <div className="w-20 h-20 bg-spot-pastel-green rounded-2xl flex items-center justify-center text-spot-charcoal mx-auto mb-6 rotate-12 shadow-xl">
+          <Sparkles size={40} />
+        </div>
+        <h3 className="font-display font-black text-3xl mb-4 uppercase tracking-tighter">Proposal Received</h3>
+        <p className="text-lg text-spot-charcoal/60 font-medium">Our Community Lead will connect with you shortly.</p>
+      </motion.div>
+    );
+  }
+
+  return (
+    <form className="space-y-6" onSubmit={handleSubmit}>
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="font-black text-[10px] uppercase tracking-[0.2em] text-spot-red ml-4 font-sans">Organizer Name</label>
+          <input 
+            type="text" required placeholder="Full Name" 
+            value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}
+            className="w-full p-5 rounded-2xl bg-white border border-black/5 focus:outline-none focus:border-spot-red transition-all font-bold" 
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="font-black text-[10px] uppercase tracking-[0.2em] text-spot-red ml-4 font-sans">Email Address</label>
+          <input 
+            type="email" required placeholder="organizer@example.com" 
+            value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})}
+            className="w-full p-5 rounded-2xl bg-white border border-black/5 focus:outline-none focus:border-spot-red transition-all font-bold" 
+          />
+        </div>
+      </div>
+      
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="font-black text-[10px] uppercase tracking-[0.2em] text-spot-red ml-4 font-sans">Phone Number</label>
+          <input 
+            type="tel" required placeholder="+91 9XXXXXXXXX" 
+            value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})}
+            className="w-full p-5 rounded-2xl bg-white border border-black/5 focus:outline-none focus:border-spot-red transition-all font-bold" 
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="font-black text-[10px] uppercase tracking-[0.2em] text-spot-red ml-4 font-sans">Type of Event</label>
+          <select 
+            required value={formData.eventType} onChange={e => setFormData({...formData, eventType: e.target.value})}
+            className="w-full p-5 rounded-2xl bg-white border border-black/5 focus:outline-none focus:border-spot-red transition-all font-bold appearance-none"
+          >
+            <option value="">Select format...</option>
+            <option value="Workshop">Workshop</option>
+            <option value="Community Meetup">Community Meetup</option>
+            <option value="Talk/Panel">Talk/Panel Presentation</option>
+            <option value="Training">Educator Training</option>
+            <option value="Other">Other Experience</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <label className="font-black text-[10px] uppercase tracking-[0.2em] text-spot-red ml-4 font-sans">Estimated Attendees</label>
+        <input 
+          type="text" placeholder="Approx. headcount" 
+          value={formData.attendees} onChange={e => setFormData({...formData, attendees: e.target.value})}
+          className="w-full p-5 rounded-2xl bg-white border border-black/5 focus:outline-none focus:border-spot-red transition-all font-bold" 
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="font-black text-[10px] uppercase tracking-[0.2em] text-spot-red ml-4 font-sans">Short Description</label>
+        <textarea 
+          rows={3} placeholder="What do you plan to create/host?" 
+          value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})}
+          className="w-full p-5 rounded-2xl bg-white border border-black/5 focus:outline-none focus:border-spot-red transition-all font-bold resize-none"
+        />
+      </div>
+
+      <button 
+        type="submit" disabled={isSubmitting}
+        className="w-full py-5 bg-spot-charcoal text-white font-black uppercase tracking-widest rounded-2xl shadow-xl hover:bg-spot-red transition-all haptic-feedback disabled:opacity-50"
+      >
+        {isSubmitting ? 'Connecting...' : 'Initialize Collaboration'}
+      </button>
+    </form>
+  );
+};
+
+const Sparkles = ({ size }: { size: number }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>;
+

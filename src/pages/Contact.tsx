@@ -29,8 +29,24 @@ export default function Contact() {
     }
   }, [searchParams]);
 
+  const validateForm = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9\s+()-]{10,20}$/;
+    
+    if (!emailRegex.test(formData.email)) {
+      alert("Please enter a valid email address.");
+      return false;
+    }
+    if (!phoneRegex.test(formData.phone)) {
+      alert("Please enter a valid phone number (at least 10 digits).");
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return;
     setIsSubmitting(true);
 
     try {
@@ -41,10 +57,10 @@ export default function Contact() {
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
+          status: 'new',
           metadata: {
             child_age: formData.childAge,
             program: formData.program,
-            duration: searchParams.get('duration'),
             message: formData.message,
             tour_requested: formData.wantsTour,
             preferred_date: formData.tourDate,
@@ -69,7 +85,7 @@ export default function Contact() {
       setTimeout(() => setIsSubmitted(false), 5000);
     } catch (err) {
       console.error('Error submitting form:', err);
-      alert('Something went wrong. Please try again.');
+      alert('Connection error. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -330,9 +346,9 @@ export default function Contact() {
               <button 
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-6 bg-spot-charcoal text-white font-black uppercase tracking-widest rounded-3xl text-sm hover:bg-spot-red transition-all flex items-center justify-center gap-3 shadow-2xl haptic-feedback disabled:opacity-50"
+                className="w-full py-6 bg-spot-charcoal text-white font-black uppercase tracking-widest rounded-3xl text-sm hover:bg-spot-red transition-all flex items-center justify-center gap-2 shadow-2xl haptic-feedback disabled:opacity-50"
               >
-                {isSubmitting ? <><Loader2 className="animate-spin" size={20} /> Sending...</> : <>Send Message <Send size={20} /></>}
+                {isSubmitting ? <><Loader2 className="animate-spin" size={20} /> Processing...</> : <>Initialize Admission <Send size={20} /></>}
               </button>
             </form>
             )}

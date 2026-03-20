@@ -1,89 +1,162 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
-import { ArrowRight, Lightbulb, Compass, Hammer, Presentation, PlayCircle, Star, Quote } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { ArrowRight, Lightbulb, Compass, Hammer, Presentation, PlayCircle, Star, Quote, LayoutGrid, Award } from 'lucide-react';
 
-const PROJECTS_DATA = [
+export const PROJECTS_DATA = [
   {
     id: '3d-printed-lego',
     title: '3D Printed Lego Set',
-    student: 'Aarav & Maker Studio',
+    student_name: 'Aarav & Maker Studio',
     category: 'Engineering & Maker',
-    ageGroup: 'Ages 10-14',
+    age_group: 'Ages 10-14',
     description: 'Engineering custom-fit compatible blocks from scratch using 3D modeling and precision printing.',
-    image: '/assets/real-photos/lego_3d_project.png',
+    image_url: '/assets/real-photos/lego_3d_project.png',
     featured: true,
+    learning_objective: "To understand topological constraints in additive manufacturing and achieve 0.1mm tolerance for interlocking mechanics.",
+    what_children_did: "Learned CAD modeling in Fusion 360, calibrated resin printers for shrinkage compensation, and stress-tested various filament types.",
+    what_they_learned: "Tolerances, material science, and the iterative nature of engineering prototypes.",
+    skills_acquired: ["CAD Design", "3D Printing", "Precision Measurement", "Iterative Prototyping"],
+    concepts_explored: ["Topology", "Material Stress", "Polymer Chemistry"],
+    reflection: "At first the blocks didn't fit, but after 4 tries, the 'click' sound was the best thing I ever heard.",
+    process_photos: [
+      { url: "/assets/real-photos/lego_3d_project.png", caption: "Initial CAD Sketch" }
+    ]
   },
   {
     id: 'nature-lab-terrarium',
-    title: 'Building a Terrarium - Nature Lab',
-    student: 'WildJar Eco Explorers',
+    title: 'Self-Sustaining Terrarium',
+    student_name: 'WildJar Eco Explorers',
     category: 'Science & Nature',
-    ageGroup: 'Ages 8-12',
+    age_group: 'Ages 8-12',
     description: 'Building a self-sustaining ecosystem in a jar, exploring the balance of biology and environmental science.',
-    image: '/assets/real-photos/terrarium_project.png',
+    image_url: '/assets/real-photos/terrarium_project.png',
     featured: true,
+    learning_objective: "To observe the water cycle and nitrogen cycle in a sealed environment over a 30-day period.",
+    what_children_did: "Identified local flora, calculated soil drainage ratios, and documented moisture levels using sensors.",
+    what_they_learned: "Ecosystem balance, microbial life, and the impact of light variance on plant respiration.",
+    skills_acquired: ["Biological Observation", "Data Logging", "Environmental Analysis"],
+    concepts_explored: ["Photosynthesis", "Evapotranspiration", "The Nitrogen Cycle"],
+    reflection: "I didn't know a jar could have its own rain!",
+    process_photos: [
+       { url: "/assets/real-photos/terrarium_project.png", caption: "Layering the foundations" }
+    ]
   },
   {
     id: 'ai-story-books',
-    title: 'Generating Story Books - AI Studio',
-    student: 'Inkubator Media Group',
+    title: 'AI-Generated Story Books',
+    student_name: 'Inkubator Media Group',
     category: 'Storytelling & Media',
-    ageGroup: 'Ages 9-15',
+    age_group: 'Ages 9-15',
     description: 'Leveraging AI tools to draft, illustrate, and publish original digital narratives and adventure books.',
-    image: '/assets/real-photos/storybook_project.png',
+    image_url: '/assets/real-photos/storybook_project.png',
     featured: true,
+    learning_objective: "To explore Large Language Models and Diffusion models as co-creative agents in narrative structure.",
+    what_children_did: "Iterative prompt engineering, character consistency training, and multi-modal publishing.",
+    what_they_learned: "Prompt logic, visual semiotics, and the ethical considerations of AI in art.",
+    skills_acquired: ["Prompt Engineering", "Digital Storytelling", "Visual Literacy", "AI Ethics"],
+    concepts_explored: ["Generative Transformers", "Neural Art", "Narrative Archetypes"],
+    reflection: "The AI is like a really fast illustrator who sometimes forgets how many fingers people have.",
+    process_photos: [
+       { url: "/assets/real-photos/storybook_project.png", caption: "Prompting the first chapter" }
+    ]
   },
   {
     id: 'artlore-costumes',
-    title: 'Halloween Costumes with Artlore',
-    student: 'Artlore Creative Cohort',
+    title: 'Wearable Art: Costumes',
+    student_name: 'Artlore Creative Cohort',
     category: 'Art & Creative',
-    ageGroup: 'Ages 7-12',
+    age_group: 'Ages 7-12',
     description: 'Bringing imagination to life with wearable art, combining costume design with creative storytelling.',
-    image: '/assets/real-photos/costumes_project.png',
+    image_url: '/assets/real-photos/costumes_project.png',
     featured: false,
+    learning_objective: "To translate character archetypes into physical artifacts using textile engineering.",
+    what_children_did: "Sketching concept art, pattern making, and assembling multi-material wearables.",
+    what_they_learned: "Textile properties, color theory, and spatial reasoning in 3D construction.",
+    skills_acquired: ["Costume Design", "Structural Analysis", "Fiber Arts"],
+    concepts_explored: ["Character Design", "Material Physics", "Aesthetics"],
+    reflection: "I turned my drawing into something I can actually wear!",
+    process_photos: [
+       { url: "/assets/real-photos/costumes_project.png", caption: "From sketch to fabric" }
+    ]
   },
   {
     id: 'electric-village',
-    title: 'Electric Village - Circuit Design',
-    student: 'Machine Marvels Engineers',
+    title: 'Electric Village',
+    student_name: 'Machine Marvels Engineers',
     category: 'Engineering & Maker',
-    ageGroup: 'Ages 11-16',
+    age_group: 'Ages 11-16',
     description: 'Designing and soldering complex circuits to power a miniature, interactive community model.',
-    image: '/assets/real-photos/electric_village_project.png',
+    image_url: '/assets/real-photos/electric_village_project.png',
     featured: false,
+    learning_objective: "To master parallel and series circuitry and calculate load requirements for distributed power.",
+    what_children_did: "Soldered over 50 connection points, integrated solar relays, and mapped a logic-based grid.",
+    what_they_learned: "Ohm's Law, logic gates, and renewable energy distribution.",
+    skills_acquired: ["Soldering", "Circuit Analysis", "Urban Planning", "Logic Design"],
+    concepts_explored: ["Voltage Regulation", "Current", "Logic Systems"],
+    reflection: "Soldering is scary at first, then it becomes like drawing with hot silver.",
+    process_photos: [
+       { url: "/assets/real-photos/electric_village_project.png", caption: "Testing the solar relays" }
+    ]
   },
   {
     id: 'mechanical-robot-arm',
     title: 'Robotics & Automation',
-    student: 'Aarav & Tech Team',
+    student_name: 'Aarav & Tech Team',
     category: 'Engineering & Maker',
-    ageGroup: 'Ages 10-12',
+    age_group: 'Ages 10-12',
     description: 'A fully functional mechanical arm built using hydraulic systems and programmed automation.',
-    image: '/assets/real-photos/mechanical_robot_arm_teen.png',
+    image_url: '/assets/real-photos/mechanical_robot_arm_teen.png',
     featured: false,
+    learning_objective: "To understand Pascal's Principle and the integration of mechanical leverage with sensor feedback.",
+    what_children_did: "Assembled hydraulic actuators, programmed servo degrees of freedom, and designed a custom claw.",
+    what_they_learned: "Fluid dynamics, torque, and closed-loop control systems.",
+    skills_acquired: ["Hydraulics", "C++ Programming", "Mechanical Assembly", "Automation"],
+    concepts_explored: ["Fluid Pressure", "Kinematics", "Torque"],
+    reflection: "The arm can pick up a grape without squashing it. That's precision.",
+    process_photos: [
+       { url: "/assets/real-photos/mechanical_robot_arm_teen.png", caption: "Calibrating the claw pressure" }
+    ]
   },
   {
     id: 'branding-shop',
-    title: 'Digital Branding Concepts',
-    student: 'Entrepreneurship Lab',
+    title: 'Digital Branding Lab',
+    student_name: 'Entrepreneurship Lab',
     category: 'Entrepreneurship',
-    ageGroup: 'Ages 13-16',
+    age_group: 'Ages 13-16',
     description: 'A complete branding package including logo design and marketing strategy for local startups.',
-    image: '/assets/real-photos/teen_branding.png',
+    image_url: '/assets/real-photos/teen_branding.png',
     featured: false,
+    learning_objective: "To create a cohesive visual identity system based on user-centered design principles.",
+    what_children_did: "Conducted market research, built brand style guides, and pitched to real business owners.",
+    what_they_learned: "Typography, branding psychology, and the 'Value Proposition' model.",
+    skills_acquired: ["Graphic Design", "Market Research", "Public Speaking", "Strategy"],
+    concepts_explored: ["Brand Equity", "Visual Hierarchy", "User Experience"],
+    reflection: "Designing a logo is 10% drawing and 90% thinking about who will use it.",
+    process_photos: [
+       { url: "/assets/real-photos/teen_branding.png", caption: "Sketching the brand architecture" }
+    ]
   },
   {
     id: 'baking-studio',
-    title: 'Baking Studio - Culinary Design',
-    student: 'Culinary Arts Group',
+    title: 'Baking & Culinary Physics',
+    student_name: 'Culinary Arts Group',
     category: 'Art & Creative',
-    ageGroup: 'Ages 10-15',
+    age_group: 'Ages 10-15',
     description: 'Learning the science of baking and the art of decorating custom cakes and cookies.',
-    image: '/assets/real-photos/teen_baking.png',
+    image_url: '/assets/real-photos/teen_baking.png',
     featured: false,
+    learning_objective: "To explore the chemical reactions of leavening agents and the physics of heat transfer.",
+    what_children_did: "Experimented with pH levels in dough, designed 3-tier structures, and mastered piping techniques.",
+    what_they_learned: "Maillard reaction, gluten development, and aesthetics in plating.",
+    skills_acquired: ["Culinary Science", "Food Styling", "Precision Baking", "Chemistry"],
+    concepts_explored: ["Acid-Base Reactions", "Thermal Conductivity", "Gluten Structure"],
+    reflection: "Baking is just chemistry that you can eat.",
+    process_photos: [
+       { url: "/assets/real-photos/teen_baking.png", caption: "The perfect sourdough rise" }
+    ]
   }
 ];
 
@@ -98,27 +171,53 @@ const SKILLS = [
 
 export default function Projects() {
   const [activeTab, setActiveTab] = useState('All Projects');
-  const tabs = ['All Projects', 'Art & Creative', 'Engineering & Maker', 'Science & Nature', 'Storytelling & Media', 'Entrepreneurship'];
+  const [projects, setProjects] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const tabs = ['All Projects', 'Art & Design', 'Engineering', 'Science', 'Media', 'Entrepreneurship'];
 
-  const filteredProjects = PROJECTS_DATA.filter(project => 
+  useEffect(() => {
+    async function fetchProjects() {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('projects')
+          .select('*')
+          .eq('status', 'published')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        
+        // Use database data if available, otherwise fallback to local data for demo/stability
+        if (data && data.length > 0) {
+          setProjects(data);
+        } else {
+          setProjects(PROJECTS_DATA);
+        }
+      } catch (err) {
+        console.error('Error fetching projects:', err);
+        setProjects(PROJECTS_DATA);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchProjects();
+  }, []);
+
+  const filteredProjects = projects.filter(project => 
     activeTab === 'All Projects' || project.category === activeTab
   );
 
   return (
-    <main className="pt-20 pb-20">
+    <main className="pt-20 pb-20 bg-spot-cream min-h-screen">
       <SEO 
         title="Artifacts of Growth | Student Projects" 
         description="A gallery of self-directed projects built by SPOT students. From 3D printed sets to eco-terrariums."
       />
       {/* Hero Section */}
       <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden px-6 py-20">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80" 
-            alt="Children working on projects" 
-            className="w-full h-full object-cover opacity-20"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-spot-cream/80 via-spot-cream/90 to-spot-cream" />
+        <div className="absolute inset-0 z-0 text-spot-charcoal/5">
+           <LayoutGrid size={800} strokeWidth={0.5} className="absolute -top-40 -left-40 rotate-12 opacity-10" />
+           <Award size={600} strokeWidth={0.5} className="absolute -bottom-20 -right-20 -rotate-12 opacity-10" />
         </div>
         
         <div className="relative z-10 max-w-4xl mx-auto text-center">
@@ -127,74 +226,38 @@ export default function Projects() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <span className="inline-block py-1 px-3 rounded-full bg-spot-pastel-pink text-spot-red font-bold text-sm tracking-wider uppercase mb-6">
+            <span className="inline-block py-1.5 px-4 rounded-full bg-spot-pastel-pink text-spot-red font-black text-[10px] tracking-[0.3em] uppercase mb-8 border border-spot-red/10">
               Student Portfolio
             </span>
-            <h1 className="font-display font-black text-6xl md:text-8xl text-spot-charcoal tracking-tighter mb-6 leading-none">
-              Projects at <span className="text-spot-red">SPOT</span>
+            <h1 className="font-display font-black text-6xl md:text-8xl lg:text-9xl text-spot-charcoal tracking-tighter mb-8 leading-[0.85] uppercase">
+              Artifacts of <br/><span className="text-spot-red italic">Growth.</span>
             </h1>
-            <p className="text-xl md:text-2xl text-spot-charcoal/80 mb-10 max-w-2xl mx-auto font-medium">
-              Real learning through building, experimenting and creating. At SPOT, children explore ideas through studios and projects rather than traditional classrooms.
+            <p className="text-xl md:text-2xl text-spot-charcoal/60 mb-12 max-w-2xl mx-auto font-medium leading-tight">
+              Evidence of agency, craft, and cognitive depth—built in the studios of SPOT.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/studios" className="w-full sm:w-auto px-8 py-4 bg-spot-red text-white font-bold rounded-full hover:bg-red-700 transition-colors text-lg shadow-lg shadow-spot-red/20">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Link to="/studios" className="w-full sm:w-auto px-12 py-6 bg-spot-red text-white font-black uppercase tracking-widest rounded-3xl hover:bg-black transition-all text-sm shadow-2xl active:scale-95 haptic-feedback">
                 Explore Studios
               </Link>
-              <Link to="/microschool" className="w-full sm:w-auto px-8 py-4 bg-white text-spot-charcoal font-bold rounded-full hover:bg-spot-pastel-yellow transition-colors text-lg border-2 border-spot-charcoal/10">
-                Join SPOT
+              <Link to="/contact" className="w-full sm:w-auto px-12 py-6 bg-white text-spot-charcoal font-black uppercase tracking-widest rounded-3xl hover:bg-spot-pastel-yellow transition-all text-sm border-2 border-black/5 active:scale-95">
+                Join our Collective
               </Link>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* How Project Learning Works */}
-      <section className="py-24 px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="font-display font-black text-4xl md:text-5xl text-spot-charcoal mb-6">Learning by Building</h2>
-          <p className="text-xl text-spot-charcoal/70 max-w-2xl mx-auto">
-            Children at SPOT learn through project-based exploration. Instead of memorizing concepts, they build machines, design art, run experiments, create stories, develop ideas, and collaborate to present their work.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
-          <div className="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-spot-pastel-yellow via-spot-pastel-pink to-spot-pastel-blue -translate-y-1/2 z-0" />
-          
-          {[
-            { icon: <Lightbulb size={40} />, title: "Curiosity", desc: "Asking questions and exploring interests." },
-            { icon: <Compass size={40} />, title: "Exploration", desc: "Researching, testing, and gathering materials." },
-            { icon: <Hammer size={40} />, title: "Creation", desc: "Building, prototyping, and iterating." },
-            { icon: <Presentation size={40} />, title: "Presentation", desc: "Sharing the final project with the community." }
-          ].map((step, index) => (
-            <motion.div 
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="relative z-10 bg-white p-8 rounded-3xl shadow-xl shadow-black/5 border border-black/5 text-center flex flex-col items-center"
-            >
-              <div className="w-20 h-20 bg-spot-cream rounded-full flex items-center justify-center text-spot-red mb-6">
-                {step.icon}
-              </div>
-              <h3 className="font-display font-black text-2xl text-spot-charcoal mb-3">{step.title}</h3>
-              <p className="text-spot-charcoal/70">{step.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Filter Projects */}
+      {/* Filter Section */}
       <section className="py-12 px-6 max-w-7xl mx-auto">
-        <div className="flex overflow-x-auto hide-scrollbar gap-3 pb-4 mb-8 justify-start md:justify-center">
+        <div className="flex flex-wrap justify-center gap-3 mb-16">
           {tabs.map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`whitespace-nowrap px-6 py-2.5 rounded-full font-bold text-sm transition-all ${
+              className={`px-8 py-4 rounded-full font-black text-[10px] uppercase tracking-widest transition-all ${
                 activeTab === tab 
-                  ? 'bg-spot-charcoal text-white shadow-md' 
-                  : 'bg-white text-spot-charcoal/60 hover:bg-spot-pastel-yellow hover:text-spot-charcoal border border-black/5'
+                  ? 'bg-spot-charcoal text-white shadow-xl scale-105' 
+                  : 'bg-white text-spot-charcoal/30 hover:border-spot-charcoal hover:text-spot-charcoal border-2 border-black/5'
               }`}
             >
               {tab}
@@ -202,42 +265,63 @@ export default function Projects() {
           ))}
         </div>
 
-        {/* Project Portfolio Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project, index) => (
-            <motion.div 
-              key={project.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
-              className="group relative bg-white rounded-3xl overflow-hidden shadow-lg shadow-black/5 border border-black/5 flex flex-col"
-            >
-              <Link to={`/projects/${project.id}`} className="absolute inset-0 z-20" aria-label={`View ${project.title}`} />
-              <div className="h-64 relative overflow-hidden">
-                <img src={project.image} alt={project.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-spot-charcoal uppercase tracking-wider z-10">
-                  {project.category}
-                </div>
-                {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-spot-charcoal/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
-                  <span className="text-white font-bold flex items-center gap-2">
-                    View Project <ArrowRight size={20} />
-                  </span>
+        {/* Project Grid */}
+        {loading ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {[1, 2, 3, 4, 5, 6].map(i => (
+              <div key={i} className="bg-white rounded-[3rem] p-8 space-y-6 border border-black/5">
+                <div className="h-64 bg-slate-100 rounded-[2.5rem] animate-pulse" />
+                <div className="space-y-3">
+                  <div className="h-4 w-1/4 bg-slate-50 rounded-full" />
+                  <div className="h-10 w-3/4 bg-slate-100 rounded-xl" />
+                  <div className="h-20 w-full bg-slate-50 rounded-2xl" />
                 </div>
               </div>
-              <div className="p-6 flex-1 flex flex-col">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-display font-black text-xl text-spot-charcoal leading-tight group-hover:text-spot-red transition-colors">
+            ))}
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {filteredProjects.map((project, index) => (
+              <motion.div 
+                key={project.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="group relative bg-white rounded-[3rem] overflow-hidden border border-black/5 hover:border-black/10 hover:shadow-2xl transition-all duration-500 flex flex-col h-full haptic-feedback"
+              >
+                <Link to={`/projects/${project.slug || project.id}`} className="absolute inset-0 z-20" />
+                <div className="h-72 overflow-hidden relative">
+                  <img src={project.image_url} alt={project.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" />
+                  <div className="absolute top-6 left-6 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full text-[9px] font-black uppercase tracking-widest text-spot-charcoal shadow-lg border border-black/5">
+                    {project.category}
+                  </div>
+                  {project.featured && (
+                    <div className="absolute top-6 right-6 w-10 h-10 bg-spot-pastel-yellow text-spot-charcoal rounded-full flex items-center justify-center shadow-lg border border-white/50">
+                       <Star size={16} fill="currentColor" />
+                    </div>
+                  )}
+                </div>
+                <div className="p-10 flex flex-col flex-1">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-spot-red">{project.student_name}</span>
+                    <div className="h-px bg-black/5 flex-1" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-spot-charcoal/30">{project.age_group}</span>
+                  </div>
+                  <h3 className="font-display text-3xl font-black mb-6 uppercase tracking-tighter leading-[0.9] group-hover:text-spot-red transition-colors">
                     {project.title}
                   </h3>
+                  <p className="text-spot-charcoal/50 text-sm font-medium leading-relaxed italic line-clamp-3 mb-8">
+                    {project.description}
+                  </p>
+                  <div className="mt-auto pt-8 border-t border-black/5 flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-spot-charcoal/20 group-hover:text-spot-red transition-colors">
+                    View Achievement <ArrowRight size={18} className="translate-x-0 group-hover:translate-x-2 transition-transform" />
+                  </div>
                 </div>
-                <p className="text-sm font-bold text-spot-charcoal/50 mb-4">{project.student} • {project.ageGroup}</p>
-                <p className="text-spot-charcoal/70 line-clamp-3">{project.description}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Featured Student Project Stories */}

@@ -506,7 +506,7 @@ export default function Philosophy() {
                 Structured learning paths supporting formal qualifications.
               </p>
               <div className="flex justify-center gap-4">
-                <span className="px-4 py-2 bg-white/10 rounded-full font-bold text-sm">IGCSE</span>
+                <span className="px-4 py-2 bg-white/10 rounded-full font-bold text-sm">Pearson Edexcel (IGCSE)</span>
                 <span className="px-4 py-2 bg-white/10 rounded-full font-bold text-sm">NIOS</span>
               </div>
             </div>

@@ -29,8 +29,24 @@ export const BookingModal = ({ isOpen, onClose, eventId, eventTitle = 'SPOT Even
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateForm = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9\s+()-]{10,20}$/;
+    
+    if (!emailRegex.test(formData.email)) {
+      alert("Please provide a valid email so we can reach you.");
+      return false;
+    }
+    if (!phoneRegex.test(formData.phone)) {
+      alert("Please provide a valid phone number so we can stay connected.");
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return;
     setIsSubmitting(true);
 
     try {
@@ -85,7 +101,7 @@ export const BookingModal = ({ isOpen, onClose, eventId, eventTitle = 'SPOT Even
       }, 3000);
     } catch (err) {
       console.error('Error submitting booking:', err);
-      alert('Failed to process request. Please check DB Schema via Supabase Dashboard if columns are missing.');
+      alert('We hit a small snag. Please try again or reach out to us directly!');
     } finally {
       setIsSubmitting(false);
     }
@@ -100,7 +116,7 @@ export const BookingModal = ({ isOpen, onClose, eventId, eventTitle = 'SPOT Even
             <div className="p-6 sm:p-8 border-b border-black/5 flex justify-between items-center shrink-0">
               <div>
                 <h2 className="font-display font-black text-2xl text-spot-charcoal">
-                  {isWaitlist ? 'Join Waitlist' : 'Book Your Spot'}
+                  {isWaitlist ? 'Join Waitlist' : 'Save Your Spot'}
                 </h2>
                 <p className="text-spot-charcoal/60 text-sm mt-1">{eventTitle}</p>
               </div>
@@ -113,15 +129,15 @@ export const BookingModal = ({ isOpen, onClose, eventId, eventTitle = 'SPOT Even
                   <div className="w-20 h-20 bg-spot-pastel-green rounded-full flex items-center justify-center text-spot-charcoal mb-6">
                     <CheckCircle size={40} className="text-spot-charcoal" />
                   </div>
-                  <h3 className="font-display font-black text-3xl text-spot-charcoal mb-4">Request Received!</h3>
+                  <h3 className="font-display font-black text-3xl text-spot-charcoal mb-4">You're in!</h3>
                   <p className="text-spot-charcoal/70 text-lg">
-                    {isWaitlist ? `You've been added to the waitlist for ${eventTitle}. We'll notify you if a spot opens up.` : `Thank you for your interest. We'll be in touch shortly to confirm your booking for ${eventTitle}.`}
+                    {isWaitlist ? `You've been added to the waitlist for ${eventTitle}. We'll notify you if a spot opens up.` : `We've received your request for ${eventTitle}. We'll be in touch very soon to confirm everything.`}
                   </p>
                 </motion.div>
               ) : (
                 <form id="booking-form" onSubmit={handleSubmit} className="space-y-5">
                   <div>
-                    <label className="block text-sm font-bold text-spot-charcoal mb-1">Full Name *</label>
+                    <label className="block text-sm font-bold text-spot-charcoal mb-1">Your Name *</label>
                     <input required type="text" name="fullName" value={formData.fullName} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all" placeholder="Jane Doe" />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -136,29 +152,29 @@ export const BookingModal = ({ isOpen, onClose, eventId, eventTitle = 'SPOT Even
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-sm font-bold text-spot-charcoal mb-1">Child's Name (Optional)</label>
+                      <label className="block text-sm font-bold text-spot-charcoal mb-1">Child's Name</label>
                       <input type="text" name="childName" value={formData.childName} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all" placeholder="Alex" />
                     </div>
                     <div>
-                      <label className="block text-sm font-bold text-spot-charcoal mb-1">Child's Age (Optional)</label>
+                      <label className="block text-sm font-bold text-spot-charcoal mb-1">Child's Age</label>
                       <input type="text" name="childAge" value={formData.childAge} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all" placeholder="10" />
                     </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-sm font-bold text-spot-charcoal mb-1">Event Selected *</label>
+                      <label className="block text-sm font-bold text-spot-charcoal mb-1">Selected Event</label>
                       <input required type="text" value={eventTitle} readOnly className="w-full px-4 py-3 rounded-xl border border-black/10 bg-black/5 focus:outline-none cursor-not-allowed text-spot-charcoal/60" />
                     </div>
                     <div>
-                      <label className="block text-sm font-bold text-spot-charcoal mb-1">Seats *</label>
+                      <label className="block text-sm font-bold text-spot-charcoal mb-1">Number of People *</label>
                       <select name="seats" value={formData.seats} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all">
                         <option value="1">1 Person</option><option value="2">2 People</option><option value="3">3 People</option><option value="4">4 People</option><option value="5">5+ People</option>
                       </select>
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-spot-charcoal mb-1">Notes / Questions</label>
-                    <textarea name="notes" value={formData.notes} onChange={handleChange} rows={3} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all resize-none" placeholder="Any special requirements?"></textarea>
+                    <label className="block text-sm font-bold text-spot-charcoal mb-1">Anything else we should know?</label>
+                    <textarea name="notes" value={formData.notes} onChange={handleChange} rows={3} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all resize-none" placeholder="Special requirements, interests, or questions..."></textarea>
                   </div>
                 </form>
               )}
@@ -166,7 +182,7 @@ export const BookingModal = ({ isOpen, onClose, eventId, eventTitle = 'SPOT Even
             {!isSubmitted && (
               <div className="p-6 sm:p-8 border-t border-black/5 bg-white shrink-0">
                 <button type="submit" form="booking-form" disabled={isSubmitting} className={`w-full py-4 text-white font-bold rounded-xl transition-colors text-lg shadow-lg flex items-center justify-center gap-2 ${isWaitlist ? 'bg-spot-charcoal hover:bg-black shadow-black/20' : 'bg-spot-red hover:bg-red-700 shadow-spot-red/20'} disabled:opacity-50`}>
-                  {isSubmitting ? <><Loader2 className="animate-spin" size={20} /> Processing...</> : (isWaitlist ? 'Join Waitlist' : 'Reserve My Spot')}
+                  {isSubmitting ? <><Loader2 className="animate-spin" size={20} /> Almost there...</> : (isWaitlist ? 'Join Waitlist' : 'Initialize Enrollment')}
                 </button>
               </div>
             )}
@@ -174,6 +190,7 @@ export const BookingModal = ({ isOpen, onClose, eventId, eventTitle = 'SPOT Even
         </div>
       )}
     </AnimatePresence>
+
   );
 };
 

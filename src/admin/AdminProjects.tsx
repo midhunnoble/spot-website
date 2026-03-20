@@ -20,6 +20,7 @@ export const AdminProjects = () => {
   const [imageUrl, setImageUrl] = useState('');
   const [concepts, setConcepts] = useState<string[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
+  const [processPhotos, setProcessPhotos] = useState<any[]>([]);
 
   useEffect(() => {
     fetchProjects();
@@ -46,7 +47,8 @@ export const AdminProjects = () => {
     setEditingProject(project);
     setImageUrl(project?.image_url || '');
     setConcepts(project?.concepts_explored || []);
-    setSkills(project?.skills_developed || []);
+    setSkills(project?.skills_acquired || []);
+    setProcessPhotos(project?.process_photos || []);
     setErrorStatus(null);
     setIsModalOpen(true);
   };
@@ -68,6 +70,7 @@ export const AdminProjects = () => {
     
     const projectData = {
       title: formData.get('title') || '',
+      slug: (formData.get('title') as string || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
       student_name: formData.get('student_name') || '',
       age_group: formData.get('age_group') || '',
       category: formData.get('category') || '',
@@ -76,10 +79,12 @@ export const AdminProjects = () => {
       featured: formData.get('featured') === 'on',
       status: formData.get('status') === 'on' ? 'published' : 'draft',
       summary: formData.get('summary') || '',
-      big_question: formData.get('big_question') || '',
+      learning_objective: formData.get('learning_objective') || '',
       what_children_did: formData.get('what_children_did') || '',
+      what_they_learned: formData.get('what_they_learned') || '',
       concepts_explored: concepts,
-      skills_developed: skills,
+      skills_acquired: skills,
+      process_photos: processPhotos,
       reflection: formData.get('reflection') || '',
       studio_link: formData.get('studio_link') || '',
     };
@@ -263,8 +268,8 @@ export const AdminProjects = () => {
                       </div>
                       <div className="space-y-8">
                         <div>
-                          <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-3">The Big Question</label>
-                          <input name="big_question" placeholder="Can we build tools that grow themselves?" defaultValue={editingProject?.big_question} className="w-full px-8 py-6 rounded-[2.5rem] bg-spot-pastel-yellow border border-black/5 focus:outline-none font-medium italic text-sm" />
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-3">Learning Objective</label>
+                          <input name="learning_objective" placeholder="To understand modularity through physical assembly..." defaultValue={editingProject?.learning_objective} className="w-full px-8 py-6 rounded-[2.5rem] bg-spot-pastel-yellow border border-black/5 focus:outline-none font-medium italic text-sm" />
                         </div>
                         <div className="grid grid-cols-2 gap-6">
                            <div>
@@ -295,8 +300,12 @@ export const AdminProjects = () => {
                              <textarea name="summary" required rows={6} placeholder="How it started, what happened, and why..." defaultValue={editingProject?.summary} className="w-full px-8 py-6 rounded-[2.5rem] bg-slate-50 border border-black/5 text-sm font-medium leading-relaxed" />
                           </div>
                           <div>
-                             <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-3">Technical Highlights</label>
+                             <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-3">What the children did</label>
                              <textarea name="what_children_did" rows={4} placeholder="Specific builds, code snippets, or sketches..." defaultValue={editingProject?.what_children_did} className="w-full px-8 py-6 rounded-[2.5rem] bg-slate-50 border border-black/5 text-sm font-medium leading-relaxed" />
+                          </div>
+                          <div>
+                             <label className="block text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 mb-3">What they learned</label>
+                             <textarea name="what_they_learned" rows={4} placeholder="Core concepts, takeaways, breakthroughs..." defaultValue={editingProject?.what_they_learned} className="w-full px-8 py-6 rounded-[2.5rem] bg-slate-50 border border-black/5 text-sm font-medium leading-relaxed" />
                           </div>
                        </div>
                        <div className="space-y-8">

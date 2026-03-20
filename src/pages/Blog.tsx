@@ -235,49 +235,91 @@ export default function Blog() {
       </section>
 
       {/* Floating Bottom Section */}
-      <section className="px-6 py-40 bg-spot-charcoal rounded-t-[8rem] relative overflow-hidden">
+      <section className="px-6 py-32 md:py-40 bg-spot-charcoal rounded-t-[5rem] md:rounded-t-[8rem] relative overflow-hidden mt-20">
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
-             <div>
-                <Sparkles className="text-spot-red mb-10" size={80} />
-                <h2 className="font-display font-black text-6xl md:text-8xl text-white mb-10 tracking-tighter uppercase leading-[0.8]">
+          <div className="grid lg:grid-cols-2 gap-16 md:gap-24 items-center">
+             <motion.div
+               initial={{ opacity: 0, x: -30 }}
+               whileInView={{ opacity: 1, x: 0 }}
+               viewport={{ once: true }}
+             >
+                <Sparkles className="text-spot-red mb-8 md:mb-10" size={60} md-size={80} />
+                <h2 className="font-display font-black text-5xl md:text-8xl text-white mb-8 md:mb-10 tracking-tighter uppercase leading-[0.8]">
                   The Culture <br/><span className="text-spot-red">Unfiltered.</span>
                 </h2>
-                <p className="text-2xl text-white/40 font-medium leading-tight max-w-xl">
+                <p className="text-xl md:text-2xl text-white/40 font-medium leading-tight max-w-xl">
                   Monthly deep-dives into divergent learning architecture and student project forensics.
                 </p>
-             </div>
+             </motion.div>
 
-             <div className="relative">
+             <motion.div 
+               initial={{ opacity: 0, x: 30 }}
+               whileInView={{ opacity: 1, x: 0 }}
+               viewport={{ once: true }}
+               className="relative w-full min-h-[400px] flex items-center"
+             >
                 {newsletterSuccess ? (
-                  <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="text-center bg-white/5 p-20 rounded-[4rem] border border-white/10">
-                    <CheckCircle2 size={100} className="text-spot-pastel-green mx-auto mb-8" />
-                    <h3 className="text-3xl font-display font-black text-white uppercase tracking-tighter">Synchronized.</h3>
+                  <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="w-full text-center bg-white/5 p-12 md:p-20 rounded-[3rem] md:rounded-[4rem] border border-white/10 backdrop-blur-3xl shadow-2xl">
+                    <CheckCircle2 size={80} className="text-spot-pastel-green mx-auto mb-6 shadow-2xl shadow-spot-pastel-green/20" />
+                    <h3 className="text-3xl md:text-4xl font-display font-black text-white uppercase tracking-tighter">Synchronized.</h3>
+                    <p className="text-white/40 font-medium mt-4">Welcome to the collective intelligence.</p>
                   </motion.div>
                 ) : (
-                  <form className="space-y-6" onSubmit={async (e) => {
+                  <form className="w-full space-y-6" onSubmit={async (e) => {
                     e.preventDefault();
+                    
+                    const nameInput = (e.currentTarget.elements.namedItem('subscriber_name') as HTMLInputElement).value;
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(newsletterEmail)) {
+                      alert("Please enter a valid email address.");
+                      return;
+                    }
+
                     setIsSubmittingNewsletter(true);
                     try {
-                      const { error } = await supabase.from('leads').insert([{ type: 'newsletter', email: newsletterEmail }]);
+                      const { error } = await supabase.from('leads').insert([{ 
+                        type: 'newsletter', 
+                        name: nameInput,
+                        email: newsletterEmail,
+                        status: 'new'
+                      }]);
                       if (error) throw error;
                       setNewsletterSuccess(true);
-                    } catch (err) { alert('Try again'); } finally { setIsSubmittingNewsletter(false); }
+                    } catch (err: any) { 
+                      console.error('Newsletter Error:', err);
+                      alert(err.message || 'Connection error. Please try again.'); 
+                    } finally { 
+                      setIsSubmittingNewsletter(false); 
+                    }
                   }}>
-                    <input 
-                      required type="email" placeholder="Your primary email" 
-                      value={newsletterEmail} onChange={(e) => setNewsletterEmail(e.target.value)}
-                      className="w-full px-10 py-8 rounded-[2.5rem] bg-white border-0 focus:ring-4 focus:ring-spot-red transition-all font-bold text-xl shadow-2xl"
-                    />
+                    <div className="space-y-4">
+                      <input 
+                        name="subscriber_name"
+                        required type="text" placeholder="Your name" 
+                        className="w-full px-8 py-6 md:px-10 md:py-8 rounded-[2rem] md:rounded-[2.5rem] bg-white/10 border border-white/10 text-white placeholder:text-white/20 focus:ring-4 focus:ring-spot-red focus:bg-white focus:text-spot-charcoal transition-all font-bold text-lg md:text-xl shadow-2xl"
+                      />
+                      <input 
+                        required type="email" placeholder="Primary email" 
+                        value={newsletterEmail} onChange={(e) => setNewsletterEmail(e.target.value)}
+                        className="w-full px-8 py-6 md:px-10 md:py-8 rounded-[2rem] md:rounded-[2.5rem] bg-white/10 border border-white/10 text-white placeholder:text-white/20 focus:ring-4 focus:ring-spot-red focus:bg-white focus:text-spot-charcoal transition-all font-bold text-lg md:text-xl shadow-2xl"
+                      />
+                    </div>
                     <button 
                       disabled={isSubmittingNewsletter}
-                      className="w-full py-8 bg-spot-red text-white font-black uppercase tracking-[0.2em] rounded-[2.5rem] text-sm shadow-2xl hover:bg-white hover:text-spot-red transition-all haptic-feedback flex items-center justify-center gap-4"
+                      className="group w-full py-6 md:py-8 bg-spot-red text-white font-black uppercase tracking-[0.2em] rounded-[2rem] md:rounded-[2.5rem] text-xs md:text-sm shadow-2xl hover:bg-white hover:text-spot-red transition-all haptic-feedback flex items-center justify-center gap-4 active:scale-95 disabled:opacity-50"
                     >
-                      {isSubmittingNewsletter ? <Loader2 className="animate-spin" /> : "Join the Culture"}
+                      {isSubmittingNewsletter ? <Loader2 className="animate-spin" /> : (
+                        <>
+                          Join the Collective <ArrowRight className="group-hover:translate-x-2 transition-transform" />
+                        </>
+                      )}
                     </button>
+                    <p className="text-[10px] text-white/20 text-center font-black uppercase tracking-widest px-6 md:px-10 leading-relaxed">
+                      By Joining, you agree to receive Divergent insights and Studio updates. 
+                    </p>
                   </form>
                 )}
-             </div>
+             </motion.div>
           </div>
         </div>
       </section>

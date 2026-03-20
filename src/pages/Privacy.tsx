@@ -1,40 +1,131 @@
 import React from 'react';
+import SEO from '../components/SEO';
+import { motion } from 'motion/react';
+import { Shield, Lock, Eye, FileText } from 'lucide-react';
 
 export default function Privacy() {
   return (
-    <main className="pt-32 pb-24 px-6 bg-spot-cream min-h-screen">
-      <div className="max-w-3xl mx-auto bg-white p-10 md:p-16 rounded-[3rem] shadow-xl border border-black/5">
-        <h1 className="font-display font-black text-4xl md:text-5xl text-spot-charcoal mb-8">Privacy Policy</h1>
-        
-        <div className="prose prose-lg text-spot-charcoal/80 space-y-6">
-          <p>Last updated: {new Date().toLocaleDateString()}</p>
-          
-          <h2 className="font-bold text-2xl text-spot-charcoal mt-8 mb-4">1. Introduction</h2>
-          <p>Welcome to SPOT Microschool. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you as to how we look after your personal data when you visit our website and tell you about your privacy rights and how the law protects you.</p>
-          
-          <h2 className="font-bold text-2xl text-spot-charcoal mt-8 mb-4">2. The Data We Collect About You</h2>
-          <p>Personal data, or personal information, means any information about an individual from which that person can be identified. We may collect, use, store and transfer different kinds of personal data about you which we have grouped together as follows:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li><strong>Identity Data</strong> includes first name, last name, username or similar identifier.</li>
-            <li><strong>Contact Data</strong> includes email address and telephone numbers.</li>
-            <li><strong>Technical Data</strong> includes internet protocol (IP) address, your login data, browser type and version, time zone setting and location.</li>
-            <li><strong>Usage Data</strong> includes information about how you use our website, products and services.</li>
-          </ul>
+    <main className="pt-40 pb-32 px-6 bg-spot-cream min-h-screen">
+      <SEO 
+        title="Privacy Strategy | SPOT" 
+        description="Our commitment to child data dignity and privacy ethics."
+      />
+      
+      <div className="max-w-4xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-16 text-center"
+        >
+          <div className="inline-flex items-center gap-3 px-6 py-2 bg-spot-pastel-blue/20 text-blue-600 rounded-full font-black text-[10px] uppercase tracking-[0.3em] mb-8">
+            <Shield size={14} /> Data Sovereignty
+          </div>
+          <h1 className="font-display font-black text-6xl md:text-8xl text-spot-charcoal uppercase tracking-tighter leading-none mb-6">
+            Privacy <br/><span className="text-spot-red italic underline decoration-spot-pastel-pink/30 underline-offset-[12px]">Policy</span>
+          </h1>
+          <div className="flex justify-center gap-8 text-[10px] font-black uppercase tracking-widest text-spot-charcoal/40 italic">
+            <span>Effective: 01.01.2026</span>
+            <span>Last Updated: 20.03.2026</span>
+          </div>
+        </motion.div>
 
-          <h2 className="font-bold text-2xl text-spot-charcoal mt-8 mb-4">3. How We Use Your Personal Data</h2>
-          <p>We will only use your personal data when the law allows us to. Most commonly, we will use your personal data in the following circumstances:</p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Where we need to perform the contract we are about to enter into or have entered into with you.</li>
-            <li>Where it is necessary for our legitimate interests (or those of a third party) and your interests and fundamental rights do not override those interests.</li>
-            <li>Where we need to comply with a legal obligation.</li>
-          </ul>
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white p-10 md:p-20 rounded-[4rem] shadow-2xl border border-black/5 prose prose-2xl prose-spot max-w-none"
+        >
+          <div className="space-y-16">
+            <section>
+              <h2 className="font-display font-black text-3xl uppercase tracking-tight flex items-center gap-4 text-spot-charcoal">
+                <span className="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-spot-red font-bold text-sm">01</span>
+                Who We Are
+              </h2>
+              <p className="text-xl text-spot-charcoal/70 leading-relaxed font-bold italic">
+                SPOT is a microschool and studio ecosystem designed for children and adolescents, operated by:
+              </p>
+              <ul className="grid md:grid-cols-2 gap-4 list-none pl-0">
+                <li className="bg-slate-50 p-6 rounded-3xl border border-black/5">
+                  <span className="block font-black uppercase text-[11px] tracking-widest text-spot-red mb-2">Corporate Entity</span>
+                  <span className="font-bold">Insighte Childcare Private Limited</span>
+                </li>
+                <li className="bg-slate-50 p-6 rounded-3xl border border-black/5">
+                  <span className="block font-black uppercase text-[11px] tracking-widest text-spot-red mb-2">Social Impact Entity</span>
+                  <span className="font-bold">NEG FIRE Trust</span>
+                </li>
+              </ul>
+              <p className="text-sm font-medium text-spot-charcoal/40">Both entities are based in Bangalore, Karnataka, India, and work together to deliver educational, therapeutic, and social impact programs.</p>
+            </section>
 
-          <h2 className="font-bold text-2xl text-spot-charcoal mt-8 mb-4">4. Data Security</h2>
-          <p>We have put in place appropriate security measures to prevent your personal data from being accidentally lost, used or accessed in an unauthorised way, altered or disclosed. In addition, we limit access to your personal data to those employees, agents, contractors and other third parties who have a business need to know.</p>
+            <section>
+              <h2 className="font-display font-black text-3xl uppercase tracking-tight flex items-center gap-4 text-spot-charcoal">
+                <span className="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-spot-red font-bold text-sm">02</span>
+                Who This Policy Is For
+              </h2>
+              <p className="text-lg">This Privacy Policy applies to Parents and guardians, Students (with parental consent), and visitors to the SPOT website.</p>
+            </section>
 
-          <h2 className="font-bold text-2xl text-spot-charcoal mt-8 mb-4">5. Contact Us</h2>
-          <p>If you have any questions about this privacy policy or our privacy practices, please contact us at team@spotschool.in.</p>
-        </div>
+            <section>
+              <h2 className="font-display font-black text-3xl uppercase tracking-tight flex items-center gap-4 text-spot-charcoal">
+                <span className="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-spot-red font-bold text-sm">03</span>
+                What Information We Collect
+              </h2>
+              <p>We collect only what is necessary to create a safe, personalized, and meaningful learning experience.</p>
+              <div className="space-y-6 mt-8">
+                <div className="p-8 rounded-3xl border border-black/5 bg-spot-pastel-yellow/5">
+                  <h3 className="font-bold text-xl mb-4 uppercase tracking-tighter underline decoration-spot-pastel-yellow decoration-4">Parent/Guardian Information</h3>
+                  <p className="text-sm font-medium opacity-70">Name, Phone number, Email address, Address/location.</p>
+                </div>
+                <div className="p-8 rounded-3xl border border-black/5 bg-spot-pastel-pink/5">
+                  <h3 className="font-bold text-xl mb-4 uppercase tracking-tighter underline decoration-spot-pastel-pink decoration-4">Child Information</h3>
+                  <p className="text-sm font-medium opacity-70">Name and age, Educational background, Learning preferences, and Neurodivergent profiles (shared voluntarily).</p>
+                </div>
+                <div className="p-8 rounded-3xl border border-black/5 bg-spot-pastel-blue/5">
+                  <h3 className="font-bold text-xl mb-4 uppercase tracking-tighter underline decoration-spot-pastel-blue decoration-4">Sensitive Personal Data</h3>
+                  <p className="text-sm font-medium opacity-70">As per Indian SPDI Rules: Health-related information, Psychological or developmental assessments, Therapy inputs and support plans.</p>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="font-display font-black text-3xl uppercase tracking-tight flex items-center gap-4 text-spot-charcoal">
+                <span className="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-spot-red font-bold text-sm">04</span>
+                How We Use Your Information
+              </h2>
+              <div className="bg-spot-charcoal text-white p-12 rounded-[3rem] shadow-2xl">
+                <p className="text-spot-pastel-pink font-black uppercase text-[10px] tracking-widest mb-8 italic italic italic">The No-Sell Commitment</p>
+                <p className="text-2xl font-bold tracking-tighter leading-tight italic">
+                  We use your data to deliver programs, support learning, and improve our systems. <span className="text-spot-pastel-yellow italic">We do not sell or rent your data.</span>
+                </p>
+              </div>
+            </section>
+
+            <section className="space-y-8">
+               <h2 className="font-display font-black text-3xl uppercase tracking-tight text-spot-charcoal">AI & Data Usage</h2>
+               <div className="p-10 rounded-[3rem] border border-black/5 bg-slate-50 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-8 opacity-5"><Eye size={120} /></div>
+                  <h3 className="font-black text-lg uppercase tracking-tighter mb-4">Suzu AI & Future Tools</h3>
+                  <p className="text-lg leading-relaxed text-spot-charcoal/70 italic">
+                    SPOT uses AI-powered tools to enhance learning. AI supports, but does not replace, human decision-making. Sensitive data is processed only with explicit consent and anonymized wherever possible.
+                  </p>
+                  <div className="mt-6 p-4 bg-white/50 border border-black/5 rounded-2xl text-[10px] font-black uppercase tracking-widest text-spot-red italic">
+                    Note: AI outputs may not always be accurate and are not medical advice.
+                  </div>
+               </div>
+            </section>
+
+            <section className="pt-16 border-t border-black/5 text-center">
+              <p className="text-[10px] font-black uppercase tracking-[0.5em] text-spot-charcoal/20 mb-8">Dignity Over Efficiency</p>
+              <p className="text-lg text-spot-charcoal/50 italic max-w-lg mx-auto leading-relaxed">
+                "At SPOT, we don’t see children as data points to be optimized. We see them as individuals with stories, strengths, and their own pace of becoming."
+              </p>
+              <div className="mt-12 flex flex-col items-center gap-2">
+                <a href="mailto:team@spotschool.in" className="text-2xl font-display font-black uppercase tracking-tighter text-spot-red hover:underline decoration-4">team@spotschool.in</a>
+                <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Privacy Grievance Office • Bangalore</span>
+              </div>
+            </section>
+          </div>
+        </motion.div>
       </div>
     </main>
   );

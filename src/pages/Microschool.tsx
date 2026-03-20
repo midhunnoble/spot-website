@@ -106,7 +106,7 @@ const HeroSection = () => {
                 transition={{ duration: 0.8, delay: 0.6 }}
                 className="inline-block"
               >
-                Curious Minds
+                Individual Spark
               </motion.span>
               <motion.div 
                 className="absolute bottom-2 md:bottom-3 left-0 w-full h-3 md:h-6 bg-spot-pastel-yellow/60 -z-10 transform -rotate-1"
@@ -125,7 +125,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          The standard classroom prepares students for a world that no longer exists. SPOT is a self-paced studio ecosystem where curious teens master future-proof crafts through project-based mastery.
+          SPOT is a studio-based microschool where students don't just study the world—they acquire the tools, agency, and cognitive grounding to actually shape it.
         </motion.p>
 
         <motion.div 
@@ -135,7 +135,7 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.8 }}
         >
           <Link to="/contact" className="px-8 py-4 bg-spot-red text-white font-bold rounded-full text-lg hover:bg-red-700 transition-colors w-full sm:w-auto flex items-center justify-center gap-2 shadow-xl shadow-spot-red/20 hover:scale-105 active:scale-95">
-            Book an Open House <ArrowRight size={20} />
+            Initialize Admission <ArrowRight size={20} />
           </Link>
           <Link to="/studios" className="px-8 py-4 bg-white border-2 border-spot-charcoal text-spot-charcoal font-bold rounded-full text-lg hover:bg-spot-charcoal hover:text-white transition-colors w-full sm:w-auto shadow-xl shadow-black/5 hover:scale-105 active:scale-95 flex items-center justify-center">
             Explore Studios
@@ -414,9 +414,9 @@ const AcademicPathways = () => {
             <div className="w-16 h-16 bg-spot-pastel-blue rounded-2xl flex items-center justify-center text-spot-charcoal mb-6 shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-transform">
               <Globe size={32} />
             </div>
-            <h3 className="font-display font-bold text-3xl mb-4 uppercase tracking-tighter">IGCSE Pathway</h3>
+            <h3 className="font-display font-bold text-3xl mb-4 uppercase tracking-tighter">PEARSON EDEXCEL (IGCSE) Pathway</h3>
             <p className="text-spot-cream/70 mb-6 leading-relaxed font-medium">
-              The International General Certificate of Secondary Education (IGCSE) is a globally recognized qualification. It offers a flexible curriculum with a wide choice of subjects, perfectly complementing our project-based approach.
+              The Pearson Edexcel International General Certificate of Secondary Education (IGCSE) is a globally recognized qualification. It offers a flexible curriculum with a wide choice of subjects, perfectly complementing our project-based approach.
             </p>
             <ul className="space-y-3 text-spot-cream/90 font-medium list-none">
               <li className="flex items-center gap-3"><CheckCircle2 size={18} className="text-spot-pastel-blue" /> Globally recognized standard</li>
@@ -457,7 +457,7 @@ const Thrive = () => {
   const learners = [
     "Curious explorers",
     "Creative thinkers",
-    "Divergent minds",
+    "Independent learners",
     "Home Schoolers",
     "2E and Gifted"
   ];
@@ -610,10 +610,62 @@ const Gallery = () => {
 
 const OpenHouse = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    childAge: '',
+    date: ''
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9\s+()-]{10,20}$/;
+    
+    if (!emailRegex.test(formData.email)) {
+      alert("Please enter a valid email address.");
+      return false;
+    }
+    if (!phoneRegex.test(formData.phone)) {
+      alert("Please enter a valid phone number.");
+      return false;
+    }
+    if (formData.phone.replace(/[^0-9]/g, '').length < 10) {
+      alert("Phone number seems too short.");
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
+    if (!validateForm()) return;
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase
+        .from('leads')
+        .insert([{
+          type: 'open_house',
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          status: 'new',
+          metadata: {
+            child_age: formData.childAge,
+            preferred_date: formData.date
+          }
+        }]);
+
+      if (error) throw error;
+      setIsSubmitted(true);
+    } catch (err) {
+      console.error('Error:', err);
+      alert('Error connecting to admissions. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -645,24 +697,51 @@ const OpenHouse = () => {
             >
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="relative group">
-                  <input type="text" required placeholder="Your Name" className="w-full p-5 rounded-2xl bg-spot-cream/50 border border-black/5 focus:outline-none focus:border-spot-red transition-all focus:bg-white focus:shadow-xl" />
+                  <input 
+                    type="text" required placeholder="Your Name" 
+                    value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}
+                    className="w-full p-5 rounded-2xl bg-spot-cream/50 border border-black/5 focus:outline-none focus:border-spot-red transition-all focus:bg-white focus:shadow-xl font-bold" 
+                  />
                 </div>
                 <div className="relative group">
-                  <input type="text" required placeholder="Child's Age" className="w-full p-5 rounded-2xl bg-spot-cream/50 border border-black/5 focus:outline-none focus:border-spot-red transition-all focus:bg-white focus:shadow-xl" />
+                  <input 
+                    type="text" required placeholder="Child's Age" 
+                    value={formData.childAge} onChange={e => setFormData({...formData, childAge: e.target.value})}
+                    className="w-full p-5 rounded-2xl bg-spot-cream/50 border border-black/5 focus:outline-none focus:border-spot-red transition-all focus:bg-white focus:shadow-xl font-bold" 
+                  />
                 </div>
               </div>
-              <input type="email" required placeholder="Email Address" className="w-full p-5 rounded-2xl bg-spot-cream/50 border border-black/5 focus:outline-none focus:border-spot-red transition-all focus:bg-white focus:shadow-xl" />
-              <div className="relative">
-                <input type="date" required className="w-full p-5 rounded-2xl bg-spot-cream/50 border border-black/5 focus:outline-none focus:border-spot-red transition-all focus:bg-white focus:shadow-xl text-spot-charcoal/60" />
-                <span className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-spot-charcoal/30 font-bold uppercase text-xs">Pick a Date</span>
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                <input 
+                  type="email" required placeholder="Email Address" 
+                  value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})}
+                  className="w-full p-5 rounded-2xl bg-spot-cream/50 border border-black/5 focus:outline-none focus:border-spot-red transition-all focus:bg-white focus:shadow-xl font-bold" 
+                />
+                <input 
+                  type="tel" required placeholder="Phone Number" 
+                  value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})}
+                  className="w-full p-5 rounded-2xl bg-spot-cream/50 border border-black/5 focus:outline-none focus:border-spot-red transition-all focus:bg-white focus:shadow-xl font-bold" 
+                />
               </div>
+
+              <div className="relative">
+                <input 
+                  type="date" required 
+                  value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})}
+                  className="w-full p-5 rounded-2xl bg-spot-cream/50 border border-black/5 focus:outline-none focus:border-spot-red transition-all focus:bg-white focus:shadow-xl text-spot-charcoal/60 font-bold" 
+                />
+                <span className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-spot-charcoal/30 font-black uppercase text-[10px] tracking-widest">Preferred Date</span>
+              </div>
+              
               <motion.button 
                 type="submit" 
-                className="w-full py-5 bg-spot-red text-white font-black uppercase tracking-widest rounded-2xl text-lg hover:bg-red-700 transition-all shadow-xl shadow-spot-red/30 hover:shadow-spot-red/50 active:scale-95"
+                disabled={isSubmitting}
+                className="w-full py-5 bg-spot-red text-white font-black uppercase tracking-widest rounded-2xl text-lg hover:bg-black transition-all shadow-xl shadow-spot-red/30 hover:shadow-black/20 active:scale-95 disabled:opacity-50 haptic-feedback"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                Register for Open House
+                {isSubmitting ? 'Processing...' : 'Initialize Admission'}
               </motion.button>
             </motion.form>
           ) : (
@@ -675,13 +754,13 @@ const OpenHouse = () => {
               <div className="w-20 h-20 bg-spot-pastel-green/20 text-spot-pastel-green rounded-full flex items-center justify-center mx-auto mb-6">
                 <CheckCircle2 size={40} />
               </div>
-              <h3 className="font-display text-3xl font-bold mb-4">Registration Successful!</h3>
-              <p className="text-xl text-spot-charcoal/70 mb-8">
-                Thank you for registering. We've sent the open house details to your email. See you soon!
+              <h3 className="font-display text-4xl font-black uppercase tracking-tighter mb-4">Connection Initiated.</h3>
+              <p className="text-xl font-medium text-spot-charcoal/60 mb-10 leading-tight">
+                Welcome to the SPOT collective. We've synchronized your entry details and will connect shortly.
               </p>
               <button 
                 onClick={() => setIsSubmitted(false)}
-                className="px-8 py-3 bg-spot-charcoal text-white font-bold rounded-full hover:bg-black transition-colors"
+                className="px-10 py-4 bg-spot-charcoal text-white font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-black transition-all active:scale-95"
               >
                 Register Another Student
               </button>
@@ -701,11 +780,11 @@ const FAQ = () => {
     },
     { 
       q: "How does SPOT handle academic credentials and board exams?", 
-      a: "We support both IGCSE (International) and NIOS (Indian) pathways. Students spend 80% of their time on passion-driven projects and 20% on focused academic blocks to secure globally recognized certifications." 
+      a: "We support both Pearson Edexcel (IGCSE) and NIOS (Indian) pathways. Students spend 80% of their time on passion-driven projects and 20% on focused academic blocks to secure globally recognized certifications." 
     },
     { 
-      q: "Is it suitable for gifted or twice-exceptional (2e) learners?", 
-      a: "Absolutely. SPOT was built for neuro-divergent and gifted minds who find traditional classrooms limiting. Our 1:3 teacher-student ratio ensures every child is seen, supported, and challenged at their own pace." 
+      q: "Is it suitable for scholars who seek more than a regular classroom?", 
+      a: "Absolutely. SPOT was built for learners who find traditional classrooms limiting and seek personalized, project-based growth. Our 1:3 teacher-student ratio ensures every child is seen, supported, and challenged at their own pace." 
     },
     { 
       q: "What is 'Studio-Based Learning' and how does it work?", 
