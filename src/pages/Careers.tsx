@@ -140,7 +140,7 @@ const ApplicationModal = ({ isOpen, onClose, defaultRole = "" }: { isOpen: boole
                       value={formData.phone}
                       onChange={(e) => setFormData({...formData, phone: e.target.value})}
                       className="w-full p-4 rounded-xl bg-white border border-black/10 focus:outline-none focus:border-spot-red transition-colors" 
-                      placeholder="(555) 123-4567" 
+                      placeholder="+91 93537 84759" 
                     />
                   </div>
                   <div>

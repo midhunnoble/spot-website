@@ -233,7 +233,7 @@ export default function Contact() {
                   <input 
                     type="tel" 
                     required
-                    placeholder="+91 98XXX XXXXX" 
+                    placeholder="+91 93537 84759" 
                     value={formData.phone}
                     onChange={(e) => setFormData({...formData, phone: e.target.value})}
                     className="w-full p-6 rounded-2xl bg-white border-2 border-transparent focus:bg-spot-cream focus:border-spot-red transition-all font-bold shadow-inner" 

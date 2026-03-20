@@ -720,7 +720,7 @@ const OpenHouse = () => {
                   className="w-full p-5 rounded-2xl bg-spot-cream/50 border border-black/5 focus:outline-none focus:border-spot-red transition-all focus:bg-white focus:shadow-xl font-bold" 
                 />
                 <input 
-                  type="tel" required placeholder="Phone Number" 
+                  type="tel" required placeholder="+91 93537 84759" 
                   value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})}
                   className="w-full p-5 rounded-2xl bg-spot-cream/50 border border-black/5 focus:outline-none focus:border-spot-red transition-all focus:bg-white focus:shadow-xl font-bold" 
                 />

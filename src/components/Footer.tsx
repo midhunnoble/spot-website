@@ -48,7 +48,7 @@ export const Footer = () => {
             <img src="/assets/logo/spot-logo-orange.png" alt="SPOT Logo" className="h-[50px] w-auto" />
           </Link>
           <p className="text-spot-cream/40 text-lg leading-tight max-w-xs mb-10 font-bold uppercase tracking-tighter italic">
-            A divergent microschool where <span className="text-white">personal curiosity</span> forges the future.
+            A school for One
           </p>
           <div className="flex items-center gap-4 text-spot-red">
             <motion.div

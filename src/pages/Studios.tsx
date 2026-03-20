@@ -433,7 +433,7 @@ const EnrollmentForm = ({ selectedStudio, setSelectedStudio }: { selectedStudio:
                   className="w-full p-5 rounded-2xl bg-slate-50 border border-black/5 font-bold focus:border-spot-red focus:outline-none" 
                 />
                 <input 
-                  required placeholder="Phone Number" 
+                  required placeholder="+91 93537 84759" 
                   value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})}
                   className="w-full p-5 rounded-2xl bg-slate-50 border border-black/5 font-bold focus:border-spot-red focus:outline-none" 
                 />

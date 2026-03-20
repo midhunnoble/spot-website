@@ -380,7 +380,7 @@ export default function StudioDetail() {
                         <div>
                           <input 
                             type="tel" 
-                            placeholder="Phone Number" 
+                            placeholder="+91 93537 84759" 
                             className="w-full p-5 rounded-2xl bg-slate-50 border border-black/5 focus:outline-none focus:border-spot-red transition-all focus:bg-white focus:shadow-xl font-bold"
                             required
                             value={formData.phone}

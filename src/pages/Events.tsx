@@ -610,7 +610,7 @@ const HostEventForm = () => {
         <div className="space-y-2">
           <label className="font-black text-[10px] uppercase tracking-[0.2em] text-spot-red ml-4 font-sans">Phone Number</label>
           <input 
-            type="tel" required placeholder="+91 9XXXXXXXXX" 
+            type="tel" required placeholder="+91 93537 84759" 
             value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})}
             className="w-full p-5 rounded-2xl bg-white border border-black/5 focus:outline-none focus:border-spot-red transition-all font-bold" 
           />

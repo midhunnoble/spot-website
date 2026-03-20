@@ -434,11 +434,11 @@ const Outcomes = () => {
                     </div>
                   </motion.div>
                 ))}
-              </div>
-           </div>
+                </div>
+             </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
   );
 };
 
@@ -453,14 +453,14 @@ const ContactInfo = () => {
                <Zap />
              </div>
              <div className="text-xs font-black uppercase tracking-widest text-spot-charcoal/40 mb-2">Call Us</div>
-             <div className="text-2xl font-display font-bold">9353784759</div>
+             <div className="text-2xl font-display font-bold">+91 93537 84759</div>
           </a>
-          <a href="mailto:spotschoolblr@gmail.com" className="glass-morphism bg-white p-10 rounded-[2.5rem] shadow-xl hover:-translate-y-2 transition-transform">
+          <a href="mailto:team@spotschool.in" className="glass-morphism bg-white p-10 rounded-[2.5rem] shadow-xl hover:-translate-y-2 transition-transform">
              <div className="w-12 h-12 bg-spot-pastel-blue rounded-xl flex items-center justify-center mx-auto mb-6 text-spot-charcoal">
                <Heart />
              </div>
              <div className="text-xs font-black uppercase tracking-widest text-spot-charcoal/40 mb-2">Email Us</div>
-             <div className="text-xl font-display font-bold">spotschoolblr@gmail.com</div>
+             <div className="text-xl font-display font-bold">team@spotschool.in</div>
           </a>
         </div>
       </div>

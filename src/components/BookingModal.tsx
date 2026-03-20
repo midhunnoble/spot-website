@@ -147,7 +147,7 @@ export const BookingModal = ({ isOpen, onClose, eventId, eventTitle = 'SPOT Even
                     </div>
                     <div>
                       <label className="block text-sm font-bold text-spot-charcoal mb-1">Phone *</label>
-                      <input required type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all" placeholder="+91 98765 43210" />
+                      <input required type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white focus:outline-none focus:ring-2 focus:ring-spot-red/20 focus:border-spot-red transition-all" placeholder="+91 93537 84759" />
                     </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
