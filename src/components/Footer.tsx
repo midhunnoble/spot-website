@@ -17,6 +17,31 @@ export const Footer = () => {
         className="absolute -top-24 -right-24 w-96 h-96 bg-spot-red rounded-full blur-[100px] pointer-events-none"
       />
 
+      {/* Cute Floating Particles */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden pr-20">
+        {[...Array(5)].map((_, i) => (
+          <motion.div
+            key={i}
+            className={`absolute w-3 h-3 rounded-full ${['bg-spot-red', 'bg-spot-pastel-pink', 'bg-spot-pastel-yellow', 'bg-spot-pastel-blue', 'bg-spot-pastel-green'][i]}`}
+            initial={{ 
+              x: Math.random() * 100 + "%", 
+              y: Math.random() * 100 + "%",
+              opacity: 0.1
+            }}
+            animate={{ 
+              y: [0, -100, 0],
+              x: [0, 20, 0],
+              opacity: [0.1, 0.3, 0.1]
+            }}
+            transition={{ 
+              duration: 10 + i * 2, 
+              repeat: Infinity, 
+              ease: "easeInOut" 
+            }}
+          />
+        ))}
+      </div>
+
       <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-16 relative z-10">
         <div className="col-span-2 md:col-span-1">
           <Link to="/" className="inline-block mb-10 hover:opacity-80 transition-opacity p-2 -ml-2">
