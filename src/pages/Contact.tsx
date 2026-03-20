@@ -115,10 +115,16 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-black text-xs uppercase tracking-[0.2em] text-spot-red mb-2">Visit Us</h3>
-                    <p className="text-spot-charcoal font-black text-2xl tracking-tighter leading-none">
-                      SPOT Microschool<br />
-                      Bangalore, India
-                    </p>
+                    <a 
+                      href="https://maps.app.goo.gl/7QAmPipYkppACFeE6" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-spot-charcoal font-black text-xl md:text-2xl tracking-tighter leading-tight hover:text-spot-red transition-colors"
+                    >
+                      SPOT Whitefield<br />
+                      #620, 1st Main AECS Layout<br />
+                      Bangalore, India 560037
+                    </a>
                   </div>
                 </div>
 
@@ -128,7 +134,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-black text-xs uppercase tracking-[0.2em] text-blue-600 mb-2">Email Us</h3>
-                    <p className="text-spot-charcoal font-black text-2xl tracking-tighter leading-none">hello@spotmicroschool.com</p>
+                    <a href="mailto:team@spotschool.in" className="text-spot-charcoal font-black text-2xl tracking-tighter leading-none hover:text-blue-600 transition-colors">team@spotschool.in</a>
                   </div>
                 </div>
 

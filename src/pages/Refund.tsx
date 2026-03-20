@@ -29,10 +29,10 @@ export default function Refund() {
           </ul>
 
           <h2 className="font-bold text-2xl text-spot-charcoal mt-8 mb-4">4. Process for Refund</h2>
-          <p>To request a refund, please send an email to hello@spotmicroschool.com with your registration details and the reason for withdrawal. Refunds will be processed within 10-15 working days.</p>
+          <p>To request a refund, please send an email to team@spotschool.in with your registration details and the reason for withdrawal. Refunds will be processed within 10-15 working days.</p>
           
           <h2 className="font-bold text-2xl text-spot-charcoal mt-8 mb-4">5. Contact Us</h2>
-          <p>If you have any questions about our refund policy, please contact us at hello@spotmicroschool.com.</p>
+          <p>If you have any questions about our refund policy, please contact us at team@spotschool.in.</p>
         </div>
       </div>
     </main>

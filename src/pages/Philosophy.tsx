@@ -293,92 +293,115 @@ export default function Philosophy() {
                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-spot-pastel-pink/10 rounded-full blur-[150px] animate-pulse" />
                <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-spot-pastel-blue/10 rounded-full blur-[120px]" />
                
-               <div className="relative w-full h-full flex flex-col items-center justify-center scale-110 md:scale-125 lg:scale-150 rotate-y-[-10deg]">
+               <div className="relative w-full h-full flex flex-col items-center justify-center scale-110 md:scale-125 lg:scale-150">
                 {/* SVG Child Vessel */}
                 <svg viewBox="0 0 240 400" className="w-[320px] h-[540px] drop-shadow-[0_60px_100px_rgba(0,0,0,0.1)]">
                   <defs>
-                    <filter id="glass-blur">
-                      <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
-                    </filter>
-                    <linearGradient id="neuralFlow" x1="0%" y1="100%" x2="0%" y2="0%">
-                      <stop offset="0%" stopColor="#D1E8E2" />
-                      <stop offset="50%" stopColor="#FADCD9" />
+                    <clipPath id="child-silhouette">
+                      <path d="M120,40 C145,40 165,60 165,90 C165,120 145,140 120,140 C95,140 75,120 75,90 C75,60 95,40 120,40 Z M85,145 C65,145 55,165 55,190 L55,280 C55,310 75,330 95,330 L145,330 C165,330 185,310 185,280 L185,190 C185,165 175,145 155,145 L85,145 Z M100,335 L100,380 C100,395 90,400 80,400 L75,400 C65,400 60,395 60,380 L60,335 Z M140,335 L140,380 C140,395 150,400 160,400 L165,400 C175,400 180,395 180,380 L180,335 Z" />
+                    </clipPath>
+                    
+                    <linearGradient id="body-fill" x1="0%" y1="100%" x2="0%" y2="0%">
+                      <stop offset="0%" stopColor="#1E5C4F" stopOpacity="0.8" />
+                      <stop offset="100%" stopColor="#D1E8E2" />
+                    </linearGradient>
+                    <linearGradient id="heart-fill" x1="0%" y1="100%" x2="0%" y2="0%">
+                      <stop offset="0%" stopColor="#D92D20" stopOpacity="0.8" />
+                      <stop offset="100%" stopColor="#FADCD9" />
+                    </linearGradient>
+                    <linearGradient id="mind-fill" x1="0%" y1="100%" x2="0%" y2="0%">
+                      <stop offset="0%" stopColor="#F7B500" stopOpacity="0.8" />
                       <stop offset="100%" stopColor="#FDF2D5" />
                     </linearGradient>
                   </defs>
 
-                  {/* Glass Outer Shell */}
-                  {/* Use a more organic silhouette path as background */}
+                  {/* Ghost Background Silhouette */}
                   <path 
-                    d="M120,60 C140,60 155,75 155,100 C155,125 140,140 120,140 C100,140 85,125 85,100 C85,75 100,60 120,60 Z M80,150 L160,150 C180,150 190,160 190,190 L190,300 C190,330 175,345 155,345 L85,345 C65,345 50,330 50,300 L50,190 C50,160 60,150 80,150 Z M90,350 L110,350 L110,400 C110,410 100,420 90,420 L70,420 C60,420 55,410 55,390 L55,350 Z M130,350 L150,350 L150,390 C150,410 145,420 135,420 L115,420 C105,420 100,410 100,400 L100,350 Z" 
-                    fill="rgba(0,0,0,0.05)"
+                    d="M120,40 C145,40 165,60 165,90 C165,120 145,140 120,140 C95,140 75,120 75,90 C75,60 95,40 120,40 Z M85,145 C65,145 55,165 55,190 L55,280 C55,310 75,330 95,330 L145,330 C165,330 185,310 185,280 L185,190 C185,165 175,145 155,145 L85,145 Z M100,335 L100,380 C100,395 90,400 80,400 L75,400 C65,400 60,395 60,380 L60,335 Z M140,335 L140,380 C140,395 150,400 160,400 L165,400 C175,400 180,395 180,380 L180,335 Z" 
+                    fill="rgba(0,0,0,0.03)"
+                    stroke="rgba(0,0,0,0.05)"
+                    strokeWidth="1"
                   />
                   
-                  {/* Phase 1: Body (Teal) - Fills the base */}
-                  <motion.path 
-                    d="M90,350 L110,350 L110,400 C110,410 100,420 90,420 L70,420 C60,420 55,410 55,390 L55,350 Z M130,350 L150,350 L150,390 C150,410 145,420 135,420 L115,420 C105,420 100,410 100,400 L100,350 Z"
-                    fill="#D1E8E2"
-                    initial={{ scaleY: 0 }}
-                    whileInView={{ scaleY: 1 }}
-                    viewport={{ once: false, amount: 0.3 }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                    style={{ originY: 1 }}
+                  <g clipPath="url(#child-silhouette)">
+                    {/* Phase 1: Body (Teal) - filling from feet to neck */}
+                    <motion.rect 
+                      x="0" y="145" width="240" height="255"
+                      fill="url(#body-fill)"
+                      initial={{ y: 255 }}
+                      whileInView={{ y: 0 }}
+                      viewport={{ once: true, margin: "-100px" }}
+                      transition={{ duration: 1.5, ease: "easeOut" }}
+                    />
+                    
+                    {/* Phase 2: Heart (Red/Pink) - filling from stomach to chest */}
+                    <motion.rect 
+                      x="0" y="145" width="240" height="185"
+                      fill="url(#heart-fill)"
+                      initial={{ y: 185 }}
+                      whileInView={{ y: 0 }}
+                      viewport={{ once: true, margin: "-100px" }}
+                      transition={{ duration: 1.5, delay: 0.8, ease: "easeOut" }}
+                    />
+                    
+                    {/* Phase 3: Mind (Yellow) - filling the head */}
+                    <motion.rect 
+                      x="0" y="0" width="240" height="145"
+                      fill="url(#mind-fill)"
+                      initial={{ y: 145 }}
+                      whileInView={{ y: 0 }}
+                      viewport={{ once: true, margin: "-100px" }}
+                      transition={{ duration: 1.5, delay: 1.6, ease: "easeOut" }}
+                    />
+                  </g>
+
+                  {/* Interactive Pulse Points */}
+                  <motion.circle 
+                    cx="120" cy="210" r="15" fill="white" className="opacity-40"
+                    animate={{ scale: [1, 1.3, 1], opacity: [0.1, 0.4, 0.1] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 1 }}
                   />
-                  
-                  {/* Phase 2: Heart (Pink) - Fills the torso */}
-                  <motion.path 
-                    d="M80,150 L160,150 C180,150 190,160 190,190 L190,300 C190,330 175,345 155,345 L85,345 C65,345 50,330 50,300 L50,190 C50,160 60,150 80,150 Z"
-                    fill="#FADCD9"
-                    initial={{ scaleY: 0 }}
-                    whileInView={{ scaleY: 1 }}
-                    viewport={{ once: false, amount: 0.5 }}
-                    transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
-                    style={{ originY: 1 }}
+                  <path 
+                    d="M120,225 C115,225 105,220 105,210 C105,204 109,200 114,200 C117,200 119,202 120,204 C121,202 123,200 126,200 C131,200 135,204 135,210 C135,220 125,225 120,225 Z" 
+                    fill="white" 
+                    className="drop-shadow-sm"
                   />
-                  
-                  {/* Phase 3: Mind (Yellow) - Fills the head */}
-                  <motion.path 
-                    d="M120,60 C140,60 155,75 155,100 C155,125 140,140 120,140 C100,140 85,125 85,100 C85,75 100,60 120,60 Z"
-                    fill="#FDF2D5"
-                    initial={{ scaleY: 0 }}
-                    whileInView={{ scaleY: 1 }}
-                    viewport={{ once: false, amount: 0.7 }}
-                    transition={{ duration: 1, delay: 1, ease: "easeOut" }}
-                    style={{ originY: 1 }}
-                  />
-                  
+
                   {/* Neural Connectors */}
                   <motion.path 
-                    d="M120,195 L120,140"
+                    d="M120,145 L120,100"
                     stroke="white"
                     strokeWidth="3"
                     strokeLinecap="round"
-                    strokeDasharray="100"
-                    initial={{ strokeDashoffset: 100 }}
+                    strokeDasharray="45"
+                    initial={{ strokeDashoffset: 45 }}
                     whileInView={{ strokeDashoffset: 0 }}
-                    transition={{ delay: 1.2, duration: 0.8 }}
+                    transition={{ delay: 2.5, duration: 1 }}
                   />
 
                   {/* Glowing Particles */}
-                  {[...Array(6)].map((_, i) => (
+                  {[...Array(12)].map((_, i) => (
                     <motion.circle
                       key={i}
-                      r="3"
+                      r={Math.random() * 3 + 1}
                       fill="white"
                       initial={{ 
-                        cx: 120, 
-                        cy: 350, 
-                        opacity: 0 
+                        cx: 120 + (Math.random() - 0.5) * 60, 
+                        cy: 380, 
+                        opacity: 0,
+                        scale: 0
                       }}
                       animate={{ 
-                        cx: 120 + (Math.random() - 0.5) * 80,
-                        cy: 100 + (Math.random() - 0.5) * 60,
-                        opacity: [0, 1, 0]
+                        cy: [380, 80],
+                        opacity: [0, 0.8, 0],
+                        scale: [0, 1, 0],
+                        x: [0, (Math.random() - 0.5) * 40, 0]
                       }}
                       transition={{ 
-                        duration: 3 + Math.random() * 2, 
+                        duration: 4 + Math.random() * 3, 
                         repeat: Infinity, 
-                        delay: i * 0.5 
+                        delay: i * 0.4,
+                        ease: "easeInOut"
                       }}
                     />
                   ))}
@@ -387,16 +410,33 @@ export default function Philosophy() {
                 {/* Floating Meta Labels */}
                 <div className="absolute inset-0 pointer-events-none">
                    <motion.div 
-                     className="absolute top-[15%] right-[-10%] glass-morph-heavy px-4 py-2 rounded-xl border border-white/40 shadow-xl"
-                     initial={{ x: 20, opacity: 0 }} whileInView={{ x: 0, opacity: 1 }} transition={{ delay: 2 }}
+                     className="absolute top-[10%] right-[-15%] glass-morphism-heavy px-6 py-3 rounded-2xl border border-white/40 shadow-2xl flex items-center gap-3"
+                     initial={{ x: 20, opacity: 0 }} 
+                     whileInView={{ x: 0, opacity: 1 }} 
+                     transition={{ delay: 2.8 }}
                    >
-                     <span className="text-[9px] font-black uppercase text-amber-500">Integrated Control</span>
+                     <Brain size={16} className="text-amber-500" />
+                     <span className="text-[10px] font-black uppercase tracking-widest text-spot-charcoal/60">Cognitive Bloom</span>
                    </motion.div>
+                   
                    <motion.div 
-                     className="absolute top-[45%] left-[-20%] glass-morph-heavy px-4 py-2 rounded-xl border border-white/40 shadow-xl"
-                     initial={{ x: -20, opacity: 0 }} whileInView={{ x: 0, opacity: 1 }} transition={{ delay: 1.5 }}
+                     className="absolute top-[40%] left-[-20%] glass-morphism-heavy px-6 py-3 rounded-2xl border border-white/40 shadow-2xl flex items-center gap-3"
+                     initial={{ x: -20, opacity: 0 }} 
+                     whileInView={{ x: 0, opacity: 1 }} 
+                     transition={{ delay: 1.8 }}
                    >
-                     <span className="text-[9px] font-black uppercase text-rose-500">Nervous System: Calibrated</span>
+                     <Heart size={16} className="text-rose-500" />
+                     <span className="text-[10px] font-black uppercase tracking-widest text-spot-charcoal/60">Safety Secured</span>
+                   </motion.div>
+
+                   <motion.div 
+                     className="absolute bottom-[20%] right-[-10%] glass-morphism-heavy px-6 py-3 rounded-2xl border border-white/40 shadow-2xl flex items-center gap-3"
+                     initial={{ x: 20, opacity: 0 }} 
+                     whileInView={{ x: 0, opacity: 1 }} 
+                     transition={{ delay: 0.8 }}
+                   >
+                     <Activity size={16} className="text-blue-500" />
+                     <span className="text-[10px] font-black uppercase tracking-widest text-spot-charcoal/60">Body Regulated</span>
                    </motion.div>
                 </div>
               </div>
