@@ -84,7 +84,7 @@ const HeroSection = () => {
             src="/assets/real-photos/teen_laptop.jpg" 
             alt="Student Work" 
             loading="eager"
-            fetchpriority="high"
+            fetchPriority="high"
             className="w-40 h-48 object-cover rounded-xl grayscale hover:grayscale-0 transition-all duration-500" 
           />
         </div>
@@ -373,7 +373,7 @@ const StudioEcosystem = () => {
             transition={{ duration: 0.4, delay: i * 0.1 }}
           >
             <div className="absolute top-0 right-0 p-8 opacity-10 transform translate-x-4 -translate-y-4 group-hover:scale-110 transition-transform duration-500">
-              {React.cloneElement(cat.icon as React.ReactElement, { size: 120 })}
+              {React.cloneElement(cat.icon as React.ReactElement<any>, { size: 120 })}
             </div>
             
             <div className="relative z-10">
@@ -556,9 +556,8 @@ const Programs = () => {
           { title: "After School Studios", desc: "Deep dives into specific passions and skills.", color: "bg-spot-pastel-pink", img: "/assets/real-photos/studios_cardboard.jpg" },
           { title: "SPOT in School", desc: "Bringing our studio model to traditional schools.", color: "bg-spot-pastel-blue", img: "/assets/real-photos/spiderman_art.jpg" }
         ].map((prog, i) => (
-          <Link
+          <motion.div
             key={i}
-            to={prog.title === "SPOT in School" ? "/inschool" : (prog.title === "Microschool" ? "/microschool" : "/studios")}
             className={`min-w-[85vw] md:min-w-0 snap-center ${prog.color} rounded-3xl overflow-hidden shadow-sm border border-black/5 group cursor-pointer flex flex-col`}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -566,6 +565,7 @@ const Programs = () => {
             transition={{ delay: i * 0.1 }}
             whileHover={{ y: -10 }}
           >
+            <Link to={prog.title === "SPOT in School" ? "/inschool" : (prog.title === "Microschool" ? "/microschool" : "/studios")} className="flex flex-col h-full">
             <div className="h-48 overflow-hidden">
               <img src={prog.img} alt={prog.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
             </div>
@@ -578,7 +578,8 @@ const Programs = () => {
                 Learn more <ArrowRight size={16} />
               </div>
             </div>
-          </Link>
+            </Link>
+          </motion.div>
         ))}
       </div>
     </section>

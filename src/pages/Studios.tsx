@@ -321,7 +321,7 @@ const HowItWorks = () => {
             transition={{ delay: i * 0.1 }}
           >
             <div className="w-32 h-32 rounded-[2.5rem] bg-slate-50 border-4 border-black/5 flex items-center justify-center text-spot-red mb-8 transition-all group-hover:bg-spot-charcoal group-hover:text-white group-hover:-rotate-6">
-              {React.cloneElement(step.icon as React.ReactElement, { size: 40 })}
+              {React.cloneElement(step.icon as React.ReactElement<any>, { size: 40 })}
             </div>
             <h3 className="font-display font-black text-2xl uppercase tracking-tighter mb-4">{step.title}</h3>
             <p className="text-spot-charcoal/50 font-medium leading-relaxed">{step.desc}</p>
@@ -558,7 +558,7 @@ const SkillForge = () => {
         >
           <div className={`relative p-8 bg-white rounded-[2.5rem] border border-black/5 shadow-2xl transition-all duration-500 overflow-hidden`}>
             <div className={`text-spot-charcoal group-hover:text-spot-red transition-colors mb-2 flex justify-center`}>
-              {React.cloneElement(skill.icon as React.ReactElement, { size: 32 })}
+              {React.cloneElement(skill.icon as React.ReactElement<any>, { size: 32 })}
             </div>
             
             <AnimatePresence>

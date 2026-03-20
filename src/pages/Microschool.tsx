@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import { ArrowDown, ArrowRight, Brain, Heart, Users, Sparkles, Rocket, Microscope, Palette, MessageCircle, Briefcase, ChevronRight, PlayCircle, Star, Globe, Compass, Zap, Target, CheckCircle2, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
+import { supabase } from '../lib/supabase';
 
 
 const HeroSection = () => {

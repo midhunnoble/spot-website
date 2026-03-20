@@ -193,7 +193,7 @@ const QuickInfo = () => {
             className="flex flex-col items-center text-center p-8 rounded-[2rem] bg-spot-cream/50 border border-black/5 glass-morphism hover:bg-white hover:shadow-2xl transition-all duration-500"
           >
             <div className="w-16 h-16 bg-spot-red/10 text-spot-red rounded-2xl flex items-center justify-center mb-6">
-              {React.cloneElement(item.icon as React.ReactElement, { size: 32 })}
+              {React.cloneElement(item.icon as React.ReactElement<any>, { size: 32 })}
             </div>
             <span className="text-xs font-black uppercase tracking-widest text-spot-charcoal/40 mb-2">{item.label}</span>
             <span className="text-lg font-display font-bold text-spot-charcoal">{item.value}</span>
@@ -270,7 +270,7 @@ const Journey = () => {
                 <div className="flex items-center justify-between mb-8">
                   <div className="px-6 py-2 bg-spot-charcoal text-white rounded-full font-black text-xs tracking-widest uppercase">{week.week}</div>
                   <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-spot-charcoal ${week.color.replace('bg-', 'bg-')}`}>
-                     {React.cloneElement(week.icon as React.ReactElement, { size: 32 })}
+                     {React.cloneElement(week.icon as React.ReactElement<any>, { size: 32 })}
                   </div>
                 </div>
                 

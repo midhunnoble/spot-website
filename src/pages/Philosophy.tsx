@@ -557,7 +557,7 @@ export default function Philosophy() {
                 onMouseLeave={() => setActiveEcosystemNode(null)}
               >
                 <div className={`w-28 h-28 rounded-[2rem] glass-morphism-heavy flex items-center justify-center shadow-2xl cursor-pointer transition-all duration-500 border border-white/40 ${isActive ? 'bg-spot-charcoal text-white scale-125 -translate-y-8 z-[60]' : 'bg-white/50 text-spot-charcoal hover:scale-110 z-20'} ${activeEcosystemNode && !isActive ? 'opacity-20 blur-[2px]' : 'opacity-100'}`}>
-                  {React.cloneElement(node.icon as React.ReactElement, { size: 36 })}
+                  {React.cloneElement(node.icon as React.ReactElement<any>, { size: 36 })}
                 </div>
                 
                 {/* Tooltip/Description - Fixed Side Sidebar approach for readability */}
@@ -671,7 +671,7 @@ export default function Philosophy() {
               
               <div className="absolute inset-0 p-10 flex flex-col justify-end">
                 <div className={`w-14 h-14 rounded-2xl ${item.color} flex items-center justify-center text-spot-charcoal mb-6 shadow-xl`}>
-                  {React.cloneElement(item.icon as React.ReactElement, { size: 32 })}
+                  {React.cloneElement(item.icon as React.ReactElement<any>, { size: 32 })}
                 </div>
                 <h3 className="font-display font-black text-4xl text-white mb-4 uppercase tracking-tighter leading-none">{item.title}</h3>
                 <p className="text-white/70 font-bold mb-8 leading-tight">{item.desc}</p>

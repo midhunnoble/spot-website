@@ -42,7 +42,7 @@ export default function Blog() {
           .order('published_at', { ascending: false });
         
         if (data) {
-          setPosts(data);
+          setPosts(data as BlogPost[]);
         } else {
             // Fallback if no data yet (for demonstration)
             setPosts([]);

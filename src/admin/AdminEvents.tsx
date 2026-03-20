@@ -146,6 +146,17 @@ export const AdminEvents = () => {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this event?')) return;
+    try {
+      const { error } = await supabase.from('events').delete().eq('id', id);
+      if (error) throw error;
+      fetchEvents();
+    } catch (err: any) {
+      alert('Error deleting event: ' + err.message);
+    }
+  };
+
   const openAttendees = async (eventId: string) => {
     setAttendeesModalEventId(eventId);
     setLoadingAttendees(true);

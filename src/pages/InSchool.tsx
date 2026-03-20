@@ -172,7 +172,7 @@ const ImpactStats = () => {
               transition={{ delay: i * 0.1 }}
             >
               <div className="mb-6 p-4 bg-white/20 rounded-2xl backdrop-blur-sm">
-                {React.cloneElement(stat.icon as React.ReactElement, { size: 32 })}
+                {React.cloneElement(stat.icon as React.ReactElement<any>, { size: 32 })}
               </div>
               <div className="font-display text-7xl font-black mb-2 text-spot-pastel-yellow">{stat.num}</div>
               <p className="font-sans text-xl font-bold uppercase tracking-widest opacity-90">{stat.label}</p>

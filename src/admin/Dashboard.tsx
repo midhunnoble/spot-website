@@ -134,12 +134,12 @@ export const AdminDashboard = () => {
               className={`${card.size} ${card.color} p-8 md:p-12 rounded-[3.5rem] border border-black/5 shadow-xl group relative overflow-hidden flex flex-col justify-between min-h-[220px]`}
             >
               <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.08] group-hover:scale-125 transition-all duration-700 text-spot-charcoal">
-                {React.cloneElement(card.icon as React.ReactElement, { size: 160 })}
+                {React.cloneElement(card.icon as React.ReactElement<any>, { size: 160 })}
               </div>
               
               <div className="flex justify-between items-start relative z-10">
                 <div className="w-14 h-14 bg-white rounded-2xl shadow-xl flex items-center justify-center group-hover:rotate-12 transition-all duration-500">
-                  {React.cloneElement(card.icon as React.ReactElement, { className: 'text-spot-charcoal', size: 24 })}
+                  {React.cloneElement(card.icon as React.ReactElement<any>, { className: 'text-spot-charcoal', size: 24 })}
                 </div>
                 <ArrowUpRight className="text-spot-charcoal/20 group-hover:text-spot-charcoal group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
               </div>

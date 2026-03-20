@@ -260,7 +260,7 @@ const Philosophy = () => {
                 transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
               >
                 <div className={`p-5 rounded-2xl shadow-xl ${isSpecial ? 'bg-white text-spot-red' : 'bg-white/70 text-spot-charcoal'}`}>
-                  {React.cloneElement(pillar.icon as React.ReactElement, { size: 36 })}
+                  {React.cloneElement(pillar.icon as React.ReactElement<any>, { size: 36 })}
                 </div>
                 <div>
                   <h3 className="font-display text-4xl font-black mb-4 uppercase tracking-tighter leading-[0.85]">{pillar.title}</h3>
